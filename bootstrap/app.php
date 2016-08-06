@@ -1,5 +1,7 @@
 <?php
 
+use \Respect\Validation\Validator as v;
+
 session_start();
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -61,5 +63,7 @@ $container['AuthController'] = function ($container) {
 
 $app->add(new \Eeti\Middleware\ValidationErrorsMiddleware($container));
 $app->add(new \Eeti\Middleware\OldInputMiddleware($container));
+
+v::with('Eeti\\Validation\\Rules');
 
 require __DIR__ . '/../app/routes.php';
