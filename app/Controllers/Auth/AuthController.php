@@ -25,9 +25,11 @@ class AuthController extends Controller
 		);
 
 		if (!$auth) {
+			$this->container->flash->addMessage('danger', '<b>Uh oh!</b> We couldn\'t find an account with those details.');
 			return $response->withRedirect($this->container->router->pathFor('auth.signin'));
 		}
 
+		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome back!');
 		return $response->withRedirect($this->container->router->pathFor('home'));
 	}
 
@@ -43,6 +45,7 @@ class AuthController extends Controller
 		]);
 
 		if ($validation->failed()) {
+			$this->container->flash->addMessage('danger', '<b>Whoops!</b> Looks like something went wrong.');
 			return $response->withRedirect($this->container->router->pathFor('auth.signup'));
 		}
 
@@ -51,6 +54,8 @@ class AuthController extends Controller
 			'username' => $request->getParam('username'),
 			'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10]),
 		]);
+
+		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome to eeti slim!');
 
 		$this->auth->attempt(
 			$request->getParam('email'),
