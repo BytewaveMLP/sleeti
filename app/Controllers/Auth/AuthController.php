@@ -46,6 +46,11 @@ class AuthController extends Controller
 			'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10]),
 		]);
 
+		$this->auth->attempt(
+			$request->getParam('email'),
+			$request->getParam('password')
+		);
+
 		return $response->withRedirect($this->container->router->pathFor('home'));
 	}
 }
