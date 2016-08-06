@@ -7,10 +7,29 @@ require __DIR__ . '/../vendor/autoload.php';
 $app = new \Slim\App([
 	'settings' => [
 		'displayErrorDetails' => true,
+		'db' => [
+			'driver'    => 'mysql',
+			'host'      => 'localhost',
+			'database'  => 'homestead',
+			'username'  => 'homestead',
+			'password'  => 'secret',
+			'charset'   => 'utf8mb4',
+			'collation' => 'utf8mb4_unicode_ci',
+			'prefix'    => '',
+		],
 	],
 ]);
 
 $container = $app->getContainer();
+
+$capsule = new \Illuminate\Database\Capsule\Manager;
+$capsule->addConnection($container['settings']['db']);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
+
+$container['db'] = function($container) use ($capsule) {
+	return $capsule;
+};
 
 $container['view'] = function ($container) {
 	$view = new \Slim\Views\Twig(__DIR__ . '/../resources/views', [
