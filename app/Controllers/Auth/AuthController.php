@@ -8,6 +8,12 @@ use Respect\Validation\Validator as v;
 
 class AuthController extends Controller
 {
+	public function getSignOut($request, $response) {
+		$this->container->auth->signout();
+
+		return $response->withRedirect($this->container->router->pathFor('home'));
+	}
+
 	public function getSignIn($request, $response) {
 		return $this->container->view->render($response, 'auth/signin.twig');
 	}

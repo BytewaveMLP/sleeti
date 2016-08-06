@@ -7,7 +7,7 @@ use Eeti\Models\User;
 class Auth
 {
 	public function user() {
-		return User::find($_SESSION['user'])->first();
+		return isset($_SESSION['user']) ? User::find($_SESSION['user'])->first() : null;
 	}
 
 	public function check() {
@@ -27,5 +27,9 @@ class Auth
 		}
 
 		return false;
+	}
+
+	public function signout() {
+		unset($_SESSION['user']);
 	}
 }
