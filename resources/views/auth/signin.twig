@@ -14,7 +14,7 @@
 					<form action="{{ path_for('auth.signin') }}" method="post" autocomplete="off">
 						<div class="form-group{{ errors.identifier ? ' has-error' : '' }}">
 							<label for="identifier">Username or Email</label>
-							<input type="identifier" name="identifier" id="identifier" placeholder="You" class="form-control" value="{{ old.identifier }}">
+							<input type="identifier" name="identifier" id="identifier" placeholder="You" class="form-control" value="{{ old.identifier }}" required>
 							{% if errors.identifier %}
 								<span class="help-block">{{ errors.identifier | first }}</span>
 							{% endif %}
@@ -22,7 +22,7 @@
 
 						<div class="form-group{{ errors.password ? ' has-error' : '' }}">
 							<label for="password">Password</label>
-							<input type="password" name="password" id="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" class="form-control">
+							<input type="password" name="password" id="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" class="form-control" required>
 							{% if errors.password %}
 								<span class="help-block">{{ errors.password | first }}</span>
 							{% endif %}

@@ -39,9 +39,10 @@ class AuthController extends Controller
 
 	public function postSignUp($request, $response) {
 		$validation = $this->container->validator->validate($request, [
-			'email'    => v::notEmpty()->noWhitespace()->email()->emailAvailable(),
-			'username' => v::notEmpty()->alnum('-_')->noWhitespace()->usernameAvailable(),
-			'password' => v::notEmpty(),
+			'email'            => v::notEmpty()->noWhitespace()->email()->emailAvailable(),
+			'username'         => v::notEmpty()->alnum('-_')->noWhitespace()->usernameAvailable(),
+			'password'         => v::notEmpty(),
+			'password_confirm' => v::passwordConfirmation($request->getParam('password')),
 		]);
 
 		if ($validation->failed()) {
@@ -57,7 +58,7 @@ class AuthController extends Controller
 
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome to eeti slim!');
 
-		$this->auth->attempt(
+		$this->container->auth->attempt(
 			$request->getParam('email'),
 			$request->getParam('password')
 		);
