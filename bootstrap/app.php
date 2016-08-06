@@ -17,6 +17,9 @@ $app = new \Slim\App([
 			'collation' => 'utf8mb4_unicode_ci',
 			'prefix'    => '',
 		],
+		'password' => [
+			'cost' => 10,
+		],
 	],
 ]);
 
@@ -46,6 +49,10 @@ $container['view'] = function ($container) {
 
 $container['HomeController'] = function ($container) {
 	return new \Eeti\Controllers\HomeController($container);
+};
+
+$container['AuthController'] = function ($container) {
+	return new \Eeti\Controllers\Auth\AuthController($container);
 };
 
 require __DIR__ . '/../app/routes.php';
