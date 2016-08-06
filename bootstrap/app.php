@@ -59,4 +59,6 @@ $container['AuthController'] = function ($container) {
 	return new \Eeti\Controllers\Auth\AuthController($container);
 };
 
+$app->add(new \Eeti\Middleware\ValidationErrorsMiddleware($container));
+
 require __DIR__ . '/../app/routes.php';
