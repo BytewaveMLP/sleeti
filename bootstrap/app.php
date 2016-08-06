@@ -47,6 +47,10 @@ $container['view'] = function ($container) {
 	return $view;
 };
 
+$container['validator'] = function ($container) {
+	return new \Eeti\Validation\Validator;
+};
+
 $container['HomeController'] = function ($container) {
 	return new \Eeti\Controllers\HomeController($container);
 };
