@@ -2,7 +2,7 @@
 
 session_start();
 
-require __DIR__ . "/../vendor/autoload.php";
+require __DIR__ . '/../vendor/autoload.php';
 
 $app = new \Slim\App([
 	'settings' => [
@@ -13,7 +13,7 @@ $app = new \Slim\App([
 $container = $app->getContainer();
 
 $container['view'] = function ($container) {
-	$view = new \Slim\Views\Twig(__DIR__ . "/../resources/views", [
+	$view = new \Slim\Views\Twig(__DIR__ . '/../resources/views', [
 		'cache' => false,
 	]);
 
@@ -25,4 +25,8 @@ $container['view'] = function ($container) {
 	return $view;
 };
 
-require __DIR__ . "/../app/routes.php";
+$container['HomeController'] = function ($container) {
+	return new \Eeti\Controllers\HomeController;
+};
+
+require __DIR__ . '/../app/routes.php';
