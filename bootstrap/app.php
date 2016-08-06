@@ -26,7 +26,7 @@ $container['view'] = function ($container) {
 };
 
 $container['HomeController'] = function ($container) {
-	return new \Eeti\Controllers\HomeController;
+	return new \Eeti\Controllers\HomeController($container);
 };
 
 require __DIR__ . '/../app/routes.php';
