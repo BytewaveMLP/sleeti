@@ -14,7 +14,7 @@
 					<form action="{{ path_for('auth.signup') }}" method="post" autocomplete="off">
 						<div class="form-group{{ errors.email ? ' has-error' : '' }}">
 							<label for="email">Email</label>
-							<input type="email" name="email" id="email" placeholder="you@domain.ext" class="form-control">
+							<input type="email" name="email" id="email" placeholder="you@domain.ext" class="form-control" value="{{ old.email }}">
 							{% if errors.email %}
 								<span class="help-block">{{ errors.email | first }}</span>
 							{% endif %}
@@ -22,7 +22,7 @@
 
 						<div class="form-group{{ errors.username ? ' has-error' : '' }}">
 							<label for="username">Username</label>
-							<input type="text" name="username" id="username" placeholder="Your desired username" class="form-control">
+							<input type="text" name="username" id="username" placeholder="Your desired username" class="form-control" value="{{ old.username }}">
 							{% if errors.username %}
 								<span class="help-block">{{ errors.username | first }}</span>
 							{% endif %}

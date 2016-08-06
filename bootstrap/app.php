@@ -60,5 +60,6 @@ $container['AuthController'] = function ($container) {
 };
 
 $app->add(new \Eeti\Middleware\ValidationErrorsMiddleware($container));
+$app->add(new \Eeti\Middleware\OldInputMiddleware($container));
 
 require __DIR__ . '/../app/routes.php';
