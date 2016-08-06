@@ -16,4 +16,20 @@ class User extends Model
 		'bio',
 		'password',
 	];
+
+	public function permission() {
+		return $this->hasOne('Eeti\\Models\\UserPermission', 'user_id', 'id');
+	}
+
+	public function isAdmin() {
+		return $this->permission->contains('A');
+	}
+
+	public function isModerator() {
+		return $this->permission->contains('M') || $this->permission->contains('A');
+	}
+
+	public function isTester() {
+		return $this->permission->contains('T');
+	}
 }

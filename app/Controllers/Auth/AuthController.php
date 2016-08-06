@@ -4,6 +4,7 @@ namespace Eeti\Controllers\Auth;
 
 use Eeti\Controllers\Controller;
 use Eeti\Models\User;
+use Eeti\Models\UserPermission;
 use Respect\Validation\Validator as v;
 
 class AuthController extends Controller
@@ -55,6 +56,13 @@ class AuthController extends Controller
 			'username' => $request->getParam('username'),
 			'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10]),
 		]);
+
+		$userPerms = UserPermission::create([
+			'user_id' => $user->id,
+			'flags'   => '',
+		]);
+
+		$userPerms->user()->associate($user);
 
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome to eeti slim!');
 

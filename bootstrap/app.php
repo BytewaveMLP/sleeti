@@ -80,6 +80,10 @@ $container['PasswordController'] = function ($container) {
 	return new \Eeti\Controllers\Auth\PasswordController($container);
 };
 
+$container['AdminController'] = function ($container) {
+	return new \Eeti\Controllers\AdminController($container);
+};
+
 $container['csrf'] = function ($container) {
 	return new \Slim\Csrf\Guard;
 };

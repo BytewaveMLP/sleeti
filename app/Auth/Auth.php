@@ -3,11 +3,13 @@
 namespace Eeti\Auth;
 
 use Eeti\Models\User;
+use Eeti\Models\UserPermission;
 
 class Auth
 {
 	public function user() {
-		return isset($_SESSION['user']) ? User::find($_SESSION['user'])->first() : null;
+		$user = isset($_SESSION['user']) ? User::find($_SESSION['user']) : null;
+		return $user;
 	}
 
 	public function check() {
@@ -26,6 +28,14 @@ class Auth
 			if (password_needs_rehash($user->password, PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10])) {
 				$user->password = password_hash($request->getParam('password'), PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10]);
 				$user->save();
+			}
+			if ($user->permission === null) { // just in case
+				$userPerms = UserPermission::create([
+					'user_id' => $user->id,
+					'flags'   => '',
+				]);
+
+				$userPerms->user()->associate($user);
 			}
 			return true;
 		}
