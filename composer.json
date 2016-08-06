@@ -2,5 +2,10 @@
     "require": {
         "slim/slim": "^3.0",
         "slim/twig-view": "^2.1"
-    }
+    },
+	"autoload": {
+		"psr-4": {
+			"Eeti\\": "app"
+		}
+	}
 }
