@@ -65,6 +65,10 @@ $container['csrf'] = function ($container) {
 	return new \Slim\Csrf\Guard;
 };
 
+$container['auth'] = function ($container) {
+	return new \Eeti\Auth\Auth;
+};
+
 $app->add(new \Eeti\Middleware\ValidationErrorsMiddleware($container));
 $app->add(new \Eeti\Middleware\OldInputMiddleware($container));
 $app->add(new \Eeti\Middleware\CsrfViewMiddleware($container));
