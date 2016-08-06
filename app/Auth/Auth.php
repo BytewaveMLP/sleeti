@@ -23,6 +23,10 @@ class Auth
 
 		if (password_verify($password, $user->password)) {
 			$_SESSION['user'] = $user->id;
+			if (password_needs_rehash($user->password, PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10])) {
+				$user->password = password_hash($request->getParam('password'), PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10]);
+				$user->save();
+			}
 			return true;
 		}
 
