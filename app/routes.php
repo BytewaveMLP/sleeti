@@ -22,6 +22,11 @@ $app->group('', function() use ($container) {
 	$this->get('/auth/password/change', 'PasswordController:getChangePassword')->setName('auth.password.change');
 	$this->post('/auth/password/change', 'PasswordController:postChangePassword');
 
+	$this->get('/upload', 'FileController:getUpload')->setName('file.upload');
+	$this->post('/upload', 'FileController:postUpload');
+
+	$this->get('/viewfile/{filename}', 'FileController:viewFile')->setName('file.view');
+
 	$this->group('', function() {
 		$this->get('/admin/acp', 'AdminController:getAcp')->setName('admin.acp');
 		$this->post('/admin/acp', 'AdminController:postAcp');

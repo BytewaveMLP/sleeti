@@ -21,6 +21,10 @@ class User extends Model
 		return $this->hasOne('Eeti\\Models\\UserPermission', 'user_id', 'id');
 	}
 
+	public function files() {
+		return $this->hasMany('Eeti\\Models\\File', 'owner_id', 'id');
+	}
+
 	public function isAdmin() {
 		return $this->permission->contains('A');
 	}

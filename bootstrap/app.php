@@ -84,6 +84,10 @@ $container['AdminController'] = function ($container) {
 	return new \Eeti\Controllers\AdminController($container);
 };
 
+$container['FileController'] = function ($container) {
+	return new \Eeti\Controllers\FileController($container);
+};
+
 $container['csrf'] = function ($container) {
 	return new \Slim\Csrf\Guard;
 };
