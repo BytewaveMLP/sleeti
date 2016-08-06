@@ -6,6 +6,7 @@ A proof-of-concept port of eeti.me to Slim 3
 - nginx/Apache 2
 - PHP 7
 - [Composer](https://getcomposer.org/)
+
 ### Setup
 - `git clone https://github.com/BytewaveMLP/eeti-slim-port`
 - `cd eeti-slim-port`
