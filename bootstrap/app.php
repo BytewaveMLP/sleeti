@@ -61,8 +61,15 @@ $container['AuthController'] = function ($container) {
 	return new \Eeti\Controllers\Auth\AuthController($container);
 };
 
+$container['csrf'] = function ($container) {
+	return new \Slim\Csrf\Guard;
+};
+
 $app->add(new \Eeti\Middleware\ValidationErrorsMiddleware($container));
 $app->add(new \Eeti\Middleware\OldInputMiddleware($container));
+$app->add(new \Eeti\Middleware\CsrfViewMiddleware($container));
+
+$app->add($container->csrf);
 
 v::with('Eeti\\Validation\\Rules');
 
