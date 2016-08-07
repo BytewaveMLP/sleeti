@@ -12,6 +12,7 @@ A proof-of-concept port of eeti.me to Slim 3
 - `cd eeti-slim-port`
 - `composer install`
 - install webserver configs
-- **TODO** flesh out installation instructions
-- restart nginx
+- **TODO:** flesh out installation instructions
+- restart nginx/apache
 - visit website
+- enjoy
