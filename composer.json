@@ -5,7 +5,9 @@
         "illuminate/database": "^5.2",
         "respect/validation": "^1.1",
         "slim/csrf": "^0.7.0",
-        "slim/flash": "^0.1.0"
+        "slim/flash": "^0.1.0",
+        "aptoma/twig-markdown": "^2.0",
+        "erusev/parsedown": "^1.6"
     },
 	"autoload": {
 		"psr-4": {

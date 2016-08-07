@@ -1,13 +1,13 @@
 {% extends 'templates/app.twig' %}
 
-{% block title %}Update Profile{% endblock %}
+{% block title %}Edit Profile{% endblock %}
 
 {% block content %}
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Update Profile</h3>
+					<h3 class="panel-title">Edit Profile</h3>
 				</div>
 
 				<div class="panel-body">
@@ -25,7 +25,7 @@
 						</div>
 
 						<div class="form-group{{ errors.bio ? ' has-error' : '' }}">
-							<label for="bio">Bio</label>
+							<label for="bio">Bio (supports Github-Flavored Markdown)</label>
 							<textarea name="bio" id="" cols="30" rows="10" class="form-control" placeholder="Your life story." maxlength="200">{{ old.bio | default(auth.user.bio) }}</textarea>
 							{% if errors.bio %}
 								<span class="help-block">{{ errors.bio | first }}</span>

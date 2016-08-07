@@ -17,7 +17,9 @@
 				{% endif %}
 				{% if user.bio is not empty %}
 					<dt>Bio</dt>
-					<dd>{{ user.bio }}</dd>
+					<dd>
+						{{ user.bio | markdown }}
+					</dd>
 				{% endif %}
 			</dl>
 			{% if user.id == auth.user.id %}

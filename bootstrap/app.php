@@ -1,11 +1,14 @@
 <?php
 
 use \Respect\Validation\Validator as v;
+use Aptoma\Twig\Extension\MarkdownExtension;
+use Aptoma\Twig\Extension\MarkdownEngine;
 
 session_start();
 
 require __DIR__ . '/../vendor/autoload.php';
 
+// need to fix this config at some point
 $app = new \Slim\App([
 	'settings' => [
 		'displayErrorDetails' => true,
@@ -56,6 +59,10 @@ $container['view'] = function ($container) {
 		$container->router,
 		$container->request->getUri()
 	));
+
+	$markdownEngine = new MarkdownEngine\ParsedownEngine;
+
+	$view->addExtension(new MarkdownExtension($markdownEngine));
 
 	$view->getEnvironment()->addGlobal('auth', [
 		'check' => $container->auth->check(),
