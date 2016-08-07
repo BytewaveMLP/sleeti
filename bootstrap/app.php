@@ -102,6 +102,10 @@ $container['ProfileController'] = function ($container) {
 	return new \Eeti\Controllers\ProfileController($container);
 };
 
+$container['CommunityController'] = function ($container) {
+	return new \Eeti\Controllers\CommunityController($container);
+};
+
 $container['csrf'] = function ($container) {
 	return new \Slim\Csrf\Guard;
 };

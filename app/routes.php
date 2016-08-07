@@ -7,14 +7,16 @@ use Eeti\Middleware\ModeratorMiddleware;
 use Eeti\Middleware\AdminMiddleware;
 use Eeti\Middleware\CsrfViewMiddleware;
 
-$app->get('/', 'HomeController:index')->setName('home');
-
-$app->get('/user/{id}', 'ProfileController:viewProfile')->setName('user.profile');
-
-$app->get('/viewfile/{filename}', 'FileController:viewFile')->setName('file.view');
-
 $app->group('', function() use ($container) { // it's groups all the way down
 	$this->group('', function() use ($container) {
+		$this->get('/', 'HomeController:index')->setName('home');
+
+		$this->get('/user/{id}', 'ProfileController:viewProfile')->setName('user.profile');
+
+		$this->get('/viewfile/{filename}', 'FileController:viewFile')->setName('file.view');
+
+		$this->get('/community', 'CommunityController:community')->setName('community');
+
 		$this->group('', function() use ($container) {
 			$this->get('/auth/signup', 'AuthController:getSignUp')->setName('auth.signup');
 			$this->post('/auth/signup', 'AuthController:postSignUp');

@@ -5,11 +5,24 @@
 {% block content %}
 	<div class="row">
 		<div class="col-md-12">
-			<h1>{{ user.username }}{% if user.name is defined %} <small>{{ user.name }}</small>{% endif %}</h1>
+			<h1>
+				{{ user.name ?: user.username }}
+			</h1>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-4">
+			<p>
+				{% if user.isAdmin() %}
+					<span class="label label-danger">Admin</span>
+				{% elseif user.isModerator() %}
+					<span class="label label-warning">Moderator</span>
+				{% endif %}
+				{% if user.isTester() %}
+					<span class="label label-primary">Tester</span>
+				{% endif %}
+			</p>
+
 			<dl>
 				{% if user.website is not empty %}
 					<dt>Website</dt>
