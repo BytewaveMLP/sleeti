@@ -25,10 +25,13 @@ class Auth
 
 		if (password_verify($password, $user->password)) {
 			$_SESSION['user'] = $user->id;
+
+			// Lazy password rehash in case settings or algo changes
 			if (password_needs_rehash($user->password, PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10])) {
 				$user->password = password_hash($request->getParam('password'), PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10]);
 				$user->save();
 			}
+
 			if ($user->permission === null) { // just in case
 				$userPerms = UserPermission::create([
 					'user_id' => $user->id,
@@ -37,6 +40,7 @@ class Auth
 
 				$userPerms->user()->associate($user);
 			}
+			
 			return true;
 		}
 
