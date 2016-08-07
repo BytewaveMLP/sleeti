@@ -1,0 +1,43 @@
+{% extends 'templates/app.twig' %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Update Profile</h3>
+				</div>
+
+				<div class="panel-body">
+					<h4>
+						Need to change your password? Click <a href="{{ path_for('auth.password.change') }}">here</a>!
+					</h4>
+
+					<form action="{{ path_for('user.profile.edit') }}" method="post" autocomplete="off">
+						<div class="form-group{{ errors.website ? ' has-error' : '' }}">
+							<label for="website">Website</label>
+							<input type="url" name="website" id="website" placeholder="http://domain.ext" class="form-control" value="{{ old.website | default(auth.user.website) }}" required>
+							{% if errors.website %}
+								<span class="help-block">{{ errors.website | first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="form-group{{ errors.bio ? ' has-error' : '' }}">
+							<label for="bio">Bio</label>
+							<textarea name="bio" id="" cols="30" rows="10" class="form-control" placeholder="Your life story." maxlength="200">{{ old.bio | default(auth.user.bio) }}</textarea>
+							{% if errors.bio %}
+								<span class="help-block">{{ errors.bio | first }}</span>
+							{% endif %}
+						</div>
+
+						<button type="submit" class="btn btn-default">Submit</button>
+
+						{{ csrf.field | raw }}
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

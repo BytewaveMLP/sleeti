@@ -29,6 +29,9 @@ $app->group('', function() use ($container) { // it's groups all the way down
 			$this->get('/auth/password/change', 'PasswordController:getChangePassword')->setName('auth.password.change');
 			$this->post('/auth/password/change', 'PasswordController:postChangePassword');
 
+			$this->get('/editprofile', 'ProfileController:getEditProfile')->setName('user.profile.edit');
+			$this->post('/editprofile', 'ProfileController:postEditoProfile');
+
 			$this->get('/upload', 'FileController:getUpload')->setName('file.upload');
 			$this->post('/upload', 'FileController:postUpload');
 
