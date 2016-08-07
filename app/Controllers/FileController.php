@@ -23,22 +23,18 @@ class FileController extends Controller
 
 		$clientFilename = $file->getClientFilename();
 
-		$filename = substr(md5($file->getStream()), 0, 7);
-
 		if (strpos($clientFilename, '.') !== false) {
 			$possibleExts = explode(".", $clientFilename);
 			$ext = $possibleExts[count($possibleExts) - 1];
-			$filename .= '.' . $ext;
 		}
 
-		if (File::where('filename', $filename)->count() === 0) {
-			$file = File::create([
-				'owner_id' => $this->container->auth->user()->id,
-				'filename' => $filename,
-			]);
+		$file = File::create([
+			'owner_id' => $this->container->auth->user()->id
+		]);
 
-			$files['file']->moveTo($this->container['settings']['upload']['path'] . $filename);
-		}
+		$filename = $file->id . ($ext !== null ? '.' . $ext : '');
+
+		$files['file']->moveTo($this->container['settings']['upload']['path'] . $filename);
 
 		return $response->withRedirect($this->container->router->pathFor('file.view', [
 			'filename' => $filename,

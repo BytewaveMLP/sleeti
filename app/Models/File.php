@@ -10,7 +10,6 @@ class File extends Model
 
 	protected $fillable = [
 		'owner_id',
-		'filename',
 	];
 
 	public function user() {
