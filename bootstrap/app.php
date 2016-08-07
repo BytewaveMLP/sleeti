@@ -91,6 +91,10 @@ $container['FileController'] = function ($container) {
 	return new \Eeti\Controllers\FileController($container);
 };
 
+$container['ProfileController'] = function ($container) {
+	return new \Eeti\Controllers\ProfileController($container);
+};
+
 $container['csrf'] = function ($container) {
 	return new \Slim\Csrf\Guard;
 };

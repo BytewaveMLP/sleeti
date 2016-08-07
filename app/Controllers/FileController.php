@@ -51,10 +51,10 @@ class FileController extends Controller
 	public function viewFile($request, $response, $args) {
 		$filename = $args['filename'];
 		$filepath = $this->container['settings']['upload']['path'] . $filename;
-		$id       = (int) (strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename);
+		$id       = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
 
 		if (!file_exists($filepath) || file_get_contents($filepath) === false || File::where('id', $id)->count() === 0) {
-			return $response->withStatus(404)->write('No files found.');
+			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
 		return $response->withHeader('Content-Type', mime_content_type($filepath))->write(file_get_contents($filepath));

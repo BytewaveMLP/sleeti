@@ -8,6 +8,8 @@ use Eeti\Middleware\AdminMiddleware;
 
 $app->get('/', 'HomeController:index')->setName('home');
 
+$app->get('/user/{id}', 'ProfileController:viewProfile')->setName('user.profile');
+
 $app->get('/viewfile/{filename}', 'FileController:viewFile')->setName('file.view');
 
 $app->group('', function() {
