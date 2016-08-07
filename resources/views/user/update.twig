@@ -2,6 +2,22 @@
 
 {% block title %}Edit Profile{% endblock %}
 
+{% block extrajs %}
+	<script>
+	// shamelessly stolen from stackoverflow
+	$(function() {
+		$("textarea[maxlength]").bind('input propertychange', function() {
+			var maxLength = $(this).attr('maxlength');
+			var usedLength = $(this).val().length;
+			$('#remaining').html(maxLength - usedLength + ' characters remaining');
+			if (usedLength > maxLength) {
+				$(this).val($(this).val().substring(0, maxLength));
+			}
+		});
+	});
+	</script>
+{% endblock %}
+
 {% block content %}
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
@@ -27,6 +43,7 @@
 						<div class="form-group{{ errors.bio ? ' has-error' : '' }}">
 							<label for="bio">Bio (supports Github-Flavored Markdown)</label>
 							<textarea name="bio" id="" cols="30" rows="10" class="form-control" placeholder="Your life story." maxlength="200">{{ old.bio | default(auth.user.bio) }}</textarea>
+							<span class="help-block" id="remaining"></span>
 							{% if errors.bio %}
 								<span class="help-block">{{ errors.bio | first }}</span>
 							{% endif %}
