@@ -38,7 +38,12 @@ class FileController extends Controller
 			$fileRecord->save();
 		}
 
-		$file->moveTo($this->container['settings']['upload']['path'] . $filename);
+		try {
+			$file->moveTo($this->container['settings']['upload']['path'] . $filename);
+		} catch (InvalidArgumentException $e) {
+			$fileRecord->delete();
+			throw new FailedUploadException("File moving failed", $files['file']->getError() ?? -1);
+		}
 
 		return $this->container->router->pathFor('file.view', [
 			'filename' => $filename,
