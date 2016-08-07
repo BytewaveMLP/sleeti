@@ -20,6 +20,11 @@
 					<dd>{{ user.bio }}</dd>
 				{% endif %}
 			</dl>
+			{% if user.id == auth.user.id %}
+				<p>
+					<a href="{{ path_for('user.profile.edit') }}">Edit your profile</a>
+				</p>
+			{% endif %}
 		</div>
 		<div class="col-md-8">
 			{% if user.files.count > 0 %}
