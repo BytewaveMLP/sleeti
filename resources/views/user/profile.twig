@@ -29,7 +29,9 @@
 					</thead>
 					<tbody>
 						{% for file in user.files %}
-							<td><a href="{{ path_for('file.view', {'filename': file.id ~ '.' ~ file.ext}) }}">{{ file.id }}.{{ file.ext }}</a></td>
+							<tr>
+								<td><a href="{{ path_for('file.view', {'filename': file.id ~ '.' ~ file.ext}) }}">{{ file.id }}.{{ file.ext }}</a></td>
+							</tr>
 						{% endfor %}
 					</tbody>
 				</table>
