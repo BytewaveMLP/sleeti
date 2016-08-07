@@ -31,27 +31,30 @@ class FileController extends Controller
 			$filename .= '.' . $ext;
 		}
 
-		$file = File::create([
-			'owner_id' => $this->container->auth->user()->id,
+		if (File::where('filename', $filename)->count() === 0) {
+			$file = File::create([
+				'owner_id' => $this->container->auth->user()->id,
+				'filename' => $filename,
+			]);
+
+			$files['file']->moveTo($this->container['settings']['upload']['path'] . $filename);
+		}
+
+		return $response->withRedirect($this->container->router->pathFor('file.view', [
 			'filename' => $filename,
-		]);
-
-		$files['file']->moveTo(__DIR__ . '/../../uploads/' . $filename);
-
-		return $response->withRedirect($this->container->router->pathFor('file.view', ['filename', $filename]));
+		]));
 	}
 
 	public function viewFile($request, $response, $args) {
 		$filename = $args['filename'];
-		$filepath = __DIR__ . '/../../uploads/' . $filename;
+		$filepath = $this->container['settings']['upload']['path'] . $filename;
 
 		if (!file_exists($filepath)) {
 			return $response->withStatus(404);
 		}
 
 		if (file_get_contents($filepath) !== false) {
-			header('Content-Type: ' . mime_content_type($filepath));
-			echo file_get_contents($filepath);
+			return $response->withHeader('Content-Type', mime_content_type($filepath))->write(file_get_contents($filepath));
 		} else {
 			return $response->withStatus(404);
 		}

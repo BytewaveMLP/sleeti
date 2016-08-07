@@ -22,6 +22,9 @@ $app = new \Slim\App([
 		'password' => [
 			'cost' => 10,
 		],
+		'upload' => [
+			'path' => '/home/vagrant/uploads/',	
+		],
 	],
 ]);
 
