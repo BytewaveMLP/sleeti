@@ -101,9 +101,6 @@ $container['csrf'] = function ($container) {
 
 $app->add(new \Eeti\Middleware\ValidationErrorsMiddleware($container));
 $app->add(new \Eeti\Middleware\OldInputMiddleware($container));
-$app->add(new \Eeti\Middleware\CsrfViewMiddleware($container));
-
-$app->add($container->csrf);
 
 v::with('Eeti\\Validation\\Rules');
 
