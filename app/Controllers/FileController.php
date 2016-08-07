@@ -5,6 +5,7 @@ namespace Eeti\Controllers;
 use Respect\Validation\Validator as v;
 use Eeti\Models\File;
 use Eeti\Models\User;
+use Eeti\Auth\Auth;
 use Eeti\Exceptions\FailedUploadException;
 
 class FileController extends Controller
@@ -67,9 +68,7 @@ class FileController extends Controller
 		$identifier = $request->getParam('identifier');
 		$password   = $request->getParam('password');
 
-		$user = User::where('email', $identifier)->orWhere('username', $identifier)->first();
-
-		if (!$user || !password_verify($password, $user->password)) {
+		if (!$this->container->auth->attempt($identifier, $password)) {
 			return $response->withStatus(403)->write("Invalid credentials given.");;
 		}
 
