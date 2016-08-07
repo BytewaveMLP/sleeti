@@ -36,21 +36,24 @@ class FileController extends Controller
 			'filename' => $filename,
 		]);
 
-		$files['file']->moveTo(__DIR__ . '/../uploads/' . $filename);
+		$files['file']->moveTo(__DIR__ . '/../../uploads/' . $filename);
 
-		$this->container->flash->addMessage('success', 'File uploaded successfully!');
 		return $response->withRedirect($this->container->router->pathFor('file.view', ['filename', $filename]));
 	}
 
 	public function viewFile($request, $response, $args) {
 		$filename = $args['filename'];
-		$filepath = __DIR__ . '/../uploads/' . $filename;
+		$filepath = __DIR__ . '/../../uploads/' . $filename;
 
 		if (!file_exists($filepath)) {
 			return $response->withStatus(404);
 		}
 
-		header('Content-Type: ' . mime_content_type($filepath));
-		echo file_get_contents($filepath);
+		if (file_get_contents($filepath) !== false) {
+			header('Content-Type: ' . mime_content_type($filepath));
+			echo file_get_contents($filepath);
+		} else {
+			return $response->withStatus(404);
+		}
 	}
 }

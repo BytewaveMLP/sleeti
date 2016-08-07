@@ -8,6 +8,8 @@ use Eeti\Middleware\AdminMiddleware;
 
 $app->get('/', 'HomeController:index')->setName('home');
 
+$app->get('/viewfile/{filename}', 'FileController:viewFile')->setName('file.view');
+
 $app->group('', function() {
 	$this->get('/auth/signup', 'AuthController:getSignUp')->setName('auth.signup');
 	$this->post('/auth/signup', 'AuthController:postSignUp');
@@ -24,8 +26,6 @@ $app->group('', function() use ($container) {
 
 	$this->get('/upload', 'FileController:getUpload')->setName('file.upload');
 	$this->post('/upload', 'FileController:postUpload');
-
-	$this->get('/viewfile/{filename}', 'FileController:viewFile')->setName('file.view');
 
 	$this->group('', function() {
 		$this->get('/admin/acp', 'AdminController:getAcp')->setName('admin.acp');
