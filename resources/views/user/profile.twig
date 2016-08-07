@@ -30,13 +30,13 @@
 					<tbody>
 						{% for file in user.files %}
 							<tr>
-								<td><a href="{{ path_for('file.view', {'filename': file.id ~ '.' ~ file.ext}) }}">{{ file.id }}.{{ file.ext }}</a></td>
+								<td><a href="{{ path_for('file.view', {'filename': (file.ext is not empty ? file.id ~ '.' ~ file.ext : file.id)}) }}">{{ file.id }}{% if file.ext is not empty %}.{{ file.ext }}{% endif %}</a></td>
 							</tr>
 						{% endfor %}
 					</tbody>
 				</table>
 			{% else %}
-				Doesn't have files
+				<b>This user hasn't uploaded any files.</b> :(
 			{% endif %}
 		</div>
 	</div>

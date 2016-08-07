@@ -12,6 +12,7 @@ class FileController extends Controller
 {
 	private function handleFileUpload($request, $user) {
 		$files = $request->getUploadedFiles();
+		$ext = null;
 
 		if (!isset($files['file']) || $files['file']->getError() !== UPLOAD_ERR_OK) {
 			throw new FailedUploadException("File upload failed", $files['file']->getError() ?? -1);
@@ -28,7 +29,6 @@ class FileController extends Controller
 
 		$fileRecord = File::create([
 			'owner_id' => $user->id,
-			'ext' => $ext,
 		]);
 
 		$filename = $fileRecord->id;
@@ -73,7 +73,7 @@ class FileController extends Controller
 		}
 
 		try {
-			return $response->write($request->getUri()->getBaseUrl() . $this->handleFileUpload($request, $user));
+			return $response->write($request->getUri()->getBaseUrl() . $this->handleFileUpload($request, $this->container->auth->user()));
 		} catch (FailedUploadException $e) {
 			return $response->withStatus(500)->write("Upload failed! File likely too large.");
 		}
