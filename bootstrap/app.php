@@ -23,7 +23,7 @@ $app = new \Slim\App([
 			'cost' => 10,
 		],
 		'upload' => [
-			'path' => '/home/vagrant/uploads/',	
+			'path' => '/home/vagrant/uploads/',
 		],
 	],
 ]);
