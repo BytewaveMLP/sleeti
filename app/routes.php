@@ -51,4 +51,4 @@ $app->post('/upload/sharex', 'FileController:sharexUpload');
 $app->group('', function() use ($container) {
 	$this->get('/install', 'InstallController:getInstall')->setName('install');
 	$this->post('/install', 'InstallController:postInstall');
-})->add(new NotInstalledMiddleware);
+})->add(new NotInstalledMiddleware($container));
