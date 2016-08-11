@@ -6,6 +6,7 @@ use Eeti\Middleware\TesterMiddleware;
 use Eeti\Middleware\ModeratorMiddleware;
 use Eeti\Middleware\AdminMiddleware;
 use Eeti\Middleware\CsrfViewMiddleware;
+use Eeti\Middleware\NotInstalledMiddleware;
 
 $app->group('', function() use ($container) { // it's groups all the way down
 	$this->group('', function() use ($container) {
@@ -46,3 +47,8 @@ $app->group('', function() use ($container) { // it's groups all the way down
 })->add($container['csrf']);
 
 $app->post('/upload/sharex', 'FileController:sharexUpload');
+
+$app->group('', function() use ($container) {
+	$this->get('/install', 'InstallController:getInstall')->setName('install');
+	$this->post('/install', 'InstallController:postInstall');
+})->add(new NotInstalledMiddleware);

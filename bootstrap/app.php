@@ -33,6 +33,12 @@ $app = new \Slim\App([
 
 $container = $app->getContainer();
 
+$container["config"] = function ($container) {
+    return new \IS\Slim\LiteConfiguration\Configuration(__DIR__ . "/../config/config.json", $container);
+};
+
+$app->add($container->get("config"));
+
 $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($container['settings']['db']);
 $capsule->setAsGlobal();

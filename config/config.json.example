@@ -1,0 +1,19 @@
+{
+	"displayErrorDetails": false,
+	"db": {
+		"driver": "",
+		"host": "",
+		"database": "",
+		"username": "",
+		"password": "",
+		"charset": "",
+		"collation": "",
+		"prefix": ""
+	},
+	"password": {
+		"cost": 10
+	},
+	"upload": {
+		"path": ""
+	}
+}
