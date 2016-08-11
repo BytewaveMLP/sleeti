@@ -5,14 +5,14 @@
 {% block content %}
 	<div class="row">
 		<div class="col-md-12">
-			<h1>Welcome to eeti slim!</h1>
+			<h1>Welcome to {{ settings.site.title | default('eeti slim') }}!</h1>
 
-			<h2>What is eeti slim?</h2>
+			<h2>What is {{ settings.site.title | default('eeti slim') }}?</h2>
 			<p>
-				eeti slim is an attempt to convert <a href="https://eeti.me/">eeti.me</a> from procedural code to MVC with Slim 3 and Eloquent, maintained by myself, <a href="https://github.com/BytewaveMLP">Bytewave</a>. This is a personal project, mostly because Alex doesn't like MVC and I do. :)
+				{{ settings.site.title | default('eeti slim') }} is an attempt to convert <a href="https://eeti.me/">eeti.me</a> from procedural code to MVC with Slim 3 and Eloquent, maintained by myself, <a href="https://github.com/BytewaveMLP">Bytewave</a>. This is a personal project, mostly because Alex doesn't like MVC and I do. :)
 			</p>
 
-			<h2>How can I join eeti slim?</h2>
+			<h2>How can I join {{ settings.site.title | default('eeti slim') }}?</h2>
 			<p>
 				Simply click the "sign up" link in the top right. Be warned, though: this is <b>hardly</b> fully-featured, and the information stored here is volatile until everything is fleshed out.
 			</p>

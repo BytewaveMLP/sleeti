@@ -1,6 +1,6 @@
 {
     "site": {
-        "title": "eeti slim port"
+        "title": "eeti slim"
     },
     "db": {
         "driver": "mysql",

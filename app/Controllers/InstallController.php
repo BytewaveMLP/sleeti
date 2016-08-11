@@ -33,7 +33,7 @@ class InstallController extends Controller
 		file_put_contents(__DIR__ . '/../../config/config.json', json_encode($settings, JSON_PRETTY_PRINT));
 		touch(__DIR__ . '/../../config/lock');
 
-		$this->container->flash->addMessage('success', '<b>Success!</b> Your new instance of eeti slim has been configured! To edit the config, see <code>/config/config.json</code> and the ACP.');
+		$this->container->flash->addMessage('success', '<b>Success!</b> Your new instance of ' . $request->getParam('title') . ' has been configured! To edit the config, see <code>/config/config.json</code> and the ACP.');
 		$this->container->flash->addMessage('info', 'The first registered account will have administrator permissions. Register an account now.');
 		return $response->withRedirect($this->container->router->pathFor('home'));
 	}
