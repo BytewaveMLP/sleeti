@@ -68,8 +68,8 @@ class AuthController extends Controller
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome to ' . $this->container->settings['site']['title'] . '!');
 
 		if ($user->id == 1) { // if this is the only user, give them admin
-			$this->container->flash->addMessage('info', 'New administrative account created!');
 			$user->permission->addPermission('A');
+			$this->container->flash->addMessage('info', 'New administrative account created!');
 		}
 
 		$this->container->auth->attempt(
