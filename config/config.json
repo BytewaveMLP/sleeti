@@ -1,1 +1,20 @@
-{}
+{
+    "site": {
+        "title": "eeti slim port"
+    },
+    "db": {
+        "driver": "mysql",
+        "host": "localhost",
+        "database": "homestead",
+        "username": "homestead",
+        "password": "secret",
+        "charset": "utf8mb4",
+        "collation": "utf8mb4_unicode_ci"
+    },
+    "password": {
+        "cost": 10
+    },
+    "upload": {
+        "path": "\/home\/vagrant\/uploads\/"
+    }
+}

@@ -4,8 +4,100 @@
 
 {% block content %}
 	<div class="row">
-		<div class="col-md-12">
-			Install
+		<div class="col-md-6 col-md-offset-3">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Install eeti slim</h3>
+				</div>
+
+				<div class="panel-body">
+					<form action="{{ path_for('install') }}" method="post" autocomplete="off">
+						<div class="form-group{{ errors.website ? ' has-error' : '' }}">
+							<label for="title">App Title</label>
+							<input type="text" name="title" id="title" placeholder="eeti slim" class="form-control" value="{{ old.title }}" required>
+							{% if errors.title %}
+								<span class="help-block">{{ errors.title | first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="form-group{{ errors.dbdriver ? ' has-error' : '' }}">
+							<label for="dbdriver">Database driver</label>
+							<input type="text" name="dbdriver" id="dbdriver" placeholder="mysql" class="form-control" value="{{ old.dbdriver | default('mysql') }}" required>
+							{% if errors.dbdriver %}
+								<span class="help-block">{{ errors.dbdriver | first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="form-group{{ errors.dbhost ? ' has-error' : '' }}">
+							<label for="dbhost">Database hostname</label>
+							<input type="text" name="dbhost" id="dbhost" placeholder="localhost" class="form-control" value="{{ old.dbhost }}" required>
+							{% if errors.dbhost %}
+								<span class="help-block">{{ errors.dbhost | first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="form-group{{ errors.dbname ? ' has-error' : '' }}">
+							<label for="dbname">Database name</label>
+							<input type="text" name="dbname" id="dbname" placeholder="database" class="form-control" value="{{ old.dbname }}" required>
+							{% if errors.dbname %}
+								<span class="help-block">{{ errors.dbname | first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="form-group{{ errors.dbuser ? ' has-error' : '' }}">
+							<label for="dbuser">Database user</label>
+							<input type="text" name="dbuser" id="dbuser" placeholder="root" class="form-control" value="{{ old.dbuser }}" required>
+							{% if errors.dbuser %}
+								<span class="help-block">{{ errors.dbuser | first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="form-group{{ errors.dbpass ? ' has-error' : '' }}">
+							<label for="dbpass">Database password</label>
+							<input type="password" name="dbpass" id="dbpass" placeholder="root" class="form-control" value="{{ old.dbpass }}" required>
+							{% if errors.dbpass %}
+								<span class="help-block">{{ errors.dbpass | first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="form-group{{ errors.dbcharset ? ' has-error' : '' }}">
+							<label for="dbuser">Database charset</label>
+							<input type="text" name="dbcharset" id="dbcharset" placeholder="utf8mb4" class="form-control" value="{{ old.dbcharset | default('utf8mb4') }}" required>
+							{% if errors.dbcharset %}
+								<span class="help-block">{{ errors.dbcharset | first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="form-group{{ errors.dbcollation ? ' has-error' : '' }}">
+							<label for="dbcollation">Database collation</label>
+							<input type="text" name="dbcollation" id="dbcollation" placeholder="utf8mb4_unicode_ci" class="form-control" value="{{ old.dbcollation | default('utf8mb4_unicode_ci') }}" required>
+							{% if errors.dbcollation %}
+								<span class="help-block">{{ errors.dbcollation | first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="form-group{{ errors.hashcost ? ' has-error' : '' }}">
+							<label for="hashcost">Password hash cost</label>
+							<input type="number" name="hashcost" id="hashcost" placeholder="10" class="form-control" value="{{ old.hashcost | default(10) }}" required>
+							{% if errors.hashcost %}
+								<span class="help-block">{{ errors.hashcost | first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="form-group{{ errors.uploadpath ? ' has-error' : '' }}">
+							<label for="uploadpath">Upload path (absolute!)</label>
+							<input type="text" name="uploadpath" id="uploadpath" placeholder="/var/www/eeti-slim/uploads/" class="form-control" value="{{ old.uploadpath }}" required>
+							{% if errors.uploadpath %}
+								<span class="help-block">{{ errors.uploadpath | first }}</span>
+							{% endif %}
+						</div>
+
+						<button type="submit" class="btn btn-default">Submit</button>
+
+						{{ csrf.field | raw }}
+					</form>
+				</div>
+			</div>
 		</div>
 	</div>
 {% endblock %}

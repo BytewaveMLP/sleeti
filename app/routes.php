@@ -43,12 +43,12 @@ $app->group('', function() use ($container) { // it's groups all the way down
 				$this->post('/admin/acp', 'AdminController:postAcp');
 			})->add(new AdminMiddleware($container));
 		})->add(new AuthMiddleware($container));
+
+		$this->group('', function() use ($container) {
+			$this->get('/install', 'InstallController:getInstall')->setName('install');
+			$this->post('/install', 'InstallController:postInstall');
+		})->add(new NotInstalledMiddleware($container));
 	})->add(new CsrfViewMiddleware($container));
 })->add($container['csrf']);
 
 $app->post('/upload/sharex', 'FileController:sharexUpload');
-
-$app->group('', function() use ($container) {
-	$this->get('/install', 'InstallController:getInstall')->setName('install');
-	$this->post('/install', 'InstallController:postInstall');
-})->add(new NotInstalledMiddleware($container));

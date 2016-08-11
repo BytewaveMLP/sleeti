@@ -69,7 +69,7 @@ class AuthController extends Controller
 
 		if ($user->id == 1) { // if this is the only user, give them admin
 			$this->container->flash->addMessage('info', 'New administrative account created!');
-			$userPerms->addPermission('A');
+			$user->permission->addPermission('A');
 		}
 
 		$this->container->auth->attempt(

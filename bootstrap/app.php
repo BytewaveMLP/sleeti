@@ -9,38 +9,23 @@ session_start();
 require __DIR__ . '/../vendor/autoload.php';
 
 // need to fix this config at some point
-$app = new \Slim\App([
+
+$settings = [
 	'settings' => [
 		'displayErrorDetails' => true,
-		'db' => [
-			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'homestead',
-			'username'  => 'homestead',
-			'password'  => 'secret',
-			'charset'   => 'utf8mb4',
-			'collation' => 'utf8mb4_unicode_ci',
-			'prefix'    => '',
-		],
-		'password' => [
-			'cost' => 10,
-		],
-		'upload' => [
-			'path' => '/home/vagrant/uploads/',
-		],
 	],
-]);
+];
+
+$decodedConfig = json_decode(file_get_contents(__DIR__ . '/../config/config.json') ?? "", true);
+
+$settings['settings'] = array_merge($settings['settings'], $decodedConfig);
+
+$app = new \Slim\App($settings);
 
 $container = $app->getContainer();
 
-$container["config"] = function ($container) {
-    return new \IS\Slim\LiteConfiguration\Configuration(__DIR__ . "/../config/config.json", $container);
-};
-
-$app->add($container->get("config"));
-
 $capsule = new \Illuminate\Database\Capsule\Manager;
-$capsule->addConnection($container['settings']['db']);
+$capsule->addConnection($container['settings']['db'] ?? []);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
@@ -76,6 +61,8 @@ $container['view'] = function ($container) {
 	]);
 
 	$view->getEnvironment()->addGlobal('flash', $container->flash);
+
+	$view->getEnvironment()->addGlobal('settings', $container->settings);
 
 	return $view;
 };
