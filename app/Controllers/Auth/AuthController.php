@@ -63,9 +63,14 @@ class AuthController extends Controller
 			'flags'   => '',
 		]);
 
-		$userPerms->user()->associate($user);
+		$userPerms->user()->associate($user); // TODO: see if this is redundant
 
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome to eeti slim!');
+
+		if ($user->id == 1) { // if this is the only user, give them admin
+			$this->container->flash->addMessage('info', 'New administrative account created!');
+			$userPerms->addPermission('A');
+		}
 
 		$this->container->auth->attempt(
 			$request->getParam('email'),
