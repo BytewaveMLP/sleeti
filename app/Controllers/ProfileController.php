@@ -40,7 +40,7 @@ class ProfileController extends Controller
 		}
 
 		$user->website = $website;
-		$user->bio     = $bio;
+		$user->bio     = strip_tags($bio);
 		$user->save();
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your profile was updated successfully.');
