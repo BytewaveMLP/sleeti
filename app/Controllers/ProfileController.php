@@ -31,7 +31,7 @@ class ProfileController extends Controller
 
 		$validation = $this->container->validator->validate($request, [
 			'website' => v::url(),
-			'bio'     => v::length(null, 200),
+			'bio'     => v::length(null, 500),
 		]);
 
 		if ($validation->failed()) {
