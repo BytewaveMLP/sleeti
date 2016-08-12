@@ -16,7 +16,7 @@ $settings = [
 	],
 ];
 
-$decodedConfig = json_decode(file_get_contents(__DIR__ . '/../config/config.json') ?? "", true);
+$decodedConfig = json_decode(file_get_contents(__DIR__ . '/../config/config.json'), true);
 
 $settings['settings'] = array_merge($settings['settings'], $decodedConfig);
 
@@ -28,6 +28,10 @@ $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($container['settings']['db'] ?? []);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
+
+$container['config'] = function($container) use ($settings) {
+	return $settings['settings'];
+};
 
 $container['db'] = function($container) use ($capsule) {
 	return $capsule;

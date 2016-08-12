@@ -1,0 +1,82 @@
+{% extends 'templates/admin/acp.twig' %}
+
+{% block title %}Database Settings{% endblock %}
+
+{% block acpcontent %}
+	<div class="col-md-6 col-md-offset-2">
+		<h4 class="text-danger"><b><u>Warning!</u></b> Messing with these settings could prevent your app from connecting to your database. Handle these settings with care.</h4>
+		<p>
+			If you mess anything up, you'll have to edit <code>/config/config.json</code> by hand.
+		</p>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Database Settings
+				</h3>
+			</div>
+			<div class="panel-body">
+				<form action="{{ path_for('admin.database') }}" method="post">
+					<div class="form-group{{ errors.driver ? ' has-error' : '' }}">
+						<label for="driver">Driver</label>
+						<input type="text" name="driver" id="driver" placeholder="mysql" class="form-control" value="{{ old.driver | default(settings.db.driver) }}" required>
+						{% if errors.driver %}
+							<span class="help-block">{{ errors.driver | first }}</span>
+						{% endif %}
+					</div>
+
+					<div class="form-group{{ errors.host ? ' has-error' : '' }}">
+						<label for="host">Hostname</label>
+						<input type="text" name="host" id="host" placeholder="localhost" class="form-control" value="{{ old.host | default(settings.db.host) }}" required>
+						{% if errors.host %}
+							<span class="help-block">{{ errors.host | first }}</span>
+						{% endif %}
+					</div>
+
+					<div class="form-group{{ errors.database ? ' has-error' : '' }}">
+						<label for="database">Database</label>
+						<input type="text" name="database" id="database" placeholder="database" class="form-control" value="{{ old.database | default(settings.db.database) }}" required>
+						{% if errors.database %}
+							<span class="help-block">{{ errors.database | first }}</span>
+						{% endif %}
+					</div>
+
+					<div class="form-group{{ errors.username ? ' has-error' : '' }}">
+						<label for="username">Username</label>
+						<input type="text" name="username" id="username" placeholder="root" class="form-control" value="{{ old.username | default(settings.db.username) }}" required>
+						{% if errors.username %}
+							<span class="help-block">{{ errors.username | first }}</span>
+						{% endif %}
+					</div>
+
+					<div class="form-group{{ errors.password ? ' has-error' : '' }}">
+						<label for="password">Password</label>
+						<input type="password" name="password" id="password" placeholder="root" class="form-control" value="{{ old.password | default(settings.db.password) }}" required>
+						{% if errors.password %}
+							<span class="help-block">{{ errors.password | first }}</span>
+						{% endif %}
+					</div>
+
+					<div class="form-group{{ errors.charset ? ' has-error' : '' }}">
+						<label for="charset">Charset</label>
+						<input type="text" name="charset" id="charset" placeholder="utf8mb4" class="form-control" value="{{ old.charset | default(settings.db.charset) }}" required>
+						{% if errors.charset %}
+							<span class="help-block">{{ errors.charset | first }}</span>
+						{% endif %}
+					</div>
+
+					<div class="form-group{{ errors.collation ? ' has-error' : '' }}">
+						<label for="collation">Collation</label>
+						<input type="text" name="collation" id="collation" placeholder="utf8mb4_unicode_ci" class="form-control" value="{{ old.collation | default(settings.db.collation) }}" required>
+						{% if errors.collation %}
+							<span class="help-block">{{ errors.collation | first }}</span>
+						{% endif %}
+					</div>
+
+					<button type="submit" class="btn btn-default">Submit</button>
+
+					{{ csrf.field | raw }}
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -38,9 +38,17 @@ $app->group('', function() use ($container) { // it's groups all the way down
 			$this->get('/upload', 'FileController:getUpload')->setName('file.upload');
 			$this->post('/upload', 'FileController:postUpload');
 
-			$this->group('', function() {
-				$this->get('/admin/acp', 'AdminController:getAcp')->setName('admin.acp');
-				$this->post('/admin/acp', 'AdminController:postAcp');
+			$this->group('/admin', function() {
+				$this->get('/acp', 'AdminController:getAcpHome')->setName('admin.acp');
+
+				$this->get('/database', 'AdminController:getDatabaseSettings')->setName('admin.database');
+				$this->post('/database', 'AdminController:postDatabaseSettings');
+
+				$this->get('/site', 'AdminController:getSiteSettings')->setName('admin.site');
+				$this->post('/site', 'AdminController:postSiteSettings');
+
+				$this->get('/password', 'AdminController:getPasswordSettings')->setName('admin.password');
+				$this->post('/password', 'AdminController:postSiteSettings');
 			})->add(new AdminMiddleware($container));
 		})->add(new AuthMiddleware($container));
 

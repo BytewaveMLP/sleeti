@@ -1,11 +1,14 @@
-{% extends 'templates/app.twig' %}
+{% extends 'templates/admin/acp.twig' %}
 
-{% block title %}ACP{% endblock %}
+{% block title %}ACP Home{% endblock %}
 
-{% block content %}
-	<div class="row">
-		<div class="col-md-12">
-			ACP
-		</div>
+{% block acpcontent %}
+	<div class="col-md-10">
+		<p>
+			Welcome to your eeti slim ACP! Here you can configure your instance of eeti slim to your liking!
+		</p>
+		<p>
+			Use the links on the left to access different configuration options related to your site.
+		</p>
 	</div>
 {% endblock %}

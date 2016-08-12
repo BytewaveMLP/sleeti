@@ -61,7 +61,7 @@
 						</div>
 
 						<div class="form-group{{ errors.dbcharset ? ' has-error' : '' }}">
-							<label for="dbuser">Database charset</label>
+							<label for="dbcharset">Database charset</label>
 							<input type="text" name="dbcharset" id="dbcharset" placeholder="utf8mb4" class="form-control" value="{{ old.dbcharset | default('utf8mb4') }}" required>
 							{% if errors.dbcharset %}
 								<span class="help-block">{{ errors.dbcharset | first }}</span>

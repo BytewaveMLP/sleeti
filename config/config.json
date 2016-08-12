@@ -1,6 +1,7 @@
 {
+    "displayErrorDetails": true,
     "site": {
-        "title": "eeti slim"
+        "title": "eeti slim testing"
     },
     "db": {
         "driver": "mysql",
@@ -11,9 +12,7 @@
         "charset": "utf8mb4",
         "collation": "utf8mb4_unicode_ci"
     },
-    "password": {
-        "cost": 10
-    },
+    "password": "secret",
     "upload": {
         "path": "\/home\/vagrant\/uploads\/"
     }
