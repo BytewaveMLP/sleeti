@@ -39,6 +39,8 @@ $app->group('', function() use ($container) { // it's groups all the way down
 			$this->get('/upload', 'FileController:getUpload')->setName('file.upload');
 			$this->post('/upload', 'FileController:postUpload');
 
+			$this->get('/delete/{filename}', 'FileController:deleteFile')->setName('file.delete');
+
 			$this->group('/admin', function() {
 				$this->get('/acp', 'AdminController:getAcpHome')->setName('admin.acp');
 

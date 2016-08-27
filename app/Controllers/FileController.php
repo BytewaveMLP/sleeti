@@ -40,6 +40,11 @@ class FileController extends Controller
 		$filename = $fileRecord->id;
 
 		if ($ext !== null) {
+			// Prevent HTML injection attacks (ext can only be alphanumeric, with _ and -)
+			if (!preg_match("/[a-zA-Z0-9\_\-]+/", $ext)) {
+				$fileRecord->delete();
+				throw new FailedUploadException("File moving failed", $files['file']->getError() ?? -1);
+			}
 			$filename .= '.' . $ext;
 			$fileRecord->ext = $ext;
 			$fileRecord->save();
@@ -104,5 +109,22 @@ class FileController extends Controller
 
 		// Output file with file's MIME content type
 		return $response->withHeader('Content-Type', mime_content_type($filepath))->write(file_get_contents($filepath));
+	}
+
+	public function deleteFile($request, $response, $args) {
+		$filename = $args['filename'];
+		$filepath = $this->container['settings']['upload']['path'] . $filename;
+		$id       = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
+
+		if (!file_exists($filepath) || file_get_contents($filepath) === false || File::where('id', $id)->count() === 0) {
+			throw new \Slim\Exception\NotFoundException($request, $response);
+		}
+
+		if ($this->container->auth->user()->id != File::where('id', $id)->first()->owner_id || !$this->container->auth->user()->isModerator()) {
+			// Slap people on the wrist who try to delete files they shoudn't be able to
+			return $request->withStatus(403)->redirect($this->container->router->pathFor('home'));
+		}
+
+		File::where('id', $id)->delete();
 	}
 }
