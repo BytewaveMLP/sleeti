@@ -16,6 +16,10 @@ $settings = [
 	],
 ];
 
+if (!file_exists(__DIR__ . '/../config/config.json')) {
+	file_put_contents(__DIR__ . '/../config/config.json', '{}');
+}
+
 $decodedConfig = json_decode(file_get_contents(__DIR__ . '/../config/config.json'), true);
 
 $settings['settings'] = array_merge($settings['settings'], $decodedConfig);
