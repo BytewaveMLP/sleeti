@@ -9,6 +9,8 @@ class InstallController extends Controller
 	}
 
 	public function postInstall($request, $response) {
+		// Yes, this is ugly.
+		// No, I don't really care. :)
 		$settings = [
 			'site' => [
 				'title' => $request->getParam('title'),

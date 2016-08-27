@@ -2,6 +2,9 @@
 
 namespace Eeti\Middleware;
 
+/**
+ * Perists validation errors across redirects
+ */
 class ValidationErrorsMiddleware extends Middleware
 {
 	public function __invoke($request, $response, $next) {

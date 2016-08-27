@@ -2,6 +2,9 @@
 
 namespace Eeti\Middleware;
 
+/**
+ * Persists old input for forms that request it
+ */
 class OldInputMiddleware extends Middleware
 {
 	public function __invoke($request, $response, $next) {

@@ -10,6 +10,7 @@ class ProfileController extends Controller
 	public function viewProfile($request, $response, $args) {
 		$id = $args['id'];
 
+		// If no users have the given ID, return 404
 		if (User::where('id', $id)->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
@@ -40,7 +41,7 @@ class ProfileController extends Controller
 		}
 
 		$user->website = $website;
-		$user->bio     = strip_tags($bio);
+		$user->bio     = strip_tags($bio); // no XSS 4 u
 		$user->save();
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your profile was updated successfully.');

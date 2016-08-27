@@ -10,10 +10,15 @@ use Eeti\Exceptions\FailedUploadException;
 
 class FileController extends Controller
 {
+	/**
+	 * Handles file uploads from clients
+	 * @param  \Eeti\Models\User $user    The user to associate with the uploaded file
+	 */
 	private function handleFileUpload($request, $user) {
 		$files = $request->getUploadedFiles();
 		$ext = null;
 
+		// If file upload fails, explain why
 		if (!isset($files['file']) || $files['file']->getError() !== UPLOAD_ERR_OK) {
 			throw new FailedUploadException("File upload failed", $files['file']->getError() ?? -1);
 		}
@@ -22,6 +27,7 @@ class FileController extends Controller
 
 		$clientFilename = $file->getClientFilename();
 
+		// Gets the upload file's extension
 		if (strpos($clientFilename, '.') !== false) {
 			$possibleExts = explode(".", $clientFilename);
 			$ext = $possibleExts[count($possibleExts) - 1];
@@ -40,8 +46,10 @@ class FileController extends Controller
 		}
 
 		try {
+			// Move file ot uploaded files path
 			$file->moveTo($this->container['settings']['upload']['path'] . $filename);
 		} catch (InvalidArgumentException $e) {
+			// Remove inconsistent file record
 			$fileRecord->delete();
 			throw new FailedUploadException("File moving failed", $files['file']->getError() ?? -1);
 		}
@@ -64,6 +72,11 @@ class FileController extends Controller
 		}
 	}
 
+	/**
+	 * Handles file uploads from ShareX
+	 *
+	 * TODO: add upload keys instead of plaintext username/password
+	 */
 	public function sharexUpload($request, $response) {
 		$identifier = $request->getParam('identifier');
 		$password   = $request->getParam('password');
@@ -75,6 +88,7 @@ class FileController extends Controller
 		try {
 			return $response->write($request->getUri()->getBaseUrl() . $this->handleFileUpload($request, $this->container->auth->user()));
 		} catch (FailedUploadException $e) {
+			// TODO: improve error handling
 			return $response->withStatus(500)->write("Upload failed! File likely too large.");
 		}
 	}
@@ -88,6 +102,7 @@ class FileController extends Controller
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
+		// Output file with file's MIME content type
 		return $response->withHeader('Content-Type', mime_content_type($filepath))->write(file_get_contents($filepath));
 	}
 }

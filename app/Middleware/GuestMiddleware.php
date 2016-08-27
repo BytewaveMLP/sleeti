@@ -2,6 +2,9 @@
 
 namespace Eeti\Middleware;
 
+/**
+ * Only allows unauthenticated users access to certain routes
+ */
 class GuestMiddleware extends Middleware
 {
 	public function __invoke($request, $response, $next) {

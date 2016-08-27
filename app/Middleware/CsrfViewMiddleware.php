@@ -2,6 +2,9 @@
 
 namespace Eeti\Middleware;
 
+/**
+ * Prevents CSRF/XSRF attacks
+ */
 class CsrfViewMiddleware extends Middleware
 {
 	public function __invoke($request, $response, $next) {

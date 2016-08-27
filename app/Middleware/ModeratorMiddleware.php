@@ -2,6 +2,9 @@
 
 namespace Eeti\Middleware;
 
+/**
+ * Only allows Moderators access to certain routes
+ */
 class ModeratorMiddleware extends Middleware
 {
 	public function __invoke($request, $response, $next) {

@@ -2,6 +2,9 @@
 
 namespace Eeti\Middleware;
 
+/**
+ * Only allows admins to access certain routes
+ */
 class AdminMiddleware extends Middleware
 {
 	public function __invoke($request, $response, $next) {

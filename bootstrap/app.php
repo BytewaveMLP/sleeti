@@ -16,23 +16,28 @@ $settings = [
 	],
 ];
 
+// Make sure config.json actually exists - a lot breaks if it doesn't
 if (!file_exists(__DIR__ . '/../config/config.json')) {
 	file_put_contents(__DIR__ . '/../config/config.json', '{}');
 }
 
 $decodedConfig = json_decode(file_get_contents(__DIR__ . '/../config/config.json'), true);
 
+// Merge config.json with current app settings
+// TODO: don't do this, move displayErrorDetails to ACP
 $settings['settings'] = array_merge($settings['settings'], $decodedConfig);
 
 $app = new \Slim\App($settings);
 
 $container = $app->getContainer();
 
+// Create database connection
 $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($container['settings']['db'] ?? []);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
+// Save decoded config.json for modification through ACP (nasty hack, I know :()
 $container['config'] = function($container) use ($settings) {
 	return $settings['settings'];
 };

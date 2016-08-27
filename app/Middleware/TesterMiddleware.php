@@ -2,6 +2,9 @@
 
 namespace Eeti\Middleware;
 
+/**
+ * Only allows Testers access to certain routes
+ */
 class TesterMiddleware extends Middleware
 {
 	public function __invoke($request, $response, $next) {

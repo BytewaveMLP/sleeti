@@ -4,6 +4,9 @@ namespace Eeti\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * File model, many-to-one with User
+ */
 class File extends Model
 {
 	protected $table = 'uploaded_files';

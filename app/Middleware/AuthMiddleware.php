@@ -2,6 +2,9 @@
 
 namespace Eeti\Middleware;
 
+/**
+ * Only allows authenticated users to accesss certain routes
+ */
 class AuthMiddleware extends Middleware
 {
 	public function __invoke($request, $response, $next) {

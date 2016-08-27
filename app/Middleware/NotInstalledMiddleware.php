@@ -2,6 +2,9 @@
 
 namespace Eeti\Middleware;
 
+/**
+ * Only allows access if the eeti slim instance isn't fully installed
+ */
 class NotInstalledMiddleware extends Middleware
 {
 	public function __invoke($request, $response, $next) {

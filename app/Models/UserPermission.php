@@ -4,6 +4,9 @@ namespace Eeti\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * User Permissions model, one-to-one with User
+ */
 class UserPermission extends Model
 {
 	protected $table = 'user_permissions';

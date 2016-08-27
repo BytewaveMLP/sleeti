@@ -8,6 +8,7 @@ use Eeti\Middleware\AdminMiddleware;
 use Eeti\Middleware\CsrfViewMiddleware;
 use Eeti\Middleware\NotInstalledMiddleware;
 
+// ugly af grouping
 $app->group('', function() use ($container) { // it's groups all the way down
 	$this->group('', function() use ($container) {
 		$this->get('/', 'HomeController:index')->setName('home');
@@ -59,4 +60,5 @@ $app->group('', function() use ($container) { // it's groups all the way down
 	})->add(new CsrfViewMiddleware($container));
 })->add($container['csrf']);
 
+// No CSRF protection for ShareX uploads
 $app->post('/upload/sharex', 'FileController:sharexUpload');
