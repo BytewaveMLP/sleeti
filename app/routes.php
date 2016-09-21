@@ -51,7 +51,7 @@ $app->group('', function() use ($container) { // it's groups all the way down
 				$this->post('/site', 'AdminController:postSiteSettings');
 
 				$this->get('/password', 'AdminController:getPasswordSettings')->setName('admin.password');
-				$this->post('/password', 'AdminController:postSiteSettings');
+				$this->post('/password', 'AdminController:postPasswordSettings');
 			})->add(new AdminMiddleware($container));
 		})->add(new AuthMiddleware($container));
 
