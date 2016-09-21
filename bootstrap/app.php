@@ -18,6 +18,10 @@ $settings = [
 
 // Make sure config.json actually exists - a lot breaks if it doesn't
 if (!file_exists(__DIR__ . '/../config/config.json')) {
+	if (!is_dir(__DIR__ . '/../config/')) { // make sure /config/ even exists (fixes .gitignore issue)
+		mkdir(__DIR__ . '/../config');
+	}
+
 	file_put_contents(__DIR__ . '/../config/config.json', '{}');
 }
 
