@@ -63,4 +63,5 @@ $app->group('', function() use ($container) { // it's groups all the way down
 })->add($container['csrf']);
 
 // No CSRF protection for ShareX uploads
+// TODO: upload tokens instead of user creds
 $app->post('/upload/sharex', 'FileController:sharexUpload');
