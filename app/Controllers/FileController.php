@@ -122,9 +122,9 @@ class FileController extends Controller
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
-		if ($this->container->auth->user()->id != File::where('id', $id)->first()->owner_id || !$this->container->auth->user()->isModerator()) {
+		if ($this->container->auth->user()->id != File::where('id', $id)->first()->owner_id && !$this->container->auth->user()->isModerator()) {
 			// Slap people on the wrist who try to delete files they shoudn't be able to
-			return $request->withStatus(403)->redirect($this->container->router->pathFor('home'));
+			return $response->withStatus(403)->redirect($this->container->router->pathFor('home'));
 		}
 
 		if (unlink($filepath)) {
