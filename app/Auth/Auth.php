@@ -12,6 +12,12 @@ use Eeti\Models\UserPermission;
  */
 class Auth
 {
+	protected $container;
+
+	public function __construct($container) {
+		$this->container = $container;
+	}
+
 	/**
 	 * Gets the currently authenticated user
 	 * @return \Eeti\Models\User The currently authenticated user (null if no user is authenticated)
@@ -47,8 +53,8 @@ class Auth
 			$_SESSION['user'] = $user->id;
 
 			// Lazy password rehash in case settings or algo changes
-			if (password_needs_rehash($user->password, PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10])) {
-				$user->password = password_hash($password, PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10]);
+			if (password_needs_rehash($user->password, PASSWORD_DEFAULT, ['cost' => ($this->container['settings']['password']['cost'] ?? 10)])) {
+				$user->password = password_hash($password, PASSWORD_DEFAULT, ['cost' => ($this->container['settings']['password']['cost'] ?? 10)]);
 				$user->save();
 			}
 

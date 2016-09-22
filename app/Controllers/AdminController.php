@@ -27,11 +27,11 @@ class AdminController extends Controller
 	}
 
 	public function getAcpHome($request, $response) {
-		return $this->container->view->render($response, 'admin/acp.twig');
+		return $this->container->view->render($response, 'admin/acp/home.twig');
 	}
 
 	public function getDatabaseSettings($request, $response) {
-		return $this->container->view->render($response, 'admin/database.twig');
+		return $this->container->view->render($response, 'admin/acp/database.twig');
 	}
 
 	public function postDatabaseSettings($request, $response) {
@@ -39,26 +39,65 @@ class AdminController extends Controller
 
 		if ($this->writeConfig(['db' => $config]) === false) {
 			$this->container->flash->addMessage('danger', '<b>Uh oh!</b> Looks like <code>/config/config.json</code> failed to write. :(');
-			return $response->withRedirect($this->container->router->pathFor('admin.database'));
+			return $response->withRedirect($this->container->router->pathFor('admin.acp.database'));
 		}
 
-		$this->container->flash->addMessage('success', 'Config written successfully!');
-		return $response->withRedirect($this->container->router->pathFor('admin.acp'));
+		$this->container->flash->addMessage('success', 'Databse settings updated successfully!');
+		return $response->withRedirect($this->container->router->pathFor('admin.acp.database'));
 	}
 
 	public function getSiteSettings($request, $response) {
-		return $this->container->view->render($response, 'admin/site.twig');
+		return $this->container->view->render($response, 'admin/acp/site.twig');
 	}
 
 	public function postSiteSettings($request, $response) {
-		return 'ok';
+		$config           = $this->getConfigElements($request, ['title']);
+		$config['upload'] = $this->getConfigElements($request, ['path']);
+
+		if (substr($config['upload'], -1) != '/') {
+			$config['upload'] .= '/';
+		}
+
+		if ($this->writeConfig(['site' => $config]) === false) {
+			$this->container->flash->addMessage('danger', '<b>Uh oh!</b> Looks like <code>/config/config.json</code> failed to write. :(');
+			return $response->withRedirect($this->container->router->pathFor('admin.acp.site'));
+		}
+
+		$this->container->flash->addMessage('success', 'Site settings updated successfully!');
+		return $response->withRedirect($this->container->router->pathFor('admin.acp.site'));
 	}
 
 	public function getPasswordSettings($request, $response) {
-		return $this->container->view->render($response, 'admin/password.twig');
+		return $this->container->view->render($response, 'admin/acp/password.twig');
 	}
 
 	public function postPasswordSettings($request, $response) {
-		return 'posted';
+		$config = $this->getConfigElements($request, ['cost']);
+
+		if ($this->writeConfig(['password' => $config]) === false) {
+			$this->container->flash->addMessage('danger', '<b>Uh oh!</b> Looks like <code>/config/config.json</code> failed to write. :(');
+			return $response->withRedirect($this->container->router->pathFor('admin.acp.password'));
+		}
+
+		$this->container->flash->addMessage('success', 'Password settings updated successfully!');
+		return $response->withRedirect($this->container->router->pathFor('admin.acp.password'));
+	}
+
+	public function getErrorSettings($request, $response) {
+		return $this->container->view->render($response, 'admin/acp/errors.twig');
+	}
+
+	public function postErrorSettings($request, $response) {
+		$config = $this->getConfigElements($request, ['displayErrorDetails']);
+
+		$config['displayErrorDetails'] = $config['displayErrorDetails'] == '1';
+
+		if ($this->writeConfig($config) === false) {
+			$this->container->flash->addMessage('danger', '<b>Uh oh!</b> Looks like <code>/config/config.json</code> failed to write. :(');
+			return $response->withRedirect($this->container->router->pathFor('admin.acp.errors'));
+		}
+
+		$this->container->flash->addMessage('success', 'Error settings updated successfully!');
+		return $response->withRedirect($this->container->router->pathFor('admin.acp.errors'));
 	}
 }

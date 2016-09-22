@@ -1,0 +1,28 @@
+{% extends 'templates/admin/acp/main.twig' %}
+
+{% block title %}Error Settings{% endblock %}
+
+{% block acpcontent %}
+	<div class="col-md-6 col-md-offset-2">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Error Settings
+				</h3>
+			</div>
+			<div class="panel-body">
+				<form action="{{ path_for('admin.acp.errors') }}" method="post">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="displayErrorDetails" value="1"{{ settings.displayErrorDetails ? ' checked' : '' }}> Display exception and error details when applicable
+						</label>
+					</div>
+
+					<button type="submit" class="btn btn-default">Submit</button>
+
+					{{ csrf.field | raw }}
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

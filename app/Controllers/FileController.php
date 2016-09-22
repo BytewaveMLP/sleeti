@@ -43,7 +43,7 @@ class FileController extends Controller
 			// Prevent HTML injection attacks (ext can only be alphanumeric, with _ and -)
 			if (!preg_match("/[a-zA-Z0-9\_\-]+/", $ext)) {
 				$fileRecord->delete();
-				throw new FailedUploadException("File moving failed", $files['file']->getError() ?? -1);
+				throw new FailedUploadException("File extension contains invalid characters", $files['file']->getError() ?? -1);
 			}
 			$filename .= '.' . $ext;
 			$fileRecord->ext = $ext;
@@ -52,7 +52,7 @@ class FileController extends Controller
 
 		try {
 			// Move file ot uploaded files path
-			$file->moveTo($this->container['settings']['upload']['path'] . $filename);
+			$file->moveTo(($this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path']) . $filename);
 		} catch (InvalidArgumentException $e) {
 			// Remove inconsistent file record
 			$fileRecord->delete();
@@ -99,9 +99,10 @@ class FileController extends Controller
 	}
 
 	public function viewFile($request, $response, $args) {
-		$filename = $args['filename'];
-		$filepath = $this->container['settings']['upload']['path'] . $filename;
-		$id       = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
+		$filename  = $args['filename'];
+		$filepath  = $this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path'];
+		$filepath .= $filename;
+		$id        = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
 
 		if (!file_exists($filepath) || file_get_contents($filepath) === false || File::where('id', $id)->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
@@ -112,9 +113,10 @@ class FileController extends Controller
 	}
 
 	public function deleteFile($request, $response, $args) {
-		$filename = $args['filename'];
-		$filepath = $this->container['settings']['upload']['path'] . $filename;
-		$id       = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
+		$filename  = $args['filename'];
+		$filepath  = $this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path'];
+		$filepath .= $filename;
+		$id        = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
 
 		if (!file_exists($filepath) || file_get_contents($filepath) === false || File::where('id', $id)->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);

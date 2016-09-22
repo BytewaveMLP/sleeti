@@ -1,0 +1,38 @@
+{% extends 'templates/admin/acp/main.twig' %}
+
+{% block title %}Site Settings{% endblock %}
+
+{% block acpcontent %}
+	<div class="col-md-6 col-md-offset-2">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Site Settings
+				</h3>
+			</div>
+			<div class="panel-body">
+				<form action="{{ path_for('admin.acp.site') }}" method="post">
+					<div class="form-group{{ errors.title ? ' has-error' : '' }}">
+						<label for="title">Site title</label>
+						<input type="text" name="title" id="title" placeholder="eeti slim" class="form-control" value="{{ old.title | default(settings.site.title) }}" required>
+						{% if errors.title %}
+							<span class="help-block">{{ errors.title | first }}</span>
+						{% endif %}
+					</div>
+
+					<div class="form-group{{ errors.path ? ' has-error' : '' }}">
+						<label for="path">Upload path</label>
+						<input type="text" name="path" id="path" placeholder="/var/www/uploads/" class="form-control" value="{{ old.path | default(settings.site.upload.path) }}" required>
+						{% if errors.path %}
+							<span class="help-block">{{ errors.path | first }}</span>
+						{% endif %}
+					</div>
+
+					<button type="submit" class="btn btn-default">Submit</button>
+
+					{{ csrf.field | raw }}
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

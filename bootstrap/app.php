@@ -51,7 +51,7 @@ $container['db'] = function($container) use ($capsule) {
 };
 
 $container['auth'] = function ($container) {
-	return new \Eeti\Auth\Auth;
+	return new \Eeti\Auth\Auth($container);
 };
 
 $container['flash'] = function ($container) {
