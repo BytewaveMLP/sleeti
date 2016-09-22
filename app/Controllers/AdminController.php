@@ -54,8 +54,8 @@ class AdminController extends Controller
 		$config           = $this->getConfigElements($request, ['title']);
 		$config['upload'] = $this->getConfigElements($request, ['path']);
 
-		if (substr($config['upload'], -1) != '/') {
-			$config['upload'] .= '/';
+		if (substr($config['upload']['path'], -1) != '/') {
+			$config['upload']['path'] .= '/';
 		}
 
 		if ($this->writeConfig(['site' => $config]) === false) {
