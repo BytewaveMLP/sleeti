@@ -43,19 +43,19 @@ $app->group('', function() use ($container) { // it's groups all the way down
 
 			$this->group('/admin', function() use ($container) {
 				$this->group('/acp', function() {
-					$this->get('', 'AdminController:getAcpHome')->setName('admin.acp.home');
+					$this->get('', 'AcpController:getAcpHome')->setName('admin.acp.home');
 
-					$this->get('/database', 'AdminController:getDatabaseSettings')->setName('admin.acp.database');
-					$this->post('/database', 'AdminController:postDatabaseSettings');
+					$this->get('/database', 'AcpController:getDatabaseSettings')->setName('admin.acp.database');
+					$this->post('/database', 'AcpController:postDatabaseSettings');
 
-					$this->get('/site', 'AdminController:getSiteSettings')->setName('admin.acp.site');
-					$this->post('/site', 'AdminController:postSiteSettings');
+					$this->get('/site', 'AcpController:getSiteSettings')->setName('admin.acp.site');
+					$this->post('/site', 'AcpController:postSiteSettings');
 
-					$this->get('/password', 'AdminController:getPasswordSettings')->setName('admin.acp.password');
-					$this->post('/password', 'AdminController:postPasswordSettings');
+					$this->get('/password', 'AcpController:getPasswordSettings')->setName('admin.acp.password');
+					$this->post('/password', 'AcpController:postPasswordSettings');
 
-					$this->get('/errors', 'AdminController:getErrorSettings')->setName('admin.acp.errors');
-					$this->post('/errors', 'AdminController:postErrorSettings');
+					$this->get('/errors', 'AcpController:getErrorSettings')->setName('admin.acp.errors');
+					$this->post('/errors', 'AcpController:postErrorSettings');
 				});
 			})->add(new AdminMiddleware($container));
 		})->add(new AuthMiddleware($container));

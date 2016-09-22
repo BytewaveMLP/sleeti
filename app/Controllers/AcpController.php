@@ -2,7 +2,7 @@
 
 namespace Eeti\Controllers;
 
-class AdminController extends Controller
+class AcpController extends Controller
 {
 	/**
 	 * Merge current config with given config, and write to application config

@@ -12,8 +12,8 @@ $container['PasswordController'] = function ($container) {
 	return new \Eeti\Controllers\Auth\PasswordController($container);
 };
 
-$container['AdminController'] = function ($container) {
-	return new \Eeti\Controllers\AdminController($container);
+$container['AcpController'] = function ($container) {
+	return new \Eeti\Controllers\AcpController($container);
 };
 
 $container['FileController'] = function ($container) {
