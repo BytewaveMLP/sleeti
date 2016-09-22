@@ -127,6 +127,8 @@ class FileController extends Controller
 			return $request->withStatus(403)->redirect($this->container->router->pathFor('home'));
 		}
 
-		File::where('id', $id)->delete();
+		if (unlink($filepath)) {
+			File::where('id', $id)->delete();
+		}
 	}
 }
