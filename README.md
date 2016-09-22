@@ -12,6 +12,7 @@ A proof-of-concept port of eeti.me to Slim 3
 - `git clone`
 - `cd`
 - `composer install`
+- Create database and source `eeti-slim.sql` from `mysql` console
 - Install webserver configs
 - Restart nginx/Apache
 - Visit website (`/install`)
