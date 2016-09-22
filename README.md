@@ -5,14 +5,15 @@ A proof-of-concept port of eeti.me to Slim 3
 ### Prerequisites
 - nginx/Apache 2
 - PHP 7
+- MySQL server
 - [Composer](https://getcomposer.org/)
 
 ### Setup
-- `git clone https://github.com/BytewaveMLP/eeti-slim-port`
-- `cd eeti-slim-port`
+- `git clone`
+- `cd`
 - `composer install`
-- install webserver configs
-- **TODO:** flesh out installation instructions
-- restart nginx/apache
-- visit website
-- enjoy
+- Install webserver configs
+- Restart nginx/Apache
+- Visit website (`/install`)
+- Fill out fields
+- Enjoy!
