@@ -79,4 +79,19 @@ class AuthController extends Controller
 
 		return $response->withRedirect($this->container->router->pathFor('home'));
 	}
+
+	public function deleteAccount($request, $response, $args) {
+		if ($this->container->auth->user()->id !== $args['id'] && !$this->container->auth->user()->isAdmin()) {
+			$this->container->flash->addMessage('danger', '<b>Hey!</b> What do you think you\'re doing?!');
+			return $response->withRedirect($this->container->router->pathFor('home'));
+		}
+
+		if (User::where('id', $args['id'])->count() === 0) {
+			throw new \Slim\Exception\NotFoundException($request, $response);
+		}
+
+		User::where('id', $args['id'])->delete();
+
+		return $response;
+	}
 }

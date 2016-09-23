@@ -1,0 +1,51 @@
+{% extends 'templates/mod/mcp/main.twig' %}
+
+{% block title %}All Files{% endblock %}
+
+{% block extrajs %}
+	<script>
+	$(function() {
+		$('[id^=delete-file-]').click(function(event) {
+			event.preventDefault();
+			var filename = $(this).attr('id').replace('delete-file-', '');
+			var element = this;
+			$.get({
+				url: '/delete/' + filename, // TODO: figure out how to get path for file.delete
+				success: function() {
+					$(element).parent().html('(<b>Deleted</b>)');
+				}
+			});
+			return false;
+		});
+	});
+	</script>
+{% endblock %}
+
+{% block mcpcontent %}
+	<div class="col-md-10">
+		{% if files.count > 0 %}
+			<table class="table table-striped table-bordered table-hover">
+				<thead>
+					<th>Uploaded files</th>
+					<th>Uploader</th>
+					<th>Delete</th>
+				</thead>
+				{% for file in files %}
+					<tr>
+						<td>
+							<a id="file-entry-{{ file.ext is not empty ? file.id ~ '.' ~ file.ext : file.id }}" href="{{ path_for('file.view', {'filename': (file.ext is not empty ? file.id ~ '.' ~ file.ext : file.id)}) }}">{{ file.id }}{% if file.ext is not empty %}.{{ file.ext }}{% endif %}</a>
+						</td>
+						<td>
+							<a href="{{ path_for('user.profile', {'id': file.user.id}) }}">{{ file.user.username }}</a>
+						</td>
+						<td>
+							<a href="#" id="delete-file-{{ file.ext is not empty ? file.id ~ '.' ~ file.ext : file.id }}">Delete</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% else %}
+			<b>There are no files to show. :(</b>
+		{% endif %}
+	</div>
+{% endblock %}

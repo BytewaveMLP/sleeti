@@ -134,5 +134,7 @@ class FileController extends Controller
 		if (unlink($filepath)) {
 			File::where('id', $id)->delete();
 		}
+
+		return $response;
 	}
 }

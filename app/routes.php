@@ -58,6 +58,13 @@ $app->group('', function() use ($container) { // it's groups all the way down
 					$this->post('/errors', 'AcpController:postErrorSettings');
 				});
 			})->add(new AdminMiddleware($container));
+
+			$this->group('/mod', function() use ($container) {
+				$this->group('/mcp', function() {
+					$this->get('', 'McpController:getMcpHome')->setName('mod.mcp.home');
+					$this->get('/files', 'McpController:getFiles')->setName('mod.mcp.files');
+				});
+			})->add(new ModeratorMiddleware($container));
 		})->add(new AuthMiddleware($container));
 
 		$this->group('', function() use ($container) {

@@ -17,7 +17,7 @@ class UserPermission extends Model
 	];
 
 	public function user() {
-		return $this->belongsTo('Eeti\\Models\\User', 'id', 'user_id');
+		return $this->belongsTo('Eeti\\Models\\User', 'user_id', 'id');
 	}
 
 	public function contains(string $flag) {

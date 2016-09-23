@@ -16,6 +16,10 @@ $container['AcpController'] = function ($container) {
 	return new \Eeti\Controllers\AcpController($container);
 };
 
+$container['McpController'] = function ($container) {
+	return new \Eeti\Controllers\McpController($container);
+};
+
 $container['FileController'] = function ($container) {
 	return new \Eeti\Controllers\FileController($container);
 };

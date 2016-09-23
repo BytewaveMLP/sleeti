@@ -17,6 +17,6 @@ class File extends Model
 	];
 
 	public function user() {
-		return $this->belongsTo('Eeti\\Models\\User', 'id', 'owner_id');
+		return $this->belongsTo('Eeti\\Models\\User', 'owner_id', 'id');
 	}
 }
