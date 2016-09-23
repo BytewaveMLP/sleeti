@@ -119,6 +119,10 @@ class FileController extends Controller
 		$id        = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
 
 		if (!file_exists($filepath) || file_get_contents($filepath) === false || File::where('id', $id)->count() === 0) {
+			if (File::where('id', $id)->count() !== 0) {
+				File::where('id', $id)->delete();
+			}
+
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
