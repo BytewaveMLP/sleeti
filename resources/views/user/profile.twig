@@ -55,6 +55,7 @@
 						<th>File</th>
 						{% if user.id == auth.user.id or auth.user.isModerator() %}
 							<th>Privacy</th>
+							<th>Delete</th>
 						{% endif %}
 					</thead>
 					<tbody>
@@ -62,12 +63,14 @@
 							<tr>
 								<td>
 									<a id="file-entry-{{ file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') }}" href="{{ path_for('file.view', {'filename': (file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : ''))}) }}">{{ file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') }}</a>
-									{% if user.id == auth.user.id or auth.user.idModerator() %}
-										(<a href="#" id="delete-file-{{ file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') }}">Delete</a>)
-									{% endif %}
 								</td>
 								{% if user.id == auth.user.id or auth.user.isModerator() %}
-									<th>{{ file.privacy_state }}</th>
+									<td>
+										{{ file.privacy_state }}
+									</td>
+									<td>
+										<a href="#" id="delete-file-{{ file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') }}">Delete</a>
+									</td>
 								{% endif %}
 							</tr>
 						{% endfor %}
