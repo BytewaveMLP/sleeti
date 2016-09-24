@@ -30,14 +30,25 @@ class FileController extends Controller
 		// Gets the upload file's extension
 		if (strpos($clientFilename, '.') !== false) {
 			$possibleExts = explode(".", $clientFilename);
-			$ext = $possibleExts[count($possibleExts) - 1];
+			$ext = array_pop($possibleExts);
+		}
+
+		$dbFilename = ($ext !== null ? implode('.', $possibleExts) : $clientFilename);
+
+		if ($dbFilename === '') {
+			$dbFilename = null;
 		}
 
 		$fileRecord = File::create([
 			'owner_id' => $user->id,
+			'filename' => $dbFilename,
 		]);
 
 		$filename = $fileRecord->id;
+
+		if ($dbFilename !== null) {
+			$filename .= '-' . $dbFilename;
+		}
 
 		if ($ext !== null) {
 			// Prevent HTML injection attacks (ext can only be alphanumeric, with _ and -)
@@ -105,14 +116,27 @@ class FileController extends Controller
 
 	public function viewFile($request, $response, $args) {
 		$filename = $args['filename'];
-		$id       = (int) (strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename);
+		$id       = (int) (strpos($filename, '-') !== false ? explode('-', $filename)[0] : $filename);
 		$ext      = null;
+
 		if (strpos($filename, '.') !== false) {
 			$possibleExts = explode('.', $filename);
 			$ext          = $possibleExts[count($possibleExts) - 1];
 		}
 
-		if (File::where('id', $id)->where('ext', $ext)->count() === 0) {
+		$filename = (strpos($filename, '-') !== false ? explode('-', $filename) : null);
+
+		if ($filename !== null) {
+			array_shift($filename);
+			$filename = implode('-', $filename);
+			$filename = ($ext !== null ? str_replace('.' . $ext, '', $filename) : $filename);
+		}
+
+		if (File::where('id', $id)->where('filename', $filename)->where('ext', $ext)->count() === 0) {
+			var_dump($filename);
+			var_dump($id);
+			var_dump($ext);
+			die();
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
@@ -120,6 +144,8 @@ class FileController extends Controller
 		$filepath .= File::where('id', $id)->where('ext', $ext)->first()->getPath();
 
 		if (!file_exists($filepath) || file_get_contents($filepath) === false) {
+			var_dump($filepath);
+			die();
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 

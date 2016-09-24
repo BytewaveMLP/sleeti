@@ -52,9 +52,9 @@
 						{% for file in user.files %}
 							<tr>
 								<td>
-									<a id="file-entry-{{ file.ext is not empty ? file.id ~ '.' ~ file.ext : file.id }}" href="{{ path_for('file.view', {'filename': (file.ext is not empty ? file.id ~ '.' ~ file.ext : file.id)}) }}">{{ file.id }}{% if file.ext is not empty %}.{{ file.ext }}{% endif %}</a>
+									<a id="file-entry-{{ file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') }}" href="{{ path_for('file.view', {'filename': (file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : ''))}) }}">{{ file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') }}</a>
 									{% if user.id == auth.user.id or auth.user.idModerator() %}
-										(<a href="#" id="delete-file-{{ file.ext is not empty ? file.id ~ '.' ~ file.ext : file.id }}">Delete</a>)
+										(<a href="#" id="delete-file-{{ file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') }}">Delete</a>)
 									{% endif %}
 								</td>
 							</tr>

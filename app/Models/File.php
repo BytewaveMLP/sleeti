@@ -13,6 +13,7 @@ class File extends Model
 
 	protected $fillable = [
 		'owner_id',
+		'filename',
 		'ext',
 	];
 
@@ -21,6 +22,6 @@ class File extends Model
 	}
 
 	public function getPath() {
-		return $this->user->id . '/' . $this->id . ($this->ext !== null ? '.' . $this->ext : '');
+		return $this->user->id . '/' . $this->id . ($this->filename !== null ? '-' . $this->filename : '') . ($this->ext !== null ? '.' . $this->ext : '');
 	}
 }
