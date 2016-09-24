@@ -16,7 +16,8 @@ class ProfileController extends Controller
 		}
 
 		return $this->container->view->render($response, 'user/profile.twig', [
-			'user' => User::where('id', $id)->first(),
+			'user'  => User::where('id', $id)->first(),
+			'files' => User::where('id', $id)->first()->files->where('privacy_state', 0),
 		]);
 	}
 

@@ -15,6 +15,7 @@ class File extends Model
 		'owner_id',
 		'filename',
 		'ext',
+		'privacy_state',
 	];
 
 	public function user() {

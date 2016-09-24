@@ -41,8 +41,9 @@ class FileController extends Controller
 		}
 
 		$fileRecord = File::create([
-			'owner_id' => $user->id,
-			'filename' => $dbFilename,
+			'owner_id'      => $user->id,
+			'filename'      => $dbFilename,
+			'privacy_state' => $user->default_privacy_state,
 		]);
 
 		$filename = $fileRecord->id;
@@ -124,15 +125,25 @@ class FileController extends Controller
 			$ext = null;
 		}
 
-		if (File::where('id', $id)->where('filename', $name)->where('ext', $ext)->count() === 0) {
+		$files = File::where('id', $id)->where('filename', $name)->where('ext', $ext);
+
+		if ($files->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
+		$file = $file->first();
+
 		$filepath  = $this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path'];
-		$filepath .= File::where('id', $id)->where('ext', $ext)->first()->getPath();
+		$filepath .= $file->getPath();
 
 		if (!file_exists($filepath) || file_get_contents($filepath) === false) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
+		}
+
+		// Check privacy state of file, show error if the user isn't authenticated when they need to be
+		if ($file->privacy_state == 2 && !$this->container->auth->check()) {
+			$this->container->flash->addMessage('danger', '<b>Whoops!</b> You need to sign in before you can view this file.');
+			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('auth.signin'));
 		}
 
 		// Output file with file's MIME content type

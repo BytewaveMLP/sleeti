@@ -21,6 +21,7 @@ class User extends Model
 		'website',
 		'bio',
 		'password',
+		'default_privacy_state',
 	];
 
 	public function permission() {

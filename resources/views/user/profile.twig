@@ -43,13 +43,13 @@
 			{% endif %}
 		</div>
 		<div class="col-md-8">
-			{% if user.files.count > 0 %}
+			{% if files.count > 0 %}
 				<table class="table table-striped table-bordered table-hover">
 					<thead>
 						<th>Uploaded files</th>
 					</thead>
 					<tbody>
-						{% for file in user.files %}
+						{% for file in files %}
 							<tr>
 								<td>
 									<a id="file-entry-{{ file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') }}" href="{{ path_for('file.view', {'filename': (file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : ''))}) }}">{{ file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') }}</a>
