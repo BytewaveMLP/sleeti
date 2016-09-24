@@ -124,10 +124,6 @@ class FileController extends Controller
 		}
 
 		if (File::where('id', $id)->where('filename', $filename)->where('ext', $ext)->count() === 0) {
-			var_dump($filename);
-			var_dump($id);
-			var_dump($ext);
-			die();
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
@@ -135,8 +131,6 @@ class FileController extends Controller
 		$filepath .= File::where('id', $id)->where('ext', $ext)->first()->getPath();
 
 		if (!file_exists($filepath) || file_get_contents($filepath) === false) {
-			var_dump($filepath);
-			die();
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
