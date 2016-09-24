@@ -70,7 +70,7 @@ class FileController extends Controller
 	}
 
 	public function getUpload($request, $response) {
-		return $this->container->view->render($response, 'file/upload.twig');
+		return $this->container->view->render($response, 'upload/file.twig');
 	}
 
 	public function postUpload($request, $response) {
@@ -147,5 +147,22 @@ class FileController extends Controller
 		}
 
 		return $response;
+	}
+
+	public function getPaste($request, $response) {
+		return $this->container->view->render($response, 'upload/paste.twig');
+	}
+
+	public function postPaste($request, $response) {
+		$file = File::create([
+			'owner_id' => $this->container->auth->user()->id,
+			'ext' => 'txt',
+		]);
+
+		file_put_contents($this->container['settings']['site']['upload']['path'] . $file->getPath(), $request->getParam('paste'));
+
+		return $response->withRedirect($this->container->router->pathFor('file.view', [
+			'filename' => $file->id . $file->ext,
+		]));
 	}
 }

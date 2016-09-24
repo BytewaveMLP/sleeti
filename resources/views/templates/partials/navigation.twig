@@ -13,11 +13,17 @@
 			<ul class="nav navbar-nav">
 				<li><a href="{{ path_for('home') }}">Home</a></li>
 				<li><a href="{{ path_for('community') }}">Community</a></li>
-				<li><a href="{{ path_for('file.upload') }}">Upload</a></li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" id="uploaddropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Upload <span class="caret"></span></a>
+					<ul class="dropdown-menu" aria-labelledby="uploaddropdown">
+						<li><a href="{{ path_for('file.upload') }}">File</a></li>
+						<li><a href="{{ path_for('file.upload.paste') }}">Paste</a></li>
+					</ul>
+				</li>
 				{% if auth.check %}
 					{% if auth.user.isModerator() %}
 							<li class="dropdown">
-								<a href="" class="dropdown-toggle" id="controldropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Control Panels <span class="caret"></span></a>
+								<a href="#" class="dropdown-toggle" id="controldropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Control Panels <span class="caret"></span></a>
 								<ul class="dropdown-menu" aria-labelledby="controldropdown">
 									<li><a href="{{ path_for('mod.mcp.home') }}">Moderator Control Panel</a></li>
 									{% if auth.user.isAdmin() %}
