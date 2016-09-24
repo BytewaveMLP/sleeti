@@ -1,6 +1,6 @@
 <?php
 
-namespace Eeti\Exceptions;
+namespace Sleeti\Exceptions;
 
 /**
  * Named exception for file upload failures

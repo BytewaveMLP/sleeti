@@ -1,6 +1,6 @@
 <?php
 
-namespace Eeti\Middleware;
+namespace Sleeti\Middleware;
 
 /**
  * Only allows admins to access certain routes

@@ -1,6 +1,6 @@
 <?php
 
-namespace Eeti\Middleware;
+namespace Sleeti\Middleware;
 
 /**
  * Easy dependecy injection for all Middleware

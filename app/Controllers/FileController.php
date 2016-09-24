@@ -1,18 +1,18 @@
 <?php
 
-namespace Eeti\Controllers;
+namespace Sleeti\Controllers;
 
 use Respect\Validation\Validator as v;
-use Eeti\Models\File;
-use Eeti\Models\User;
-use Eeti\Auth\Auth;
-use Eeti\Exceptions\FailedUploadException;
+use Sleeti\Models\File;
+use Sleeti\Models\User;
+use Sleeti\Auth\Auth;
+use Sleeti\Exceptions\FailedUploadException;
 
 class FileController extends Controller
 {
 	/**
 	 * Handles file uploads from clients
-	 * @param  \Eeti\Models\User $user    The user to associate with the uploaded file
+	 * @param  \Sleeti\Models\User $user    The user to associate with the uploaded file
 	 */
 	private function handleFileUpload($request, $user) {
 		$files = $request->getUploadedFiles();

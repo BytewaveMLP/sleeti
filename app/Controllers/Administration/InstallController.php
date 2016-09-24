@@ -1,8 +1,8 @@
 <?php
 
-namespace Eeti\Controllers\Administration;
+namespace Sleeti\Controllers\Administration;
 
-use Eeti\Controllers\Controller;
+use Sleeti\Controllers\Controller;
 
 class InstallController extends Controller
 {

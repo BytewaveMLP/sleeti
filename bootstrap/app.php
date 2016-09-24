@@ -39,7 +39,7 @@ $container['db'] = function($container) use ($capsule) {
 };
 
 $container['auth'] = function ($container) {
-	return new \Eeti\Auth\Auth($container);
+	return new \Sleeti\Auth\Auth($container);
 };
 
 $container['flash'] = function ($container) {
@@ -73,7 +73,7 @@ $container['view'] = function ($container) {
 };
 
 $container['validator'] = function ($container) {
-	return new \Eeti\Validation\Validator;
+	return new \Sleeti\Validation\Validator;
 };
 
 require __DIR__ . '/registercontrollers.php';
@@ -82,9 +82,9 @@ $container['csrf'] = function ($container) {
 	return new \Slim\Csrf\Guard;
 };
 
-$app->add(new \Eeti\Middleware\ValidationErrorsMiddleware($container));
-$app->add(new \Eeti\Middleware\OldInputMiddleware($container));
+$app->add(new \Sleeti\Middleware\ValidationErrorsMiddleware($container));
+$app->add(new \Sleeti\Middleware\OldInputMiddleware($container));
 
-v::with('Eeti\\Validation\\Rules');
+v::with('Sleeti\\Validation\\Rules');
 
 require __DIR__ . '/../app/routes.php';

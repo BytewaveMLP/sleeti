@@ -1,6 +1,6 @@
 <?php
 
-namespace Eeti\Middleware;
+namespace Sleeti\Middleware;
 
 /**
  * Only allows unauthenticated users access to certain routes

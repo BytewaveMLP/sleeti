@@ -1,8 +1,8 @@
 <?php
 
-namespace Eeti\Validation\Rules;
+namespace Sleeti\Validation\Rules;
 
-use Eeti\Models\User;
+use Sleeti\Models\User;
 use Respect\Validation\Rules\AbstractRule;
 
 class MatchesPassword extends AbstractRule

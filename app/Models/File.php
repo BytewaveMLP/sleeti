@@ -1,6 +1,6 @@
 <?php
 
-namespace Eeti\Models;
+namespace Sleeti\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,7 +18,7 @@ class File extends Model
 	];
 
 	public function user() {
-		return $this->belongsTo('Eeti\\Models\\User', 'owner_id', 'id');
+		return $this->belongsTo('Sleeti\\Models\\User', 'owner_id', 'id');
 	}
 
 	public function getPath() {

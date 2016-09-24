@@ -1,8 +1,8 @@
 <?php
 
-namespace Eeti\Controllers;
+namespace Sleeti\Controllers;
 
-use Eeti\Models\User;
+use Sleeti\Models\User;
 
 class CommunityController extends Controller
 {

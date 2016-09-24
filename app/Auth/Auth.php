@@ -1,14 +1,14 @@
 <?php
 
-namespace Eeti\Auth;
+namespace Sleeti\Auth;
 
-use Eeti\Models\User;
-use Eeti\Models\UserPermission;
+use Sleeti\Models\User;
+use Sleeti\Models\UserPermission;
 
 /**
  * General auth handler class
  *
- * Handles eeti slim user authentication
+ * Handles sleeti user authentication
  */
 class Auth
 {
@@ -20,7 +20,7 @@ class Auth
 
 	/**
 	 * Gets the currently authenticated user
-	 * @return \Eeti\Models\User The currently authenticated user (null if no user is authenticated)
+	 * @return \Sleeti\Models\User The currently authenticated user (null if no user is authenticated)
 	 */
 	public function user() {
 		$user = isset($_SESSION['user']) ? User::find($_SESSION['user']) : null;
@@ -39,7 +39,7 @@ class Auth
 	 * Attempt user authentication with a given identifier and password
 	 * @param  string $identifier The user's identifier (email or username)
 	 * @param  string $password   The user's password
-	 * @return \Eeti\Models\User  The User matching the given credentials (false if no user found)
+	 * @return \Sleeti\Models\User  The User matching the given credentials (false if no user found)
 	 */
 	public function attempt($identifier, $password) {
 		$user = User::where('email', $identifier)->orWhere('username', $identifier)->first();

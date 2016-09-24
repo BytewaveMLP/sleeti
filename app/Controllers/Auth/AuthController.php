@@ -1,10 +1,10 @@
 <?php
 
-namespace Eeti\Controllers\Auth;
+namespace Sleeti\Controllers\Auth;
 
-use Eeti\Controllers\Controller;
-use Eeti\Models\User;
-use Eeti\Models\UserPermission;
+use Sleeti\Controllers\Controller;
+use Sleeti\Models\User;
+use Sleeti\Models\UserPermission;
 use Respect\Validation\Validator as v;
 
 class AuthController extends Controller
@@ -65,7 +65,7 @@ class AuthController extends Controller
 
 		$userPerms->user()->associate($user);
 
-		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome to ' . $this->container->settings['site']['title'] ?? 'eeti slim' . '!');
+		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome to ' . $this->container->settings['site']['title'] ?? 'sleeti' . '!');
 
 		if ($user->id === 1) { // if this is the only user, give them admin
 			$user->addPermission('A');

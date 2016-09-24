@@ -1,9 +1,9 @@
 <?php
 
-namespace Eeti\Controllers\Auth;
+namespace Sleeti\Controllers\Auth;
 
-use Eeti\Controllers\Controller;
-use Eeti\Models\User;
+use Sleeti\Controllers\Controller;
+use Sleeti\Models\User;
 use Respect\Validation\Validator as v;
 
 class PasswordController extends Controller

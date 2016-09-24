@@ -1,9 +1,9 @@
 <?php
 
-namespace Eeti\Controllers\Moderation;
+namespace Sleeti\Controllers\Moderation;
 
-use Eeti\Controllers\Controller;
-use \Eeti\Models\File;
+use Sleeti\Controllers\Controller;
+use \Sleeti\Models\File;
 
 class McpController extends Controller
 {

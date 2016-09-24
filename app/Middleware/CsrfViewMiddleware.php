@@ -1,6 +1,6 @@
 <?php
 
-namespace Eeti\Middleware;
+namespace Sleeti\Middleware;
 
 /**
  * Prevents CSRF/XSRF attacks

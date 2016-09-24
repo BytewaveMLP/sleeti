@@ -1,6 +1,6 @@
 <?php
 
-namespace Eeti\Models;
+namespace Sleeti\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,7 +17,7 @@ class UserPermission extends Model
 	];
 
 	public function user() {
-		return $this->belongsTo('Eeti\\Models\\User', 'user_id', 'id');
+		return $this->belongsTo('Sleeti\\Models\\User', 'user_id', 'id');
 	}
 
 	public function contains(string $flag) {

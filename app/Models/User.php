@@ -1,6 +1,6 @@
 <?php
 
-namespace Eeti\Models;
+namespace Sleeti\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,11 +24,11 @@ class User extends Model
 	];
 
 	public function permission() {
-		return $this->hasOne('Eeti\\Models\\UserPermission', 'user_id', 'id');
+		return $this->hasOne('Sleeti\\Models\\UserPermission', 'user_id', 'id');
 	}
 
 	public function files() {
-		return $this->hasMany('Eeti\\Models\\File', 'owner_id', 'id');
+		return $this->hasMany('Sleeti\\Models\\File', 'owner_id', 'id');
 	}
 
 	public function isAdmin() {

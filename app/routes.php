@@ -1,12 +1,12 @@
 <?php
 
-use Eeti\Middleware\AuthMiddleware;
-use Eeti\Middleware\GuestMiddleware;
-use Eeti\Middleware\TesterMiddleware;
-use Eeti\Middleware\ModeratorMiddleware;
-use Eeti\Middleware\AdminMiddleware;
-use Eeti\Middleware\CsrfViewMiddleware;
-use Eeti\Middleware\NotInstalledMiddleware;
+use Sleeti\Middleware\AuthMiddleware;
+use Sleeti\Middleware\GuestMiddleware;
+use Sleeti\Middleware\TesterMiddleware;
+use Sleeti\Middleware\ModeratorMiddleware;
+use Sleeti\Middleware\AdminMiddleware;
+use Sleeti\Middleware\CsrfViewMiddleware;
+use Sleeti\Middleware\NotInstalledMiddleware;
 
 // ugly af grouping
 $app->group('', function() use ($container) { // it's groups all the way down

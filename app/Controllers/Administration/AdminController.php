@@ -1,9 +1,9 @@
 <?php
 
-namespace Eeti\Controllers\Administration;
+namespace Sleeti\Controllers\Administration;
 
-use Eeti\Controllers\Controller;
-use Eeti\Models\User;
+use Sleeti\Controllers\Controller;
+use Sleeti\Models\User;
 
 class AdminController extends Controller
 {

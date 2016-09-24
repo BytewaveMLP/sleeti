@@ -1,6 +1,6 @@
 <?php
 
-namespace Eeti\Controllers;
+namespace Sleeti\Controllers;
 
 class HomeController extends Controller
 {

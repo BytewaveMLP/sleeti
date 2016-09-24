@@ -1,6 +1,6 @@
 <?php
 
-namespace Eeti\Validation;
+namespace Sleeti\Validation;
 
 use Respect\Validation\Validator as Respect;
 use Respect\Validation\Exceptions\NestedValidationException;

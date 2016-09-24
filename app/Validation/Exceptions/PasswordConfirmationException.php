@@ -1,6 +1,6 @@
 <?php
 
-namespace Eeti\Validation\Exceptions;
+namespace Sleeti\Validation\Exceptions;
 
 use Respect\Validation\Exceptions\ValidationException;
 
