@@ -109,7 +109,7 @@ class FileController extends Controller
 			return $response->write($request->getUri()->getBaseUrl() . $this->handleFileUpload($request, $this->container->auth->user()));
 		} catch (FailedUploadException $e) {
 			// TODO: improve error handling
-			return $response->withStatus(500)->write("Upload failed! File likely too large.");
+			return $response->withStatus(500)->write($e->getMessage());
 		}
 	}
 
