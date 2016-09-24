@@ -105,14 +105,19 @@ class FileController extends Controller
 
 	public function viewFile($request, $response, $args) {
 		$filename = $args['filename'];
-		$id       = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
+		$id       = (int) (strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename);
+		$ext      = null;
+		if (strpos($filename, '.') !== false) {
+			$possibleExts = explode('.', $filename);
+			$ext          = $possibleExts[count($possibleExts) - 1];
+		}
 
-		if (File::where('id', $id)->count() === 0) {
+		if (File::where('id', $id)->where('ext', $ext)->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
 		$filepath  = $this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path'];
-		$filepath .= File::where('id', $id)->first()->getPath();
+		$filepath .= File::where('id', $id)->where('ext', $ext)->first()->getPath();
 
 		if (!file_exists($filepath) || file_get_contents($filepath) === false) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
@@ -162,7 +167,7 @@ class FileController extends Controller
 		file_put_contents($this->container['settings']['site']['upload']['path'] . $file->getPath(), $request->getParam('paste'));
 
 		return $response->withRedirect($this->container->router->pathFor('file.view', [
-			'filename' => $file->id . $file->ext,
+			'filename' => $file->id . '.' . $file->ext,
 		]));
 	}
 
