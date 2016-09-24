@@ -31,7 +31,7 @@ class ProfileController extends Controller
 		$bio     = $request->getParam('bio');
 
 		$validation = $this->container->validator->validate($request, [
-			'website' => v::url(),
+			'website' => v::optional(v::url()),
 			'bio'     => v::length(null, 500),
 		]);
 
