@@ -16,7 +16,6 @@ class FileController extends Controller
 	 */
 	private function handleFileUpload($request, $user) {
 		$files = $request->getUploadedFiles();
-		$ext = null;
 
 		// If file upload fails, explain why
 		if (!isset($files['file']) || $files['file']->getError() !== UPLOAD_ERR_OK) {
@@ -26,17 +25,11 @@ class FileController extends Controller
 		$file = $files['file'];
 
 		$clientFilename = $file->getClientFilename();
+		$dbFilename     = pathinfo($clientFilename, PATHINFO_FILENAME);
+		$ext            = pathinfo($clientFilename, PATHINFO_EXTENSION);
 
-		// Gets the upload file's extension
-		if (strpos($clientFilename, '.') !== false) {
-			$possibleExts = explode(".", $clientFilename);
-			$ext = array_pop($possibleExts);
-		}
-
-		$dbFilename = ($ext !== null ? implode('.', $possibleExts) : $clientFilename);
-
-		if ($dbFilename === '') {
-			$dbFilename = null;
+		if (!preg_match('/^[a-zA-Z0-9\-\. ]*$/', $dbFilename ?? '') || !preg_match('/^[a-zA-Z0-9\- ]*$/', $ext ?? '')) {
+			throw new FailedUploadException("Invalid filename or extension (filename: " . ($dbFilename ?? '') . ", ext: " . ($ext ?? '') . ").", $files['file']->getError() ?? -1);
 		}
 
 		$fileRecord = File::create([
@@ -70,9 +63,7 @@ class FileController extends Controller
 			throw new FailedUploadException("File moving failed", $files['file']->getError() ?? -1);
 		}
 
-		return $this->container->router->pathFor('file.view', [
-			'filename' => $filename,
-		]);
+		return $filename;
 	}
 
 	public function getUpload($request, $response) {
@@ -81,11 +72,16 @@ class FileController extends Controller
 
 	public function postUpload($request, $response) {
 		try {
-			return $response->withRedirect($this->handleFileUpload($request, $this->container->auth->user()));
+			$filename = $this->handleFileUpload($request, $this->container->auth->user());
 		} catch (FailedUploadException $e) {
 			$this->container->flash->addMessage('danger', '<b>Oh no!</b> We couldn\'t upload your file. It\'s likely too big.');
 			return $response->withRedirect($this->container->router->pathFor('file.upload'));
 		}
+
+		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your file was uploaded successfully. <a href="' . $this->container->router->pathFor('file.view', [
+			'filename' => $filename,
+		]) . '">Click here</a> to view it.');
+		return $response->withRedirect($this->container->router->pathFor('file.upload'));
 	}
 
 	/**
@@ -180,16 +176,34 @@ class FileController extends Controller
 	}
 
 	public function postPaste($request, $response) {
-		$file = File::create([
-			'owner_id' => $this->container->auth->user()->id,
-			'ext' => 'txt',
+		$title = $request->getParam('title');
+		$paste = $request->getParam('paste');
+
+		$validation = $this->container->validator->validate($request, [
+			'title' => v::length(null, 100)->regex('/^[a-zA-Z0-9\-\. ]*$/'),
+			'paste' => v::notEmpty(),
 		]);
 
-		file_put_contents($this->container['settings']['site']['upload']['path'] . $file->getPath(), $request->getParam('paste'));
+		$filename = pathinfo($title, PATHINFO_FILENAME);
+		$ext      = pathinfo($title, PATHINFO_EXTENSION);
 
-		return $response->withRedirect($this->container->router->pathFor('file.view', [
-			'filename' => $file->id . '.' . $file->ext,
-		]));
+		if ($validation->failed()) {
+			$this->container->flash->addMessage('danger', '<b>Whoops!</b> Looks like we\'re missing something...');
+			return $response->withRedirect($this->container->router->pathFor('file.upload.paste'));
+		}
+
+		$file = File::create([
+			'owner_id' => $this->container->auth->user()->id,
+			'filename' => $filename,
+			'ext'      => $ext,
+		]);
+
+		file_put_contents($this->container['settings']['site']['upload']['path'] . $file->getPath(), $paste);
+
+		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your paste was uploaded successfully. <a href="' . $this->container->router->pathFor('file.view', [
+			'filename' => $file->id . ($filename !== null ? '-' . $filename : '') . ($file->ext !== null ? '.' . $file->ext : ''),
+		]) . '">Click here</a> to view it.');
+		return $response->withRedirect($this->container->router->pathFor('file.upload.paste'));
 	}
 
 	public function getSharex($request, $response) {
