@@ -167,6 +167,10 @@ class FileController extends Controller
 	}
 
 	public function getSharex($request, $response) {
-		return $this->view->render($response, 'upload/sharex.twig');
+		return $this->container->view->render($response, 'upload/sharex.twig', [
+			'site' => [
+				'url' => $request->getUri(),
+			],
+		]);
 	}
 }

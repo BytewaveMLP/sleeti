@@ -5,7 +5,33 @@
 {% block content %}
 	<div class="row">
 		<div class="col-md-12">
-			
+			<h2>ShareX Configuration</h2>
+			<p>
+				To use {{ settings.site.title | default('eeti slim') }} with ShareX:
+			</p>
+			<ol>
+				<li>Copy the code below</li>
+				<li>Open ShareX's main window</li>
+				<li>Open the Destinations dropdown</li>
+				<li>Click "Destination settings..."</li>
+				<li>Click "Custom uploaders"</li>
+				<li>Click "Import from clipboard"</li>
+			</ol>
+			<pre><code>{
+  "Name": "{{ settings.site.title | default('eeti slim') }}",
+  "RequestType": "POST",
+  "RequestURL": "{{ site.url }}",
+  "FileFormName": "file",
+  "Arguments": {
+    "user": "{{ auth.user.username }}",
+    "pass": "PUT YOUR PASSWORD HERE"
+  },
+  "ResponseType": "Text",
+  "RegexList": [
+    "(.+)"
+  ],
+  "URL": "$1$"
+}</code></pre>
 		</div>
 	</div>
 {% endblock %}
