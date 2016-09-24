@@ -3,7 +3,7 @@
 {% block title %}Profile - {{ user.username }}{% endblock %}
 
 {% if user.id == auth.user.id or auth.user.isModerator() %}
-	{% set files = auth.user.files %}
+	{% set files = user.files %}
 {% else %}
 	{% set files = user.files.where('privacy_state', 0) %}
 {% endif %}
