@@ -40,10 +40,23 @@ class FileController extends Controller
 			$ext = null;
 		}
 
+		$privacy = null;
+		$privStr = $request->getParam('privacy');
+
+		if ($privStr == 'public') {
+			$privacy = 0;
+		} elseif ($privStr == 'unlisted') {
+			$privacy = 1;
+		} elseif ($privStr == 'private') {
+			$privacy = 2;
+		} else {
+			$privacy = $user->default_privacy_state;
+		}
+
 		$fileRecord = File::create([
 			'owner_id'      => $user->id,
 			'filename'      => $dbFilename,
-			'privacy_state' => $user->default_privacy_state,
+			'privacy_state' => $privacy,
 		]);
 
 		$filename = $fileRecord->id;
@@ -131,7 +144,7 @@ class FileController extends Controller
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
-		$file = $file->first();
+		$file = $files->first();
 
 		$filepath  = $this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path'];
 		$filepath .= $file->getPath();
@@ -206,10 +219,23 @@ class FileController extends Controller
 			return $response->withRedirect($this->container->router->pathFor('file.upload.paste'));
 		}
 
+		$privStr = $request->getParam('privacy');
+
+		if ($privStr == 'public') {
+			$privacy = 0;
+		} elseif ($privStr == 'unlisted') {
+			$privacy = 1;
+		} elseif ($privStr == 'private') {
+			$privacy = 2;
+		} else {
+			$privacy = $user->default_privacy_state;
+		}
+
 		$file = File::create([
-			'owner_id' => $this->container->auth->user()->id,
-			'filename' => $filename,
-			'ext'      => $ext,
+			'owner_id'      => $this->container->auth->user()->id,
+			'filename'      => $filename,
+			'ext'           => $ext,
+			'privacy_state' => $privacy,
 		]);
 
 		file_put_contents($this->container['settings']['site']['upload']['path'] . $file->getPath(), $paste);

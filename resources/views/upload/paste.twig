@@ -36,6 +36,31 @@
 							{% endif %}
 						</div>
 
+						<h4>
+							Privacy setting
+						</h4>
+
+						<div class="radio">
+							<label>
+								<input type="radio" name="privacy" id="public" value="public"{% if auth.user.default_privacy_state == 0 %} checked{% endif %}>
+								Public
+							</label>
+						</div>
+
+						<div class="radio">
+							<label>
+								<input type="radio" name="privacy" id="unlisted" value="unlisted"{% if auth.user.default_privacy_state == 1 %} checked{% endif %}>
+								Unlisted (not displayed on profile)
+							</label>
+						</div>
+
+						<div class="radio">
+							<label>
+								<input type="radio" name="privacy" id="private" value="private"{% if auth.user.default_privacy_state == 2 %} checked{% endif %}>
+								Private (requires login to view)
+							</label>
+						</div>
+
 						<button type="submit" class="btn btn-default">Submit</button>
 
 						{{ csrf.field | raw }}
