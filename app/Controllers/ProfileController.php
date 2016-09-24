@@ -30,7 +30,7 @@ class ProfileController extends Controller
 
 		$website = $request->getParam('website');
 		$bio     = $request->getParam('bio');
-		$name    = $requset->getParam('name');
+		$name    = $request->getParam('name');
 
 		$privacy = $request->getParam('privacy');
 
