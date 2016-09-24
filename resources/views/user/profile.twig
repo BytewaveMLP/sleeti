@@ -6,7 +6,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<h1>
-				{{ user.name ?: user.username }}
+				{{ user.username }} {% if user.name %}<small>({{ user.name }})</small>{% endif %}
 			</h1>
 		</div>
 	</div>
