@@ -13,11 +13,11 @@ $container['PasswordController'] = function ($container) {
 };
 
 $container['AcpController'] = function ($container) {
-	return new \Eeti\Controllers\AcpController($container);
+	return new \Eeti\Controllers\Administration\AcpController($container);
 };
 
 $container['McpController'] = function ($container) {
-	return new \Eeti\Controllers\McpController($container);
+	return new \Eeti\Controllers\Moderation\McpController($container);
 };
 
 $container['FileController'] = function ($container) {
@@ -33,5 +33,5 @@ $container['CommunityController'] = function ($container) {
 };
 
 $container['InstallController'] = function ($container) {
-	return new \Eeti\Controllers\InstallController($container);
+	return new \Eeti\Controllers\Administration\InstallController($container);
 };
