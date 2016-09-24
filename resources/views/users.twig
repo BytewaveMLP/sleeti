@@ -22,7 +22,8 @@
 						{% for user in users %}
 							<tr>
 								<td>
-									<a href="{{ path_for('user.profile', {'id': user.id}) }}">{{ user.username }} {% if user.name %}({{ user.name }}){% endif %}</a>
+									<a href="{{ path_for('user.profile', {'id': user.id}) }}">{{ user.username }}</a>
+									{% if user.name %}({{ user.name }}){% endif %}
 									{% if user.isAdmin() %}
 										<span class="label label-danger">Administrator</span>
 									{% elseif user.isModerator() %}
