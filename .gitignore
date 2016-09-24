@@ -1,3 +1,4 @@
 /vendor/
 /config/config.json
 /config/lock
+/snippets/

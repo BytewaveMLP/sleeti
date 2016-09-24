@@ -19,4 +19,8 @@ class File extends Model
 	public function user() {
 		return $this->belongsTo('Eeti\\Models\\User', 'owner_id', 'id');
 	}
+
+	public function getPath() {
+		return $this->user->id . '/' . $this->id . ($this->ext !== null ? '.' . $this->ext : '');
+	}
 }

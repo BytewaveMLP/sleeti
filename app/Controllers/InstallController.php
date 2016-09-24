@@ -28,7 +28,7 @@ class InstallController extends Controller
 				'cost' => (int) ($request->getParam('hashcost')),
 			],
 			'upload' => [
-				'path' => $request->getParam('uploadpath'),
+				'path' => $request->getParam('uploadpath'), -1) . (substr($request->getParam('uploadpath'), -1) !== '/' ? '/' : ''),
 			],
 		];
 

@@ -50,9 +50,14 @@ class FileController extends Controller
 			$fileRecord->save();
 		}
 
+		$path = ($this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path']) . $fileRecord->user->id;
+
 		try {
-			// Move file ot uploaded files path
-			$file->moveTo(($this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path']) . $filename);
+			// Move file to uploaded files path
+			if (!is_dir($path)) {
+				mkdir($path);
+			}
+			$file->moveTo($path . '/' . $filename);
 		} catch (InvalidArgumentException $e) {
 			// Remove inconsistent file record
 			$fileRecord->delete();
@@ -99,12 +104,17 @@ class FileController extends Controller
 	}
 
 	public function viewFile($request, $response, $args) {
-		$filename  = $args['filename'];
-		$filepath  = $this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path'];
-		$filepath .= $filename;
-		$id        = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
+		$filename = $args['filename'];
+		$id       = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
 
-		if (!file_exists($filepath) || file_get_contents($filepath) === false || File::where('id', $id)->count() === 0) {
+		if (File::where('id', $id)->count() === 0) {
+			throw new \Slim\Exception\NotFoundException($request, $response);
+		}
+
+		$filepath  = $this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path'];
+		$filepath .= File::where('id', $id)->first()->getPath();
+
+		if (!file_exists($filepath) || file_get_contents($filepath) === false) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
@@ -113,16 +123,17 @@ class FileController extends Controller
 	}
 
 	public function deleteFile($request, $response, $args) {
-		$filename  = $args['filename'];
+		$filename = $args['filename'];
+		$id       = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
+
+		if (File::where('id', $id)->count() === 0) {
+			throw new \Slim\Exception\NotFoundException($request, $response);
+		}
+
 		$filepath  = $this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path'];
-		$filepath .= $filename;
-		$id        = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
+		$filepath .= File::where('id', $id)->first()->getPath();
 
-		if (!file_exists($filepath) || file_get_contents($filepath) === false || File::where('id', $id)->count() === 0) {
-			if (File::where('id', $id)->count() !== 0) {
-				File::where('id', $id)->delete();
-			}
-
+		if (!file_exists($filepath) || file_get_contents($filepath) === false) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
