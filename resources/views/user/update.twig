@@ -19,6 +19,14 @@
 	</script>
 {% endblock %}
 
+{% block extracss %}
+	<style>
+	#bio {
+		resize: vertical;
+	}
+	</style>
+{% endblock %}
+
 {% block content %}
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
@@ -43,7 +51,7 @@
 
 						<div class="form-group{{ errors.bio ? ' has-error' : '' }}">
 							<label for="bio">Bio (supports Github-Flavored Markdown)</label>
-							<textarea name="bio" id="" cols="30" rows="10" class="form-control" placeholder="Your life story.">{{ old.bio | default(auth.user.bio) }}</textarea>
+							<textarea name="bio" id="bio" cols="30" rows="10" class="form-control" placeholder="Your life story.">{{ old.bio | default(auth.user.bio) }}</textarea>
 							<span class="help-block" id="remaining"></span>
 							{% if errors.bio %}
 								<span class="help-block">{{ errors.bio | first }}</span>
