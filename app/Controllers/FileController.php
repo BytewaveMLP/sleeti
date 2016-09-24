@@ -28,8 +28,16 @@ class FileController extends Controller
 		$dbFilename     = pathinfo($clientFilename, PATHINFO_FILENAME);
 		$ext            = pathinfo($clientFilename, PATHINFO_EXTENSION);
 
-		if (!preg_match('/^[a-zA-Z0-9\-\. ]*$/', $dbFilename ?? '') || !preg_match('/^[a-zA-Z0-9\- ]*$/', $ext ?? '')) {
-			throw new FailedUploadException("Invalid filename or extension (filename: " . ($dbFilename ?? '') . ", ext: " . ($ext ?? '') . ").", $files['file']->getError() ?? -1);
+		if (!preg_match('/^[a-zA-Z0-9\-\. ]*$/', $dbFilename) || !preg_match('/^[a-zA-Z0-9\- ]*$/', $ext)) {
+			throw new FailedUploadException("Invalid filename or extension (filename: " . ($dbFilename) . ", ext: " . ($ext) . ").", $files['file']->getError() ?? -1);
+		}
+
+		if ($dbFilename === '') {
+			$dbFilename = null;
+		}
+
+		if ($ext === '') {
+			$ext = null;
 		}
 
 		$fileRecord = File::create([
@@ -74,7 +82,7 @@ class FileController extends Controller
 		try {
 			$filename = $this->handleFileUpload($request, $this->container->auth->user());
 		} catch (FailedUploadException $e) {
-			$this->container->flash->addMessage('danger', '<b>Oh no!</b> We couldn\'t upload your file. It\'s likely too big.');
+			$this->container->flash->addMessage('danger', '<b>Oh no!</b> We couldn\'t upload your file. Either the file name contains invalid characters, your file is too large, or we had trouble in handling. Sorry!');
 			return $response->withRedirect($this->container->router->pathFor('file.upload'));
 		}
 
@@ -107,23 +115,16 @@ class FileController extends Controller
 
 	public function viewFile($request, $response, $args) {
 		$filename = $args['filename'];
-		$id       = (int) (strpos($filename, '-') !== false ? explode('-', $filename)[0] : $filename);
-		$ext      = null;
+		$name     = pathinfo($filename, PATHINFO_FILENAME);
+		$id       = (int) (strpos($name, '-') !== false ? explode('-', $name)[0] : $name);
+		$name     = (strpos($name, '-') !== false ? substr($name, strpos($name, '-') + 1) : null);
+		$ext      = pathinfo($filename, PATHINFO_EXTENSION);
 
-		if (strpos($filename, '.') !== false) {
-			$possibleExts = explode('.', $filename);
-			$ext          = $possibleExts[count($possibleExts) - 1];
+		if ($ext === '') {
+			$ext = null;
 		}
 
-		$filename = (strpos($filename, '-') !== false ? explode('-', $filename) : null);
-
-		if ($filename !== null) {
-			array_shift($filename);
-			$filename = implode('-', $filename);
-			$filename = ($ext !== null ? str_replace('.' . $ext, '', $filename) : $filename);
-		}
-
-		if (File::where('id', $id)->where('filename', $filename)->where('ext', $ext)->count() === 0) {
+		if (File::where('id', $id)->where('filename', $name)->where('ext', $ext)->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
@@ -131,6 +132,7 @@ class FileController extends Controller
 		$filepath .= File::where('id', $id)->where('ext', $ext)->first()->getPath();
 
 		if (!file_exists($filepath) || file_get_contents($filepath) === false) {
+			die("missing file");
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
@@ -195,7 +197,7 @@ class FileController extends Controller
 		file_put_contents($this->container['settings']['site']['upload']['path'] . $file->getPath(), $paste);
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your paste was uploaded successfully. <a href="' . $this->container->router->pathFor('file.view', [
-			'filename' => $file->id . ($filename !== null ? '-' . $filename : '') . ($file->ext !== null ? '.' . $file->ext : ''),
+			'filename' => $file->id . ($filename !== '' ? '-' . $filename : '') . ($file->ext !== '' ? '.' . $file->ext : ''),
 		]) . '">Click here</a> to view it.');
 		return $response->withRedirect($this->container->router->pathFor('file.upload.paste'));
 	}
