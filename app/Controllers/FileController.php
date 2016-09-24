@@ -51,11 +51,6 @@ class FileController extends Controller
 		}
 
 		if ($ext !== null) {
-			// Prevent HTML injection attacks (ext can only be alphanumeric, with _ and -)
-			if (!preg_match("/[a-zA-Z0-9\_\-]+/", $ext)) {
-				$fileRecord->delete();
-				throw new FailedUploadException("File extension contains invalid characters", $files['file']->getError() ?? -1);
-			}
 			$filename .= '.' . $ext;
 			$fileRecord->ext = $ext;
 			$fileRecord->save();
