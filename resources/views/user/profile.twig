@@ -38,7 +38,7 @@
 				</p>
 			{% elseif auth.user.isAdmin() %}
 				<p>
-					<a href="{{ path_for('admin.user.giveperms', {'user': user}) }}">Change usergroup</a>
+					<a href="{{ path_for('admin.user.giveperms', {'id': user.id}) }}">Change usergroup</a>
 				</p>
 			{% endif %}
 		</div>
