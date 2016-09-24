@@ -38,4 +38,16 @@ class User extends Model
 	public function isModerator() {
 		return $this->permission->contains('M') || $this->isAdmin();
 	}
+
+	public function addPermission(string $flag) {
+		if ($this->permission->contains($flag)) return;
+		$this->permission->flags .= $flag;
+		$this->permission->save();
+	}
+
+	public function removePermission(string $flag) {
+		if (!$this->permission->contains($flag)) return;
+		$this->permission->flags = str_replace($this->flags, '', $flag);
+		$this->permission->save();
+	}
 }

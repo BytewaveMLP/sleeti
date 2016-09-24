@@ -23,16 +23,4 @@ class UserPermission extends Model
 	public function contains(string $flag) {
 		return strpos($this->flags, $flag) !== false;
 	}
-
-	public function addPermission(string $flag) {
-		if ($this->contains($flag)) return;
-		$this->flags .= $flag;
-		$this->save();
-	}
-
-	public function removePermission(string $flag) {
-		if (!$this->contains($flag)) return;
-		$this->flags = str_replace($this->flags, '', $flag);
-		$this->save();
-	}
 }

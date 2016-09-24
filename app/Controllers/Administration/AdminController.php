@@ -9,24 +9,30 @@ class AdminController extends Controller
 {
 	public function getAddPermissionsPage($request, $response, $args) {
 		$id = $args['uid'];
+		$user = User::where('id', $id)->first();
 
-		if (User::where('id', $id)->count() === 0) {
-			// throw new \Slim\Exception\NotFoundException($request, $response);
+		if ($user === null) {
+			throw new \Slim\Exception\NotFoundException($request, $response);
+		} elseif ($user === $this->container->auth->user()) {
+			$this->container->flash->addMessage('danger', '<b>Hey!</b> You can\'t change your own group!');
+			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
 		}
 
 		return $this->container->view->render($response, 'admin/user/giveperms.twig', [
-			'user' => User::where('id', $id)->first(),
+			'user' => $user,
 		]);
 	}
 
 	public function postAddPermissionsPage($request, $response, $args) {
 		$id = $args['uid'];
-
-		if (User::where('id', $id)->count() === 0) {
-			throw new \Slim\Exception\NotFoundException($request, $response);
-		}
-
 		$user = User::where('id', $id)->first();
+
+		if ($user === null) {
+			throw new \Slim\Exception\NotFoundException($request, $response);
+		} elseif ($user === $this->container->auth->user()) {
+			$this->container->flash->addMessage('danger', '<b>Hey!</b> You can\'t change your own group!');
+			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
+		}
 
 		$group = $request->getParam('group');
 
@@ -40,5 +46,10 @@ class AdminController extends Controller
 			$user->removePermission('M');
 			$user->removePermission('A');
 		}
+
+		$this->container->flash->addMessage('success', '<b>Woohoo!</b> ' . $user->username . '\'s usergroup was changed successfully.');
+		return $response->withRedirect($this->container->router->pathFor('user.profile', [
+			'id' => $user->id,
+		]));
 	}
 }

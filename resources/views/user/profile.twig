@@ -36,6 +36,10 @@
 				<p>
 					<a href="{{ path_for('user.profile.edit') }}">Edit your profile</a>
 				</p>
+			{% elseif auth.user.isAdmin() %}
+				<p>
+					<a href="{{ path_for('admin.user.giveperms', {'user': user}) }}">Change usergroup</a>
+				</p>
 			{% endif %}
 		</div>
 		<div class="col-md-8">
