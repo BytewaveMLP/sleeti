@@ -183,6 +183,14 @@ class FileController extends Controller
 		$filename = pathinfo($title, PATHINFO_FILENAME);
 		$ext      = pathinfo($title, PATHINFO_EXTENSION);
 
+		if ($filename === '') {
+			$filename = null;
+		}
+
+		if ($ext === '') {
+			$ext = null;
+		}
+
 		if ($validation->failed()) {
 			$this->container->flash->addMessage('danger', '<b>Whoops!</b> Looks like we\'re missing something...');
 			return $response->withRedirect($this->container->router->pathFor('file.upload.paste'));
@@ -197,7 +205,7 @@ class FileController extends Controller
 		file_put_contents($this->container['settings']['site']['upload']['path'] . $file->getPath(), $paste);
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your paste was uploaded successfully. <a href="' . $this->container->router->pathFor('file.view', [
-			'filename' => $file->id . ($filename !== '' ? '-' . $filename : '') . ($file->ext !== '' ? '.' . $file->ext : ''),
+			'filename' => $file->id . ($filename !== null ? '-' . $filename : '') . ($file->ext !== null ? '.' . $file->ext : ''),
 		]) . '">Click here</a> to view it.');
 		return $response->withRedirect($this->container->router->pathFor('file.upload.paste'));
 	}

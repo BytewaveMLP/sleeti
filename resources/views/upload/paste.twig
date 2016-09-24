@@ -20,8 +20,16 @@
 
 				<div class="panel-body">
 					<form action="{{ path_for('file.upload.paste') }}" method="post" enctype="multipart/form-data" autocomplete="off">
+						<div class="form-group{{ errors.title ? ' has-error' : '' }}">
+							<label for="title">Title</label>
+							<input type="text" name="title" id="title" class="form-control" valuve="{{ old.title }}" placeholder="file.ext, file, .ext, or empty"></input>
+							{% if errors.title %}
+								<span class="help-block">{{ errors.title | first }}</span>
+							{% endif %}
+						</div>
+
 						<div class="form-group{{ errors.paste ? ' has-error' : '' }}">
-							<label for="paste">Paste</label>
+							<label for="paste">Content</label>
 							<textarea name="paste" id="paste" cols="30" rows="15" class="form-control" required>{{ old.paste }}</textarea>
 							{% if errors.paste %}
 								<span class="help-block">{{ errors.paste | first }}</span>
