@@ -8,14 +8,6 @@ session_start();
 
 require __DIR__ . '/../vendor/autoload.php';
 
-// need to fix this config at some point
-
-$settings = [
-	'settings' => [
-		'displayErrorDetails' => true,
-	],
-];
-
 // Make sure config.json actually exists - a lot breaks if it doesn't
 if (!file_exists(__DIR__ . '/../config/config.json')) {
 	if (!is_dir(__DIR__ . '/../config/')) { // make sure /config/ even exists (fixes .gitignore issue)
@@ -25,11 +17,7 @@ if (!file_exists(__DIR__ . '/../config/config.json')) {
 	file_put_contents(__DIR__ . '/../config/config.json', '{}');
 }
 
-$decodedConfig = json_decode(file_get_contents(__DIR__ . '/../config/config.json'), true);
-
-// Merge config.json with current app settings
-// TODO: don't do this, move displayErrorDetails to ACP
-$settings['settings'] = array_merge($settings['settings'], $decodedConfig);
+$settings['settings'] = json_decode(file_get_contents(__DIR__ . '/../config/config.json'), true);
 
 $app = new \Slim\App($settings);
 
