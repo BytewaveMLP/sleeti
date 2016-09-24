@@ -1,4 +1,4 @@
-# eeti-slim-port
+# sleeti
 A proof-of-concept port of eeti.me to Slim 3
 
 ## Installation
