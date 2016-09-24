@@ -132,7 +132,6 @@ class FileController extends Controller
 		$filepath .= File::where('id', $id)->where('ext', $ext)->first()->getPath();
 
 		if (!file_exists($filepath) || file_get_contents($filepath) === false) {
-			die("missing file");
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
