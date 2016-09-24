@@ -13,7 +13,7 @@ class AcpController extends Controller
 	 */
 	private function writeConfig(array $config) {
 		$newConfig = array_merge($this->container['config'], $config);
-		return file_put_contents(__DIR__ . '/../../config/config.json', json_encode($newConfig, JSON_PRETTY_PRINT));
+		return file_put_contents(__DIR__ . '/../../../config/config.json', json_encode($newConfig, JSON_PRETTY_PRINT));
 	}
 
 	/**
