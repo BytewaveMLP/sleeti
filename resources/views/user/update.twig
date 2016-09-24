@@ -35,7 +35,7 @@
 					<form action="{{ path_for('user.profile.edit') }}" method="post" autocomplete="off">
 						<div class="form-group{{ errors.website ? ' has-error' : '' }}">
 							<label for="website">Website</label>
-							<input type="url" name="website" id="website" placeholder="http://domain.ext" class="form-control" value="{{ old.website | default(auth.user.website) }}" required>
+							<input type="url" name="website" id="website" placeholder="http://domain.ext" class="form-control" value="{{ old.website | default(auth.user.website) }}">
 							{% if errors.website %}
 								<span class="help-block">{{ errors.website | first }}</span>
 							{% endif %}
