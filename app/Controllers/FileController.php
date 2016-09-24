@@ -165,4 +165,8 @@ class FileController extends Controller
 			'filename' => $file->id . $file->ext,
 		]));
 	}
+
+	public function getSharex($request, $response) {
+		return $this->view->render($response, 'upload/sharex.twig');
+	}
 }
