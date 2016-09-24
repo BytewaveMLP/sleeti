@@ -82,7 +82,7 @@ class AuthController extends Controller
 
 	public function deleteAccount($request, $response, $args) {
 		if ($this->container->auth->user()->id !== $args['id'] && !$this->container->auth->user()->isAdmin()) {
-			$this->container->flash->addMessage('danger', '<b>Hey!</b> What do you think you\'re doing?!');
+			$this->container->flash->addMessage('danger', '<b>Hey!</b> What do you think you\'re doing?! You can\'t delete someone else\'s account!');
 			return $response->withRedirect($this->container->router->pathFor('home'));
 		}
 
