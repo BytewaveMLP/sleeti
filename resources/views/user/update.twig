@@ -45,6 +45,14 @@
 							Details
 						</h4>
 
+						<div class="form-group{{ errors.name ? ' has-error' : '' }}">
+							<label for="website">Display Name</label>
+							<input type="text" name="name" id="name" placeholder="" class="form-control" value="{{ old.name | default(auth.user.name) }}">
+							{% if errors.name %}
+								<span class="help-block">{{ errors.name | first }}</span>
+							{% endif %}
+						</div>
+
 						<div class="form-group{{ errors.website ? ' has-error' : '' }}">
 							<label for="website">Website</label>
 							<input type="url" name="website" id="website" placeholder="http://domain.ext" class="form-control" value="{{ old.website | default(auth.user.website) }}">

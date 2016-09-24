@@ -30,6 +30,7 @@ class ProfileController extends Controller
 
 		$website = $request->getParam('website');
 		$bio     = $request->getParam('bio');
+		$name    = $requset->getParam('name');
 
 		$privacy = $request->getParam('privacy');
 
@@ -53,6 +54,7 @@ class ProfileController extends Controller
 
 		$user->website = $website;
 		$user->bio     = strip_tags($bio); // no XSS 4 u
+		$user->name    = $name;
 		$user->save();
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your profile was updated successfully.');
