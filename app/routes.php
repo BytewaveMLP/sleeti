@@ -57,6 +57,11 @@ $app->group('', function() use ($container) { // it's groups all the way down
 					$this->get('/errors', 'AcpController:getErrorSettings')->setName('admin.acp.errors');
 					$this->post('/errors', 'AcpController:postErrorSettings');
 				});
+
+				$this->group('/user', function() {
+					$this->get('/giveperms/{uid}', 'AdminController:getAddPermissionsPage')->setName('admin.user.giveperms');
+					$this->post('/giveperms/{uid}', 'AdminController:postAddPermissionsPage');
+				});
 			})->add(new AdminMiddleware($container));
 
 			$this->group('/mod', function() use ($container) {

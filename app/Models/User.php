@@ -38,8 +38,4 @@ class User extends Model
 	public function isModerator() {
 		return $this->permission->contains('M') || $this->isAdmin();
 	}
-
-	public function isTester() {
-		return $this->permission->contains('T') || $this->isAdmin();
-	}
 }

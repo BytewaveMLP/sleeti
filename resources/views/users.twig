@@ -28,9 +28,6 @@
 									{% elseif user.isModerator() %}
 										<span class="label label-warning">Moderator</span>
 									{% endif %}
-									{% if user.isTester() %}
-										<span class="label label-primary">Tester</span>
-									{% endif %}
 								</td>
 							</tr>
 						{% endfor %}
