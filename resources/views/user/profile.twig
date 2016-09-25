@@ -20,7 +20,7 @@
 			var filename = $(this).attr('id').replace('delete-file-', '');
 			var element = this;
 			$.get({
-				url: '/delete/' + filename, // TODO: figure out how to get path for file.delete
+				url: {{ path_for('file.delete', {filename: ''}) }} + filename,
 				success: function() {
 					$(element).parent().parent().remove();
 				}
