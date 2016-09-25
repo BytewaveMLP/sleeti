@@ -4,6 +4,9 @@
 
 {% block extrajs %}
 	<script>
+	function jq(myid) {
+		return "#" + myid.replace( /(:|\.|\[|\]|,|=)/g, "\\$1" );
+	}
 	$(function() {
 		$('[id^=delete-file-]').click(function(event) {
 			event.preventDefault();
@@ -13,6 +16,7 @@
 				url: '/delete/' + filename, // TODO: figure out how to get path for file.delete
 				success: function() {
 					$(element).parent().html('(<b>Deleted</b>)');
+					$(jq('file-entry-' + filename)).parent().html($(jq('file-entry-' + filename)).text());
 				}
 			});
 			return false;

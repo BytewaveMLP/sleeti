@@ -8,6 +8,29 @@
 	{% set files = user.files.where('privacy_state', 0) %}
 {% endif %}
 
+{% block extrajs %}
+	<script>
+	function jq(myid) {
+		return "#" + myid.replace( /(:|\.|\[|\]|,|=)/g, "\\$1" );
+	}
+	$(function() {
+		$('[id^=delete-file-]').click(function(event) {
+			event.preventDefault();
+			var filename = $(this).attr('id').replace('delete-file-', '');
+			var element = this;
+			$.get({
+				url: '/delete/' + filename, // TODO: figure out how to get path for file.delete
+				success: function() {
+					$(element).parent().html('(<b>Deleted</b>)');
+					$(jq('file-entry-' + filename)).parent().html($(jq('file-entry-' + filename)).text());
+				}
+			});
+			return false;
+		});
+	});
+	</script>
+{% endblock %}
+
 {% block content %}
 	<div class="row">
 		<div class="col-md-12">
@@ -95,23 +118,4 @@
 			</div>
 		{% endif %}
 	</div>
-{% endblock %}
-
-{% block extrajs %}
-	<script>
-	$(function() {
-		$('[id^=delete-file-]').click(function(event) {
-			event.preventDefault();
-			var filename = $(this).attr('id').replace('delete-file-', '');
-			var element = this;
-			$.get({
-				url: '/delete/' + filename, // TODO: figure out how to get path for file.delete
-				success: function() {
-					$(element).parent().html('(<b>Deleted</b>)');
-				}
-			});
-			return false;
-		});
-	});
-	</script>
 {% endblock %}
