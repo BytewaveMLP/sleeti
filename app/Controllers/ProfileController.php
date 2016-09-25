@@ -34,8 +34,9 @@ class ProfileController extends Controller
 		$privacy = $request->getParam('privacy');
 
 		$validation = $this->container->validator->validate($request, [
-			'website' => v::optional(v::url()),
+			'website' => v::optional(v::url())->length(null, 255),
 			'bio'     => v::length(null, 500),
+			'name'    => v::length(null, 50),
 		]);
 
 		if ($validation->failed()) {
