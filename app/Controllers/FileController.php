@@ -120,7 +120,9 @@ class FileController extends Controller
 		}
 
 		try {
-			return $response->write($request->getUri()->getBaseUrl() . $this->handleFileUpload($request, $this->container->auth->user()));
+			return $response->write($request->getUri()->getBaseUrl() . $this->container->router->pathFor('file.view', [
+				'filename' => $this->handleFileUpload($request, $this->container->auth->user())
+			]));
 		} catch (FailedUploadException $e) {
 			// TODO: improve error handling
 			return $response->withStatus(500)->write($e->getMessage());
