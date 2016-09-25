@@ -160,7 +160,7 @@ class FileController extends Controller
 		}
 
 		// Output file with file's MIME content type
-		return $response->withHeader('Content-Type', mime_content_type($filepath))->write(file_get_contents($filepath));
+		return $response->withHeader('Connection: keep-alive')->withHeader('Content-Type', mime_content_type($filepath))->write(file_get_contents($filepath));
 	}
 
 	public function deleteFile($request, $response, $args) {
