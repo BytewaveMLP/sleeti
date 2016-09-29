@@ -33,6 +33,8 @@ class ProfileController extends Controller
 
 		$privacy = $request->getParam('privacy');
 
+		$bio = preg_replace('~\r\n?~', "\n", $bio);
+
 		$validation = $this->container->validator->validate($request, [
 			'website' => v::optional(v::url())->length(null, 255),
 			'bio'     => v::length(null, 500),
