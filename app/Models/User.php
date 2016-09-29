@@ -48,7 +48,7 @@ class User extends Model
 
 	public function removePermission(string $flag) {
 		if (!$this->permission->contains($flag)) return;
-		$this->permission->flags = str_replace($this->flags, '', $flag);
+		$this->permission->flags = str_replace($flag, '', $this->permission->flags);
 		$this->permission->save();
 	}
 }
