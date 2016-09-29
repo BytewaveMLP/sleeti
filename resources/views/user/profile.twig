@@ -105,18 +105,7 @@
 			{% endif %}
 		</div>
 		{% if user.id == auth.user.id or auth.user.isModerator() %}
-			<div class="col-md-2">
-				<h3>Privacy levels</h3>
-				<p>
-					<b>0</b> - Public
-				</p>
-				<p>
-					<b>1</b> - Unlisted (invisible on profiles to everyone but moderators)
-				</p>
-				<p>
-					<b>2</b> - Private (like unlisted, but requires a user to be logged in to view)
-				</p>
-			</div>
+			{% include 'templates/partials/privacy-levels-desc.twig' %}
 		{% endif %}
 	</div>
 {% endblock %}
