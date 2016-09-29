@@ -83,16 +83,17 @@
 					</thead>
 					<tbody>
 						{% for file in files %}
+							{% set filename = file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') %}
 							<tr>
 								<td>
-									<a id="file-entry-{{ file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') }}" href="{{ path_for('file.view', {'filename': (file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : ''))}) }}">{{ file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') }}</a>
+									<a id="file-entry-{{ filename }}" href="{{ path_for('file.view', {'filename': filename}) }}">{{ filename }}</a>
 								</td>
 								{% if user.id == auth.user.id or auth.user.isModerator() %}
 									<td>
 										{{ file.privacy_state }}
 									</td>
 									<td>
-										<a href="#" class="btn btn-danger btn-xs" id="delete-file-{{ file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') }}">Delete</a>
+										<a href="#" class="btn btn-danger btn-xs" id="delete-file-{{ filename }}">Delete</a>
 									</td>
 								{% endif %}
 							</tr>
