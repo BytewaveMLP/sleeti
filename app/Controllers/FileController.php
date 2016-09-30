@@ -162,7 +162,9 @@ class FileController extends Controller
 		}
 
 		// Output file with file's MIME content type
-		return $response->withHeader('Content-Type', mime_content_type($filepath))->withBody(new \GuzzleHttp\Psr7\LazyOpenStream($filepath, 'r'));
+		$response = $response->withHeader('Content-Length', filesize($filepath))->withHeader('Content-Type', mime_content_type($filepath));
+		readfile($filepath);
+		return $response;
 	}
 
 	public function deleteFile($request, $response, $args) {
