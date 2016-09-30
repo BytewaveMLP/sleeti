@@ -174,7 +174,7 @@ class FileController extends Controller
 
 		while (!feof($handle)) {
 			$buffer = fread($handle, 1024 * 1024);
-			$response = $response->write($buffer);
+			echo $buffer;
 		}
 
 		fclose($handle);
