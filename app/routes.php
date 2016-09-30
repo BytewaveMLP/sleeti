@@ -15,7 +15,7 @@ $app->group('', function() use ($container) { // it's groups all the way down
 
 		$this->get('/user/{id}', 'ProfileController:viewProfile')->setName('user.profile');
 
-		$this->get('/viewfile/{filename}', 'FileController:viewFile')->setName('file.view');
+		$this->get('/viewfile/{filename}', 'FileController:viewFile')->setName('file.view')->setOutputBuffering(false);
 
 		$this->get('/community', 'CommunityController:community')->setName('community');
 
