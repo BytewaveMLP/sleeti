@@ -162,7 +162,6 @@ class FileController extends Controller
 		}
 
 		// Output file with file's MIME content type
-		$response = $response->withHeader('Content-Type', mime_content_type($filepath));
 		return $response->withBody(new \GuzzleHttp\Psr7\LazyOpenStream($filepath, 'r'));
 	}
 
