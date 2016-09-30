@@ -162,7 +162,24 @@ class FileController extends Controller
 		}
 
 		// Output file with file's MIME content type
-		return $response->withHeader('Content-Type', mime_content_type($filepath))->write(file_get_contents($filepath));
+
+		$handle = fopen($filepath, 'rb');
+
+		if ($handle === false) {
+			$this->container->flash->addMessage('danger', '<b>Uh oh!</b> We had an issue while trying to show you this file. Sorry! Try again later.');
+			return $response->withStatus(500)->withRedirect($this->container->router->pathFor('home'));
+		}
+
+		$respone = $response->withHeader('Content-Type', mime_content_type($filepath));
+
+		while (!feof($handle)) {
+			$buffer = fread($handle, 1024 * 1024);
+			$response = $response->write($buffer);
+		}
+
+		fclose($handle);
+
+		return $response;
 	}
 
 	public function deleteFile($request, $response, $args) {
