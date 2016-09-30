@@ -28,7 +28,8 @@ class FileController extends Controller
 		$dbFilename     = pathinfo($clientFilename, PATHINFO_FILENAME);
 		$ext            = pathinfo($clientFilename, PATHINFO_EXTENSION);
 
-		if (!preg_match('/^[a-zA-Z0-9\-\. ]*$/', $dbFilename) || !preg_match('/^[a-zA-Z0-9\- ]*$/', $ext)) {
+		// Maintain cross-platform compatability by ensuring all file names are valid in NTFS
+		if (strpbrk($dbFilename, "\\/?%*:|\"<>") || strpbrk($ext, "\\/?%*:|\"<>")) {
 			throw new FailedUploadException("Invalid filename or extension (filename: " . ($dbFilename) . ", ext: " . ($ext) . ").", $files['file']->getError() ?? -1);
 		}
 
