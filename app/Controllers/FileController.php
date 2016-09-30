@@ -41,7 +41,6 @@ class FileController extends Controller
 			$ext = null;
 		}
 
-		$privacy = null;
 		$privStr = $request->getParam('privacy');
 
 		if ($privStr == 'public') {
