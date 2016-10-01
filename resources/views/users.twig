@@ -22,7 +22,7 @@
 						{% for user in page.users %}
 							<tr>
 								<td>
-									<a href="{{ path_for('user.profile', {'id': user.id}) }}">{{ user.username }}</a>
+									<a href="{{ path_for('community') }}">{{ user.username }}</a>
 									{% if user.name %}({{ user.name }}){% endif %}
 									{% if user.isAdmin() %}
 										<span class="label label-danger">Administrator</span>
@@ -53,9 +53,25 @@
 									<span aria-hidden="true"><span class="fa fa-angle-left"></span></span>
 								</a>
 							</li>
-							{% for p in 1..page.last %}
-								<li{% if p == page.current %} class="active"{% endif %}><a href="{{ path_for('community') }}?page={{ p }}">{{ p }}</a></li>
-							{% endfor %}
+							{% if page.current < 6 %}
+								{% for p in 1..(page.last < 6 ? page.last : 6) %}
+									<li{% if p == page.current %} class="active"{% endif %}><a href="{{ path_for('community') }}?page={{ p }}">{{ p }}</a></li>
+								{% endfor %}
+								{% if page.last > 6 %}
+									<li><span>...</span></li>
+								{% endif %}
+							{% elseif page.current > (page.last - 6) %}
+								<li><span>...</span></li>
+								{% for p in page.last - 6..page.last %}
+									<li{% if p == page.current %} class="active"{% endif %}><a href="{{ path_for('community') }}?page={{ p }}">{{ p }}</a></li>
+								{% endfor %}
+							{% else %}
+								<li><span>...</span></li>
+								{% for p in page.current - 3..page.current + 3 %}
+									<li{% if p == page.current %} class="active"{% endif %}><a href="{{ path_for('community') }}?page={{ p }}">{{ p }}</a></li>
+								{% endfor %}
+								<li><span>...</span></li>
+							{% endif %}
 							<li{% if page.current == page.last %} class="disabled"{% endif %}>
 								<a href="{{ path_for('community') }}?page={{ page.current + 1 }}" aria-label="Next">
 									<span aria-hidden="true"><span class="fa fa-angle-right"></span></span>
