@@ -7,7 +7,7 @@
 		<div class="col-md-6 col-md-offset-3">
 			<h4 class="text-danger"><b><u>Warning!</u></b> This action is <b>irreversible</b>!</h4>
 			<p>
-				If you delete your account, <b>all files you have uploaded will be permanently deleted</b>. No questions asked. They <b>cannot</b> be recovered.
+				If you delete this account, <b>all files uploaded using it will be <u>permanently deleted</u></b>. No questions asked. They <b>cannot</b> be recovered.
 			</p>
 
 			<div class="panel panel-danger">
@@ -19,7 +19,7 @@
 					<form action="{{ path_for('user.profile.delete', {'id': id}) }}" method="post" autocomplete="off">
 						<div class="form-group{{ errors.identifier ? ' has-error' : '' }}">
 							<label for="identifier">Username or Email</label>
-							<span class="help-block">Please enter the username or email associated with this account for verification.</span>
+							<span class="help-block">Please enter the username or email associated with the account you're trying to delete for verification.</span>
 							<input type="text" name="identifier" id="identifier" placeholder="You" class="form-control" value="{{ old.identifier }}" required>
 							{% if errors.identifier %}
 								<span class="help-block">{{ errors.identifier | first }}</span>
