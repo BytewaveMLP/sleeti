@@ -80,18 +80,63 @@ class AuthController extends Controller
 		return $response->withRedirect($this->container->router->pathFor('home'));
 	}
 
-	public function deleteAccount($request, $response, $args) {
-		if ($this->container->auth->user()->id !== $args['id'] && !$this->container->auth->user()->isAdmin()) {
-			$this->container->flash->addMessage('danger', '<b>Hey!</b> What do you think you\'re doing?! You can\'t delete someone else\'s account!');
-			return $response->withRedirect($this->container->router->pathFor('home'));
-		}
+	public function getDeleteAccount($request, $response, $args) {
+		$args['id'] = $args['id'] ?? $this->container->auth->user()->id;
 
 		if (User::where('id', $args['id'])->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
-		User::where('id', $args['id'])->delete();
+		if ($this->container->auth->user()->id != $args['id'] && !$this->container->auth->user()->isAdmin()) {
+			$this->container->flash->addMessage('danger', '<b>Hey!</b> What do you think you\'re doing?! You can\'t delete someone else\'s account!');
+			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
+		}
 
-		return $response;
+		return $this->container->view->render($response, 'user/delete.twig', [
+			'id' => $args['id'] ?? $this->container->auth->user()->id,
+		]);
+	}
+
+	public function postDeleteAccount($request, $response, $args) {
+		if ($this->container->auth->user()->id != $args['id'] && !$this->container->auth->user()->isAdmin()) {
+			$this->container->flash->addMessage('danger', '<b>Hey!</b> What do you think you\'re doing?! You can\'t delete someone else\'s account!');
+			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
+		}
+
+		$users = User::where('id', $args['id']);
+
+		if ($users->count() === 0) {
+			throw new \Slim\Exception\NotFoundException($request, $response);
+		}
+
+		$user = $users->first();
+
+		$validation = $this->container->validator->validate($request, [
+			'identifier' => v::MatchesUserIdentifier($user),
+		]);
+
+		if ($validation->failed()) {
+			$this->container->flash->addMessage('danger', '<b>Whoops!</b> Looks like we\'re missing something...');
+			return $response->withRedirect($this->container->router->pathFor('user.profile.delete'));
+		}
+
+		foreach ($user->files as $file) {
+			var_dump($this->container['settings']['site']['upload']['path'] . $file->getPath());
+			unlink($this->container['settings']['site']['upload']['path'] . $file->getPath());
+			$file->delete();
+		}
+
+		$path = $this->container['settings']['site']['upload']['path'] . $user->id;
+
+		if (is_dir($path)) {
+			rmdir($path);
+		}
+
+		$user->delete();
+
+		$this->container->auth->signout();
+
+		$this->container->flash->addMessage('info', 'Account deleted.');
+		return $response->withRedirect($this->container->router->pathFor('home'));
 	}
 }

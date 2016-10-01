@@ -80,6 +80,12 @@
 
 						{{ csrf.field | raw }}
 					</form>
+
+					<hr>
+
+					<p>
+						<a href="{{ path_for('user.profile.delete') }}" class="btn btn-danger">Delete account</a>
+					</p>
 				</div>
 			</div>
 		</div>

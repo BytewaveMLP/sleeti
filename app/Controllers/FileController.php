@@ -71,7 +71,7 @@ class FileController extends Controller
 			$fileRecord->save();
 		}
 
-		$path = ($this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path']) . $fileRecord->user->id;
+		$path = $this->container['settings']['site']['upload']['path'] . $fileRecord->user->id;
 
 		try {
 			// Move file to uploaded files path
@@ -148,7 +148,7 @@ class FileController extends Controller
 
 		$file = $files->first();
 
-		$filepath  = $this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path'];
+		$filepath  = $this->container['settings']['site']['upload']['path'];
 		$filepath .= $file->getPath();
 
 		if (!file_exists($filepath) || file_get_contents($filepath) === false) {
@@ -173,7 +173,7 @@ class FileController extends Controller
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
-		$filepath  = $this->container['settings']['site']['upload']['path'] ?? $this->container['settings']['upload']['path'];
+		$filepath  = $this->container['settings']['site']['upload']['path'];
 		$filepath .= File::where('id', $id)->first()->getPath();
 
 		if (!file_exists($filepath) || file_get_contents($filepath) === false) {
@@ -201,7 +201,7 @@ class FileController extends Controller
 		$paste = $request->getParam('paste');
 
 		$validation = $this->container->validator->validate($request, [
-			'title' => v::length(null, 100)->regex('/^[a-zA-Z0-9\-\. ]*$/'),
+			'title' => v::length(null, 100)->validFilename(),
 			'paste' => v::notEmpty(),
 		]);
 
@@ -239,6 +239,12 @@ class FileController extends Controller
 			'ext'           => $ext,
 			'privacy_state' => $privacy,
 		]);
+
+		$path = $this->container['settings']['site']['upload']['path'] . $file->user->id;
+
+		if (!is_dir($path)) {
+			mkdir($path);
+		}
 
 		file_put_contents($this->container['settings']['site']['upload']['path'] . $file->getPath(), $paste);
 

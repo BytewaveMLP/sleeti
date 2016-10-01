@@ -36,6 +36,9 @@ $app->group('', function() use ($container) { // it's groups all the way down
 			$this->get('/editprofile', 'ProfileController:getEditProfile')->setName('user.profile.edit');
 			$this->post('/editprofile', 'ProfileController:postEditoProfile');
 
+			$this->get('/deleteprofile[/{id}]', 'AuthController:getDeleteAccount')->setName('user.profile.delete');
+			$this->post('/deleteprofile/{id}', 'AuthController:postDeleteAccount');
+
 			$this->group('/upload', function() {
 				$this->get('', 'FileController:getUpload')->setName('file.upload');
 				$this->post('', 'FileController:postUpload');

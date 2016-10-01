@@ -30,6 +30,11 @@
 										<span class="label label-warning">Moderator</span>
 									{% endif %}
 								</td>
+								{% if auth.user.isAdmin() %}
+									<td>
+										<a href="{{ path_for('user.profile.delete', {'id': user.id}) }}" class="btn btn-danger btn-xs">Delete</a>
+									</td>
+								{% endif %}
 							</tr>
 						{% endfor %}
 					</tbody>
