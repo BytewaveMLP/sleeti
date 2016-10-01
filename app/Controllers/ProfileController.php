@@ -7,7 +7,7 @@ use Respect\Validation\Validator as v;
 
 class ProfileController extends Controller
 {
-	const MAX_PER_PAGE = 10;
+	const MAX_PER_PAGE = 3;
 
 	public function viewProfile($request, $response, $args) {
 		$id    = $args['id'];

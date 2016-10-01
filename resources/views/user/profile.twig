@@ -122,8 +122,8 @@
 									<li><span>...</span></li>
 								{% endif %}
 							{% elseif page.current > (page.last - 6) %}
-								<li><span>...</span></li>
-								{% for p in page.last - 6..page.last %}
+								{% if page.last - 6 > 0 %}<li><span>...</span></li>{% endif %}
+								{% for p in (page.last - 6 > 0 ? page.last - 6 : 1)..page.last %}
 									<li{% if p == page.current %} class="active"{% endif %}><a href="{{ path_for('user.profile', {'id': user.id}) }}?page={{ p }}">{{ p }}</a></li>
 								{% endfor %}
 							{% else %}
