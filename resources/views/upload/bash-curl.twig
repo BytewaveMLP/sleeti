@@ -66,8 +66,7 @@ else
 	echo "^D to upload"
 fi
 
-curl -s -F file=@"$1" -F identifier="$user" -F password="$pass" "$site"
-echo "" # fixes partial line issue in zsh</code></pre>
+echo $(curl -s -F file=@"$1" -F identifier="$user" -F password="$pass" "$site")</code></pre>
 		</div>
 	</div>
 {% endblock %}
