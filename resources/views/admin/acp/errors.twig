@@ -11,7 +11,7 @@
 				</h3>
 			</div>
 			<div class="panel-body">
-				<form action="{{ path_for('admin.acp.errors') }}" method="post">
+				<form action="{{ path_for('admin.acp.errors') }}" method="post" autocomplete="off">
 					<div class="checkbox">
 						<label>
 							<input type="checkbox" name="displayErrorDetails" value="1"{{ settings.displayErrorDetails ? ' checked' : '' }}> Display exception and error details when applicable

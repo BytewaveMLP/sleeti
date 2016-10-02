@@ -11,7 +11,7 @@
 				</h3>
 			</div>
 			<div class="panel-body">
-				<form action="{{ path_for('admin.acp.site') }}" method="post">
+				<form action="{{ path_for('admin.acp.site') }}" method="post" autocomplete="off">
 					<div class="form-group{{ errors.title ? ' has-error' : '' }}">
 						<label for="title">Site title</label>
 						<input type="text" name="title" id="title" placeholder="sleeti" class="form-control" value="{{ old.title | default(settings.site.title) }}" required>

@@ -15,7 +15,7 @@
 				</h3>
 			</div>
 			<div class="panel-body">
-				<form action="{{ path_for('admin.acp.database') }}" method="post">
+				<form action="{{ path_for('admin.acp.database') }}" method="post" autocomplete="off">
 					<div class="form-group{{ errors.driver ? ' has-error' : '' }}">
 						<label for="driver">Driver</label>
 						<input type="text" name="driver" id="driver" placeholder="mysql" class="form-control" value="{{ old.driver | default(settings.db.driver) }}" required>

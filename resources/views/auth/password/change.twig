@@ -11,7 +11,7 @@
 				</div>
 
 				<div class="panel-body">
-					<form action="{{ path_for('auth.password.change') }}" method="post" autocomplete="off">
+					<form action="{{ path_for('auth.password.change') }}" method="post">
 						<div class="form-group{{ errors.password_old ? ' has-error' : '' }}">
 							<label for="password_old">Current password</label>
 							<input type="password" name="password_old" id="password_old" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" class="form-control" required>
