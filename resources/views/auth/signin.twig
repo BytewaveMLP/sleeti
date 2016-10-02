@@ -11,6 +11,10 @@
 				</div>
 
 				<div class="panel-body">
+					<p>
+						Don't have an account? <a href="{{ path_for('auth.signup') }}">Click here</a> to register!
+					</p>
+
 					<form action="{{ path_for('auth.signin') }}" method="post" autocomplete="off">
 						<div class="form-group{{ errors.identifier ? ' has-error' : '' }}">
 							<label for="identifier">Username or Email</label>
