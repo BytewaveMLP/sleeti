@@ -47,6 +47,8 @@ $app->group('', function() use ($container) { // it's groups all the way down
 				$this->post('/paste', 'FileController:postPaste');
 
 				$this->get('/sharex', 'FileController:getSharex')->setName('file.upload.sharex');
+
+				$this->get('/bash', 'FileController:getBashScript')->setName('file.upload.bash');
 			});
 
 			$this->get('/delete/{filename}', 'FileController:deleteFile')->setName('file.delete');

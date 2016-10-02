@@ -261,4 +261,12 @@ class FileController extends Controller
 			],
 		]);
 	}
+
+	public function getBashScript($request, $response) {
+		return $this->container->view->render($response, 'upload/bash-curl.twig', [
+			'site' => [
+				'url' => $request->getUri()->getBaseUrl() . $this->container->router->pathFor('file.upload.sharex'),
+			],
+		]);
+	}
 }

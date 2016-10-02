@@ -1,0 +1,73 @@
+{% extends 'templates/app.twig' %}
+
+{% block title %}Bash + cURL{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h2>Uploading with Bash and cURL</h2>
+			<p>
+				To use {{ settings.site.title | default('sleeti') }} with cURL and bash, use the following script.
+			</p>
+			<pre><code>#!/bin/bash
+
+site="{{ site.url }}"
+
+user="{{ auth.user.username }}" # your username
+pass="PUT YOUR PASSWORD HERE" # your password
+
+exit_with_error() {
+	>&amp;2 echo "`basename "$0"`: $1"
+	exit $2
+}
+
+usage() {
+	echo "sleeti upload script"
+	echo ""
+	echo "Usage:"
+	echo "    `basename "$0"` &lt;file&gt;"
+	echo "Arguments:"
+	echo "    file    The file to upload (when -, read stdin)"
+	echo "Exit codes:"
+	echo "    1       file not found"
+	echo "    2       no file specified"
+	echo "    3       required details missing"
+	echo "    127     dependency missing"
+	echo ""
+	echo "Direct all issues to Byte, and all hate to /dev/null. &lt;3"
+}
+
+# test for missing command dependencies
+type curl >/dev/null 2>&amp;1 || exit_with_error "curl: command not found" 127
+
+if [ -x "$site" ]; then
+	exit_with_error "no site specified - see script source" 3
+fi
+
+if [ -z "$user" ]; then
+	exit_with_error "no user specified - see script source" 3
+fi
+
+if [ -z "$pass" ]; then
+	exit_with_error "no password specified - see script source" 3
+fi
+
+if [ -z "$1" ]; then
+	usage
+	echo ""
+	exit_with_error "no file specified" 2
+fi
+
+if [ ! "$1" = "-" ]; then
+	if [ ! -f "$1" ]; then
+		exit_with_error "$1: file not found" 1
+	fi
+else
+	echo "^D to upload"
+fi
+
+curl -s -F file=@"$1" -F identifier="$user" -F password="$pass" "$site"
+echo "" # fixes partial line issue in zsh</code></pre>
+		</div>
+	</div>
+{% endblock %}
