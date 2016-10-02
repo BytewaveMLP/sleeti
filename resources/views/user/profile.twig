@@ -2,12 +2,6 @@
 
 {% block title %}Profile - {{ user.username }}{% endblock %}
 
-{% if user.id == auth.user.id or auth.user.isModerator() %}
-	{% set files = page.files %}
-{% else %}
-	{% set files = page.files.where('privacy_state', 0) %}
-{% endif %}
-
 {% block extrajs %}
 	<script>
 	function jq(myid) {
@@ -72,7 +66,7 @@
 			{% endif %}
 		</div>
 		<div class="col-md-{{ (user.id == auth.user.id or auth.user.isModerator()) ? '6' : '8' }}">
-			{% if files.count > 0 %}
+			{% if page.files.count > 0 %}
 				<table class="table table-striped table-bordered table-hover">
 					<thead>
 						<th>File</th>
@@ -82,7 +76,7 @@
 						{% endif %}
 					</thead>
 					<tbody>
-						{% for file in files %}
+						{% for file in page.files %}
 							{% set filename = file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') %}
 							<tr>
 								<td>

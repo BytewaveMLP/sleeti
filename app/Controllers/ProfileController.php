@@ -21,7 +21,13 @@ class ProfileController extends Controller
 
 		$user = $users->first();
 
-		$totalPages = ceil($user->files->count() / $this::MAX_PER_PAGE);
+		$files = $user->files();
+
+		if (!$this->container->auth->check() || $this->container->auth->user()->id != $user->id || !$this->container->auth->user()->isModerator()) {
+			$files = $files->where('privacy_state', 0);
+		}
+
+		$totalPages = ceil($files->get()->count() / $this::MAX_PER_PAGE);
 
 		if ($page > $totalPages) {
 			$page = $totalPages;
@@ -32,7 +38,7 @@ class ProfileController extends Controller
 		return $this->container->view->render($response, 'user/profile.twig', [
 			'user' => $user,
 			'page' => [
-				'files'   => $user->files()->skip(($page - 1) * $this::MAX_PER_PAGE)->take($this::MAX_PER_PAGE)->get(),
+				'files'   => $files->skip(($page - 1) * $this::MAX_PER_PAGE)->take($this::MAX_PER_PAGE)->get(),
 				'current' => $page,
 				'last'    => $totalPages,
 			],
