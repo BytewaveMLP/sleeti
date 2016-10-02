@@ -30,7 +30,7 @@
 
 						<div class="form-group{{ errors.paste ? ' has-error' : '' }}">
 							<label for="paste">Content</label>
-							<textarea name="paste" id="paste" cols="30" rows="15" class="form-control" required>{{ old.paste }}</textarea>
+							<textarea name="paste" id="paste" cols="30" rows="15" class="form-control" required>{{ (errors.title or errors.paste) ? old.paste : '' }}</textarea>
 							{% if errors.paste %}
 								<span class="help-block">{{ errors.paste | first }}</span>
 							{% endif %}
