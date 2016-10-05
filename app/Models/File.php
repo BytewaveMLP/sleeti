@@ -14,7 +14,7 @@ class File extends Model
 	protected $fillable = [
 		'owner_id',
 		'filename',
-		'ext',
+		'ext', // At some point, there was likely a reason for me storing this. Dunno what it is now.
 		'privacy_state',
 	];
 
