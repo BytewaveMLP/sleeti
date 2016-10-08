@@ -83,8 +83,15 @@
 									<a id="file-entry-{{ filename }}" href="{{ path_for('file.view', {'filename': filename}) }}">{{ filename }}</a>
 								</td>
 								{% if user.id == auth.user.id or auth.user.isModerator() %}
+									{% if file.privacy_state == 0 %}
+										{% set privacy = "Public" %}
+									{% elseif file.privacy_state == 1 %}
+										{% set privacy = "Unlisted" %}
+									{% else %}
+										{% set privacy = "Private" %}
+									{% endif %}
 									<td>
-										{{ file.privacy_state }}
+										{{ privacy }}
 									</td>
 									<td>
 										<a href="#" class="btn btn-danger btn-xs" id="delete-file-{{ filename }}">Delete</a>

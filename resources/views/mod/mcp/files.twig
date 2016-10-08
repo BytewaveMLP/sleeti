@@ -44,8 +44,15 @@
 						<td>
 							<a href="{{ path_for('user.profile', {'id': file.user.id}) }}">{{ file.user.username }}</a>
 						</td>
+						{% if file.privacy_state == 0 %}
+							{% set privacy = "Public" %}
+						{% elseif file.privacy_state == 1 %}
+							{% set privacy = "Unlisted" %}
+						{% else %}
+							{% set privacy = "Private" %}
+						{% endif %}
 						<td>
-							{{ file.privacy_state }}
+							{{ privacy }}
 						</td>
 						<td>
 							<a href="#" class="btn btn-danger btn-xs" id="delete-file-{{ filename }}">Delete</a>
