@@ -101,7 +101,7 @@ class FileController extends Controller
 		}
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your file was uploaded successfully. <a href="' . $this->container->router->pathFor('file.view', [
-			'filename' => urlencode($filename),
+			'filename' => rawurlencode($filename),
 		]) . '">Click here</a> to view it.');
 		return $response->withRedirect($this->container->router->pathFor('file.upload'));
 	}
@@ -121,7 +121,7 @@ class FileController extends Controller
 
 		try {
 			return $response->write($request->getUri()->getBaseUrl() . $this->container->router->pathFor('file.view', [
-				'filename' => urlencode($this->handleFileUpload($request, $this->container->auth->user())),
+				'filename' => rawurlencode($this->handleFileUpload($request, $this->container->auth->user())),
 			]));
 		} catch (FailedUploadException $e) {
 			// TODO: improve error handling
@@ -249,7 +249,7 @@ class FileController extends Controller
 		file_put_contents($this->container['settings']['site']['upload']['path'] . $file->getPath(), $paste);
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your paste was uploaded successfully. <a href="' . $this->container->router->pathFor('file.view', [
-			'filename' => urlencode($file->id . ($filename !== null ? '-' . $filename : '') . ($file->ext !== null ? '.' . $file->ext : '')),
+			'filename' => rawurlencode($file->id . ($filename !== null ? '-' . $filename : '') . ($file->ext !== null ? '.' . $file->ext : '')),
 		]) . '">Click here</a> to view it.');
 		return $response->withRedirect($this->container->router->pathFor('file.upload.paste'));
 	}
