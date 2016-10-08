@@ -29,7 +29,11 @@
 	<div class="row">
 		<div class="col-md-12">
 			<h1>
-				{{ user.username }} {% if user.name %}<small>({{ user.name }})</small>{% endif %}
+				{% if user.name %}
+					{{ user.name }} <small>({{ user.username }})</small>
+				{% else %}
+					{{ user.username }}
+				{% endif %}
 			</h1>
 		</div>
 	</div>
