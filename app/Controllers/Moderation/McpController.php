@@ -25,7 +25,7 @@ class McpController extends Controller
 
 		return $this->container->view->render($response, 'mod/mcp/files.twig', [
 			'page' => [
-				'files'   => File::skip(($page - 1) * $this::MAX_PER_PAGE)->take($this::MAX_PER_PAGE)->get(),
+				'files'   => File::orderBy('id', 'DESC')->skip(($page - 1) * $this::MAX_PER_PAGE)->take($this::MAX_PER_PAGE)->get(),
 				'current' => $page,
 				'last'    => $totalPages,
 			],

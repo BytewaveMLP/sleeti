@@ -21,7 +21,7 @@ class ProfileController extends Controller
 
 		$user = $users->first();
 
-		$files = $user->files();
+		$files = $user->files()->orderBy('id', 'DESC');
 
 		if (!$this->container->auth->check() || ($this->container->auth->user()->id != $user->id && !$this->container->auth->user()->isModerator())) {
 			$files = $files->where('privacy_state', 0);
