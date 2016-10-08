@@ -82,7 +82,7 @@
 							{% set filename = file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') %}
 							<tr>
 								<td>
-									<a id="file-entry-{{ filename | url_encode }}" href="{{ path_for('file.view', {'filename': filename}) }}">{{ filename }}</a>
+									<a id="file-entry-{{ filename | url_encode }}" href="{{ path_for('file.view', {'filename': filename | url_encode }) }}">{{ filename }}</a>
 								</td>
 								{% if user.id == auth.user.id or auth.user.isModerator() %}
 									{% if file.privacy_state == 0 %}
