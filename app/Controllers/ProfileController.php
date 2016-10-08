@@ -23,7 +23,7 @@ class ProfileController extends Controller
 
 		$files = $user->files();
 
-		if (!$this->container->auth->check() || $this->container->auth->user()->id != $user->id || !$this->container->auth->user()->isModerator()) {
+		if (!$this->container->auth->check() || ($this->container->auth->user()->id != $user->id && !$this->container->auth->user()->isModerator())) {
 			$files = $files->where('privacy_state', 0);
 		}
 
