@@ -19,6 +19,8 @@
 							</label>
 						</div>
 
+						<span class="help-block">Full power over everything&mdash;think Linux's <code>root</code>. Inherits moderator permissions, as well as access to the ACP. <b>Only give this to people you trust with full authority over all the things.</b></span>
+
 						<div class="radio">
 							<label>
 								<input type="radio" name="group" id="mod" value="mod"{% if user.isModerator() and not user.isAdmin() %} checked{% endif %}>
@@ -26,12 +28,16 @@
 							</label>
 						</div>
 
+						<span class="help-block">Site moderator. Grants access to the MCP, where <b>all files</b>, regardless of privacy levels, may be viewed and deleted.</span>
+
 						<div class="radio">
 							<label>
 								<input type="radio" name="group" id="none" value="none"{% if not user.isAdmin() and not user.isModerator() %} checked{% endif %}>
 								None
 							</label>
 						</div>
+
+						<span class="help-block">Regular user. No extra permissions, just uploading and basic user profile control.</span>
 
 						<button type="submit" class="btn btn-default">Submit</button>
 
