@@ -22,7 +22,7 @@
 					<form action="{{ path_for('file.upload.paste') }}" method="post" enctype="multipart/form-data" autocomplete="off">
 						<div class="form-group{{ errors.title ? ' has-error' : '' }}">
 							<label for="title">Title</label>
-							<input type="text" name="title" id="title" class="form-control" value="{{ old.title }}" placeholder="file.ext, file, .ext, or empty"></input>
+							<input type="text" name="title" id="title" class="form-control" value="{{ (errors.title or errors.paste) ? old.title : '' }}" placeholder="file.ext, file, .ext, or empty"></input>
 							{% if errors.title %}
 								<span class="help-block">{{ errors.title | first }}</span>
 							{% endif %}
