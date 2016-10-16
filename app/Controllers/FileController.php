@@ -176,7 +176,7 @@ class FileController extends Controller
 		// Check privacy state of file, show error if the user isn't authenticated when they need to be
 		if ($file->privacy_state == 2 && !$this->container->auth->check()) {
 			$this->container->flash->addMessage('danger', '<b>Whoops!</b> You need to sign in before you can view this file.');
-			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('auth.signin'));
+			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('auth.signin') . '?redirect=' . $this->container->router->pathFor('file.view', ['filename' => $filename]));
 		}
 
 		// Output file with file's MIME content type
