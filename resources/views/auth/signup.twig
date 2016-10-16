@@ -20,11 +20,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block title %}Sign Up{% endblock %}
 
-{% if settings.recaptcha.enabled %}
-	{% block extrajs %}
+{% block extrajs %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pwstrength-bootstrap/2.0.3/pwstrength-bootstrap.min.js"></script>
+	<script>
+	$(function () {
+		$('#password').pwstrength({
+			ui: {
+				showPopover: true
+			}
+		});
+	});
+	</script>
+
+	{% if settings.recaptcha.enabled %}
 		{{ recaptcha_script | raw }}
-	{% endblock %}
-{% endif %}
+	{% endif %}
+{% endblock %}
 
 {% block content %}
 	<div class="row">
