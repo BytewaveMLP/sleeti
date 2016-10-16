@@ -134,7 +134,7 @@ class FileController extends Controller
 		$password   = $request->getParam('password');
 
 		if (!$this->container->auth->attempt($identifier, $password)) {
-			return $response->withStatus(403)->write("Invalid credentials given.");;
+			return $response->withStatus(401)->write("Invalid credentials given.");;
 		}
 
 		try {
