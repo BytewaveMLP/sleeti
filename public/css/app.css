@@ -1,3 +1,8 @@
 body {
 	padding-top: 70px;
 }
+
+pre {
+	-moz-tab-size: 4;
+	tab-size: 4;
+}
