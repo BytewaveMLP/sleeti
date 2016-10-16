@@ -82,53 +82,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			</table>
 
 			{% if page.last != 1 %}
-				<nav aria-label="Page navigation">
-					<ul class="pagination">
-						<li{% if page.current == 1 %} class="disabled"{% endif %}>
-							<a href="{{ path_for('mod.mcp.files') }}?page=1">
-								<span aria-hidden="true"><span class="fa fa-angle-double-left"></span></span>
-								<span class="sr-only">First</span>
-							</a>
-						</li>
-						<li{% if page.current == 1 %} class="disabled"{% endif %}>
-							<a href="{{ path_for('mod.mcp.files') }}?page={{ page.current - 1 }}">
-								<span aria-hidden="true"><span class="fa fa-angle-left"></span></span>
-								<span class="sr-only">Previous</span>
-							</a>
-						</li>
-						{% if page.current < 6 %}
-							{% for p in 1..(page.last < 6 ? page.last : 6) %}
-								<li{% if p == page.current %} class="active"{% endif %}><a href="{{ path_for('mod.mcp.files') }}?page={{ p }}">{{ p }}</a></li>
-							{% endfor %}
-							{% if page.last > 6 %}
-								<li><span>...</span></li>
-							{% endif %}
-							{% elseif page.current > (page.last - 6) %}
-								{% if page.last - 6 > 0 %}<li><span>...</span></li>{% endif %}
-								{% for p in (page.last - 6 > 0 ? page.last - 6 : 1)..page.last %}
-									<li{% if p == page.current %} class="active"{% endif %}><a href="{{ path_for('mod.mcp.files') }}?page={{ p }}">{{ p }}</a></li>
-								{% endfor %}
-						{% else %}
-							<li><span>...</span></li>
-							{% for p in page.current - 3..page.current + 3 %}
-								<li{% if p == page.current %} class="active"{% endif %}><a href="{{ path_for('mod.mcp.files') }}?page={{ p }}">{{ p }}</a></li>
-							{% endfor %}
-							<li><span>...</span></li>
-						{% endif %}
-						<li{% if page.current == page.last %} class="disabled"{% endif %}>
-							<a href="{{ path_for('mod.mcp.files') }}?page={{ page.current + 1 }}">
-								<span aria-hidden="true"><span class="fa fa-angle-right"></span></span>
-								<span class="sr-only">Next</span>
-							</a>
-						</li>
-						<li{% if page.current == page.last %} class="disabled"{% endif %}>
-							<a href="{{ path_for('mod.mcp.files') }}?page={{ page.last }}">
-								<span aria-hidden="true"><span class="fa fa-angle-double-right"></span></span>
-								<span class="sr-only">Last</span>
-							</a>
-						</li>
-					</ul>
-				</nav>
+				{% include '/templates/partials/pagination.twig' with {
+					currentPage: page.current,
+					paginationPath: path_for('mod.mcp') ~ "?page=",
+					lastPage: page.last,
+					showAlwaysFirstAndLast: true
+				} only %}
 			{% endif %}
 		{% else %}
 			<b>There are no files to show.</b> :(
