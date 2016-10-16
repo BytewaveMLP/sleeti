@@ -46,15 +46,15 @@ class AuthController extends Controller
 			$request->getParam('password')
 		);
 
-		if (!$auth) {
-			$this->container->flash->addMessage('danger', '<b>Uh oh!</b> We couldn\'t find an account with those details.');
-			return $response->withRedirect($this->container->router->pathFor('auth.signin'));
-		}
-
 		$redirect = $request->getParam('redirect');
 
 		if ($redirect == '') {
 			$redirect = null;
+		}
+
+		if (!$auth) {
+			$this->container->flash->addMessage('danger', '<b>Uh oh!</b> We couldn\'t find an account with those details.');
+			return $response->withRedirect($this->container->router->pathFor('auth.signin') . ($redirect !== null ? '?redirect=' . $redirect : ''));
 		}
 
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome back!');
