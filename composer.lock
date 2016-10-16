@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2fef52d32a2f2fb0fb823921af69ebab",
-    "content-hash": "c26f1e979b9be9d5bd48b678db5de82c",
+    "hash": "43aa6e55c6e337459f91cf4ea153e05e",
+    "content-hash": "d042dee6269f6bc5edab5d900fefaa63",
     "packages": [
         {
             "name": "aptoma/twig-markdown",
@@ -866,6 +866,54 @@
                 "validator"
             ],
             "time": "2016-08-03 09:06:53"
+        },
+        {
+            "name": "robthree/twofactorauth",
+            "version": "1.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RobThree/TwoFactorAuth.git",
+                "reference": "fa781c14e34b512c1492d6c34379ef71d4ef9b9b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/RobThree/TwoFactorAuth/zipball/fa781c14e34b512c1492d6c34379ef71d4ef9b9b",
+                "reference": "fa781c14e34b512c1492d6c34379ef71d4ef9b9b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rob Janssen",
+                    "homepage": "http://robiii.me",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Two Factor Authentication",
+            "homepage": "https://github.com/RobThree/TwoFactorAuth",
+            "keywords": [
+                "Authentication",
+                "MFA",
+                "Multi Factor Authentication",
+                "Two Factor Authentication",
+                "authenticator",
+                "authy",
+                "php",
+                "tfa"
+            ],
+            "time": "2016-06-24 15:52:02"
         },
         {
             "name": "slim/csrf",
