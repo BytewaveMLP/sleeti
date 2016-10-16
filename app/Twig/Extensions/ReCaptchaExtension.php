@@ -28,7 +28,7 @@ class ReCaptchaExtension extends \Twig_Extension
 	 */
 	private $siteKey;
 
-	public function __construct(string $siteKey) {
+	public function __construct($siteKey) {
 		$this->siteKey = $siteKey;
 	}
 
