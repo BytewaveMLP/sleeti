@@ -41,19 +41,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			</ol>
 
 			<pre><code>{
-  "Name": "{{ settings.site.title | default('sleeti') }}",
-  "RequestType": "POST",
-  "RequestURL": "{{ site.url }}",
-  "FileFormName": "file",
-  "Arguments": {
-    "identifier": "{{ auth.user.username }}",
-    "password": "PUT YOUR PASSWORD HERE"
-  },
-  "ResponseType": "Text",
-  "RegexList": [
-    "(.+)"
-  ],
-  "URL": "$1$"
+	"Name": "{{ settings.site.title | default('sleeti') }}",
+	"RequestType": "POST",
+	"RequestURL": "{{ site.url }}",
+	"FileFormName": "file",
+	"Arguments": {
+		"identifier": "{{ auth.user.username }}",
+		"password": "PUT YOUR PASSWORD HERE"
+	},
+	"ResponseType": "Text",
+	"RegexList": [
+		"(.+)"
+ 	],
+	"URL": "$1$"
 }</code></pre>
 		</div>
 	</div>
