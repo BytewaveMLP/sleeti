@@ -35,7 +35,9 @@ class AuthController extends Controller
 	}
 
 	public function getSignIn($request, $response) {
-		return $this->container->view->render($response, 'auth/signin.twig');
+		return $this->container->view->render($response, 'auth/signin.twig', [
+			'redirect' => $request->getParam('redirect'),
+		]);
 	}
 
 	public function postSignIn($request, $response) {
@@ -49,8 +51,14 @@ class AuthController extends Controller
 			return $response->withRedirect($this->container->router->pathFor('auth.signin'));
 		}
 
+		$redirect = $request->getParam('redirect');
+
+		if ($redirect == '') {
+			$redirect = null;
+		}
+
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome back!');
-		return $response->withRedirect($this->container->router->pathFor('home'));
+		return $response->withRedirect($redirect ?? $this->container->router->pathFor('home'));
 	}
 
 	public function getSignUp($request, $response) {
