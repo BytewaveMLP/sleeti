@@ -84,7 +84,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			{% if page.last != 1 %}
 				{% include '/templates/partials/pagination.twig' with {
 					currentPage: page.current,
-					paginationPath: path_for('mod.mcp.home') ~ "?page=",
+					paginationPath: path_for('mod.mcp.files') ~ "?page=",
 					lastPage: page.last,
 					showAlwaysFirstAndLast: true
 				} only %}
