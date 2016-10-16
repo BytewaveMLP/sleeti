@@ -120,4 +120,20 @@ class AcpController extends Controller
 		$this->container->flash->addMessage('success', 'Error settings updated successfully!');
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.errors'));
 	}
+
+	public function getReCaptchaSettings($request, $response) {
+		return $this->container->view->render($response, 'admin/acp/recaptcha.twig');
+	}
+
+	public function postReCaptchaSettings($request, $response) {
+		$config = $this->getConfigElements($request, ['enabled', 'sitekey', 'secretkey']);
+
+		if ($this->writeConfig(['recaptcha' => $config]) === false) {
+			$this->container->flash->addMessage('danger', '<b>Uh oh!</b> Looks like <code>/config/config.json</code> failed to write. :(');
+			return $response->withRedirect($this->container->router->pathFor('admin.acp.recaptcha'));
+		}
+
+		$this->container->flash->addMessage('success', 'reCAPTCHA settings updated successfully!');
+		return $response->withRedirect($this->container->router->pathFor('admin.acp.recaptcha'));
+	}
 }

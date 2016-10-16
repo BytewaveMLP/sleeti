@@ -86,6 +86,9 @@ $app->group('', function() use ($container) { // it's groups all the way down
 
 					$this->get('/errors', 'AcpController:getErrorSettings')->setName('admin.acp.errors');
 					$this->post('/errors', 'AcpController:postErrorSettings');
+
+					$this->get('/recaptcha', 'AcpController:getReCaptchaSettings')->setName('admin.acp.recaptcha');
+					$this->post('/recaptcha', 'AcpController:postReCaptchaSettings');
 				});
 
 				$this->group('/user', function() {

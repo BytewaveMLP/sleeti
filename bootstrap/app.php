@@ -78,6 +78,8 @@ $container['view'] = function ($container) {
 
 	$view->addExtension(new MarkdownExtension($markdownEngine));
 
+	$view->addExtension(new \Sleeti\Twig\Extensions\ReCaptchaExtension($container['settings']['recaptcha']['sitekey']));
+
 	$view->getEnvironment()->addGlobal('auth', [
 		'check' => $container->auth->check(),
 		'user'  => $container->auth->user(),

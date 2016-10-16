@@ -58,12 +58,18 @@ class AuthController extends Controller
 	}
 
 	public function postSignUp($request, $response) {
-		$validation = $this->container->validator->validate($request, [
-			'email'            => v::notEmpty()->noWhitespace()->email()->emailAvailable(),
-			'username'         => v::notEmpty()->alnum('-_')->noWhitespace()->usernameAvailable(),
-			'password'         => v::notEmpty(),
-			'password_confirm' => v::passwordConfirmation($request->getParam('password')),
-		]);
+		$rules = [
+			'email'                => v::notEmpty()->noWhitespace()->email()->emailAvailable(),
+			'username'             => v::notEmpty()->alnum('-_')->noWhitespace()->usernameAvailable(),
+			'password'             => v::notEmpty(),
+			'password_confirm'     => v::passwordConfirmation($request->getParam('password')),
+		];
+
+		if ($this->container['settings']['recaptcha']['enabled']) {
+			$rules['g-recaptcha-response'] = v::reCaptcha($this->container['settings']['recaptcha']['secretkey']);
+		}
+
+		$validation = $this->container->validator->validate($request, $rules);
 
 		if ($validation->failed()) {
 			$this->container->flash->addMessage('danger', '<b>Whoops!</b> Looks like something went wrong.');

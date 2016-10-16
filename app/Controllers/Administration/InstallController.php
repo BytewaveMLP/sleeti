@@ -50,6 +50,11 @@ class InstallController extends Controller
 			'upload' => [
 				'path' => $request->getParam('uploadpath'), -1) . (substr($request->getParam('uploadpath'), -1) !== '/' ? '/' : ''),
 			],
+			'recaptcha' => [
+				'enabled'   => $request->getParam('recaptcha-enabled') == '1',
+				'sitekey'   => $request->getParam('recaptcha-sitekey'),
+				'secretkey' => $request->getParam('recaptcha-secretkey'),
+			],
 		];
 
 		if (file_put_contents(__DIR__ . '/../../config/config.json', json_encode($settings, JSON_PRETTY_PRINT)) === false) {

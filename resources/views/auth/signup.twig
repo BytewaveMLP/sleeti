@@ -20,6 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block title %}Sign Up{% endblock %}
 
+{% if settings.recaptcha.enabled %}
+	{% block extrajs %}
+		{{ recaptcha_script | raw }}
+	{% endblock %}
+{% endif %}
+
 {% block content %}
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
@@ -61,6 +67,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 								<span class="help-block">{{ errors.password_confirm | first }}</span>
 							{% endif %}
 						</div>
+
+						{% if settings.recaptcha.enabled %}
+							<div class="form-group{{ errors['g-recaptcha-response'] ? ' has-error' : '' }}">
+								{{ recaptcha_form | raw }}
+								{% if errors['g-recaptcha-response'] %}
+									<span class="help-block">{{ errors['g-recaptcha-response'] | first }}</span>
+								{% endif %}
+							</div>
+						{% endif %}
 
 						<button type="submit" class="btn btn-default">Submit</button>
 
