@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 22, 2016 at 02:03 AM
+-- Generation Time: Oct 17, 2016 at 02:01 AM
 -- Server version: 5.7.13-0ubuntu0.16.04.2
 -- PHP Version: 7.0.8-2+deb.sury.org~xenial+1
 
@@ -30,7 +30,7 @@ CREATE TABLE `uploaded_files` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `filename` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `ext` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `privacy_state` int(1) NOT NULL DEFAULT 0,
+  `privacy_state` int(1) NOT NULL DEFAULT '0',
   `owner_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
@@ -46,11 +46,13 @@ CREATE TABLE `users` (
   `id` int(10) UNSIGNED NOT NULL,
   `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tfa_enabled` tinyint(1) NOT NULL DEFAULT '0',
+  `tfa_secret` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `website` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `bio` text COLLATE utf8mb4_unicode_ci,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `default_privacy_state` int(1) NOT NULL DEFAULT 0,
+  `default_privacy_state` int(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
