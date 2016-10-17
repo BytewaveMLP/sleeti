@@ -57,8 +57,55 @@ class AuthController extends Controller
 			return $response->withRedirect($this->container->router->pathFor('auth.signin') . ($redirect !== null ? '?redirect=' . $redirect : ''));
 		}
 
+		$user = $this->container->auth->user();
+
+		if ($user->tfa_enabled) {
+			$_SESSION['tfa-partial'] = true;
+			return $response->withRedirect($redirect ?? $this->container->router->pathFor('auth.signin.2fa'));
+		}
+
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome back!');
 		return $response->withRedirect($redirect ?? $this->container->router->pathFor('home'));
+	}
+
+	public function get2Fa($request, $response) {
+		return $this->container->view->render($response, 'auth/2fa.twig', [
+			'redirect' => $request->getParam('redirect'),
+		]);
+	}
+
+	public function post2Fa($request, $response) {
+		$user   = $this->container->auth->user();
+		$tfa    = $this->container->tfa;
+		$secret = $user->tfa_secret;
+		$code   = $request->getParam('code');
+
+		$validation = $this->container->validator->validate($request, [
+			'tfa_code' => v::twoFactorAuthCode($tfa, $secret),
+		]);
+
+		if ($validation->failed()) {
+			$this->container->flash->addMessage('danger', '<b>Whoops!</b> Looks like something isn\'t quite right here...');
+			return $response->withRedirect($redirect ?? $this->container->router->pathFor('auth.signin.2fa') . ($redirect !== null ? '?redirect=' . $redirect : ''));
+		}
+
+		$redirect = $request->getParam('redirect');
+
+		if ($redirect === '') {
+			$redirect = null;
+		}
+
+		unset($_SESSION['tfa-partial']);
+
+		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome back!');
+		return $response->withRedirect($redirect ?? $this->container->router->pathFor('home'));
+	}
+
+	public function get2FaCancel($request, $response) {
+		unset($_SESSION['tfa-partial']);
+		$this->container->auth->signout();
+
+		return $response->withRedirect($this->container->router->pathFor('auth.signin'));
 	}
 
 	public function getSignUp($request, $response) {

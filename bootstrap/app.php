@@ -102,6 +102,10 @@ $container['csrf'] = function ($container) {
 	return new \Slim\Csrf\Guard;
 };
 
+$container['tfa'] = function ($container) {
+	return new \RobThree\Auth\TwoFactorAuth($container['settings']['site']['title'] ?? "sleeti");
+};
+
 $app->add(new \Sleeti\Middleware\ValidationErrorsMiddleware($container));
 $app->add(new \Sleeti\Middleware\OldInputMiddleware($container));
 

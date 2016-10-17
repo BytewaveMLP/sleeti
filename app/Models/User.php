@@ -35,6 +35,7 @@ class User extends Model
 	protected $fillable = [
 		'username',
 		'email',
+		'tfa_secret',
 		'name',
 		'website',
 		'bio',

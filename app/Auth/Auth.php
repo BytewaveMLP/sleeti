@@ -50,7 +50,7 @@ class Auth
 	 * @return boolean Is a user currently authenticated?
 	 */
 	public function check() {
-		return isset($_SESSION['user']);
+		return isset($_SESSION['user']) && !isset($_SESSION['tfa-partial']);
 	}
 
 	/**

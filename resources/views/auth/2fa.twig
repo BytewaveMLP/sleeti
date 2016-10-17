@@ -1,0 +1,57 @@
+{#
+This file is part of sleeti.
+Copyright (C) 2016  Eliot Partridge
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{% extends 'templates/app.twig' %}
+
+{% block title %}Sign In - 2FA{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Sign In - 2FA</h3>
+				</div>
+
+				<div class="panel-body">
+					<form action="{{ path_for('auth.signin.2fa') }}" method="post">
+						<div class="form-group{{ errors.tfa_code ? ' has-error' : '' }}">
+							<label for="tfa_code">Code</label>
+							<input type="text" name="tfa_code" id="tfa_code" placeholder="XXXXXX" class="form-control" required>
+							{% if errors.tfa_code %}
+								<span class="help-block">{{ errors.tfa_code | first }}</span>
+							{% endif %}
+						</div>
+
+						<button type="submit" class="btn btn-default">Submit</button>
+
+						<input type="hidden" name="redirect" value="{{ redirect }}">
+
+						{{ csrf.field | raw }}
+					</form>
+
+					<hr>
+
+					<p>
+						<a href="{{ path_for('auth.signin.2fa.cancel') }}" class="btn btn-danger">Cancel</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

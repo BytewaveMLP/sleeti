@@ -26,6 +26,10 @@ $container['AuthController'] = function ($container) {
 	return new \Sleeti\Controllers\Auth\AuthController($container);
 };
 
+$container['TwoFactorAuthController'] = function ($container) {
+	return new \Sleeti\Controllers\Auth\TwoFactorAuthController($container);
+};
+
 $container['PasswordController'] = function ($container) {
 	return new \Sleeti\Controllers\Auth\PasswordController($container);
 };
