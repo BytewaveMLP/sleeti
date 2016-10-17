@@ -63,7 +63,7 @@ class TwoFactorAuthController extends Controller
 
 		return $this->container->view->render($response, 'user/2fa/setup.twig', [
 			'tfa' => [
-				'qr_code' => $tfa->getQRCodeImageAsDataUri(($container['settings']['site']['title'] ?? "sleeti") . ':' . $user->username, $secret),
+				'qr_code' => $tfa->getQRCodeImageAsDataUri(($this->container['settings']['site']['title'] ?? "sleeti") . ':' . $user->username, $secret),
 				'secret'  => $secret,
 			],
 		]);
