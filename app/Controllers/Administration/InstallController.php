@@ -48,7 +48,7 @@ class InstallController extends Controller
 				'cost' => (int) ($request->getParam('hashcost')),
 			],
 			'upload' => [
-				'path' => $request->getParam('uploadpath'), -1) . (substr($request->getParam('uploadpath'), -1) !== '/' ? '/' : ''),
+				'path' => $request->getParam('uploadpath') . (substr($request->getParam('uploadpath'), -1) !== '/' ? '/' : ''),
 			],
 			'recaptcha' => [
 				'enabled'   => $request->getParam('recaptcha-enabled') == '1',
