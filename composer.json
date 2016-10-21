@@ -9,7 +9,8 @@
         "aptoma/twig-markdown": "^2.0",
         "erusev/parsedown": "^1.6",
         "guzzlehttp/guzzle": "^6.2",
-        "robthree/twofactorauth": "^1.5"
+        "robthree/twofactorauth": "^1.5",
+        "ircmaxell/random-lib": "^1.2"
     },
 	"autoload": {
 		"psr-4": {
