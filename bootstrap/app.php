@@ -106,6 +106,12 @@ $container['tfa'] = function ($container) {
 	return new \RobThree\Auth\TwoFactorAuth($container['settings']['site']['title'] ?? "sleeti");
 };
 
+$container['randomlib'] = function ($container) {
+	$factory  = new \RandomLib\Factory;
+	$strength = new \SecurityLib\Strength(\SecurityLib\Strength::MEDIUM);
+	return $factory->getGenerator($strength);
+};
+
 $app->add(new \Sleeti\Middleware\ValidationErrorsMiddleware($container));
 $app->add(new \Sleeti\Middleware\OldInputMiddleware($container));
 
