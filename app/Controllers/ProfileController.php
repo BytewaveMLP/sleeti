@@ -90,12 +90,14 @@ class ProfileController extends Controller
 		}
 
 		if ($privacy == 'public') {
-			$user->default_privacy_state = 0;
+			$user->settings->default_privacy_state = 0;
 		} elseif ($privacy == 'unlisted') {
-			$user->default_privacy_state = 1;
+			$user->settings->default_privacy_state = 1;
 		} elseif ($privacy == 'private') {
-			$user->default_privacy_state = 2;
+			$user->settings->default_privacy_state = 2;
 		}
+
+		$user->settings->save();
 
 		$user->website = $website;
 		$user->bio     = strip_tags($bio); // no XSS 4 u

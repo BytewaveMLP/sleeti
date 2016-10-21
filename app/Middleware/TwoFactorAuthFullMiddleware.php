@@ -26,7 +26,7 @@ namespace Sleeti\Middleware;
 class TwoFactorAuthFullMiddleware extends Middleware
 {
 	public function __invoke($request, $response, $next) {
-		if ($this->container->auth->user() && $this->container->auth->user()->tfa_enabled && isset($_SESSION['tfa-partial'])) {
+		if ($this->container->auth->user() && $this->container->auth->user()->settings->tfa_enabled && isset($_SESSION['tfa-partial'])) {
 			$this->container->flash->addMessage('warning', '<b>Hey!</b> You need to finish signing in before you can go there!');
 			return $response->withRedirect($this->container->router->pathFor('auth.signin.2fa') . "?redirect=" . $request->getUri()->getPath());
 		}

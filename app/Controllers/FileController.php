@@ -68,7 +68,7 @@ class FileController extends Controller
 		} elseif ($privStr == 'private') {
 			$privacy = 2;
 		} else {
-			$privacy = $user->default_privacy_state;
+			$privacy = $user->settings->default_privacy_state;
 		}
 
 		$fileRecord = File::create([
@@ -248,7 +248,7 @@ class FileController extends Controller
 		} elseif ($privStr == 'private') {
 			$privacy = 2;
 		} else {
-			$privacy = $user->default_privacy_state;
+			$privacy = $user->settings->default_privacy_state;
 		}
 
 		$file = File::create([

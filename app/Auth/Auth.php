@@ -21,7 +21,8 @@
 namespace Sleeti\Auth;
 
 use Sleeti\Models\User;
-use Sleeti\Models\UserPermission;
+use Sleeti\Models\UserPermissions;
+use Sleeti\Models\UserSettings;
 
 /**
  * General auth handler class
@@ -77,13 +78,18 @@ class Auth
 			}
 
 			// Just in case there isn't an associated UserPermission for this User, create one
-			if ($user->permission === null) {
-				$userPerms = UserPermission::create([
+			if ($user->permissions === null) {
+				$userPerms = UserPermissions::create([
 					'user_id' => $user->id,
 					'flags'   => '',
 				]);
+			}
 
-				$userPerms->user()->associate($user);
+			// Same for UserSettings
+			if ($user->settings === null) {
+				$userSettings = UserSettings::create([
+					'user_id' => $user->id,
+				]);
 			}
 
 			return true;

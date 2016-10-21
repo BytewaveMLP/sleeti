@@ -28,7 +28,7 @@ class TwoFactorAuthPartialMiddleware extends Middleware
 	public function __invoke($request, $response, $next) {
 		if (!$this->container->auth->user()) {
 			return $response->withRedirect($this->container->router->pathFor('auth.signin'));
-		} elseif ($this->container->auth->user()->tfa_enabled && !isset($_SESSION['tfa-partial'])) {
+		} elseif ($this->container->auth->user()->settings->tfa_enabled && !isset($_SESSION['tfa-partial'])) {
 			$this->container->flash->addMessage('warning', '<b>Hey!</b> You\'re already signed in!');
 			return $response->withRedirect($this->container->router->pathFor('home'));
 		}

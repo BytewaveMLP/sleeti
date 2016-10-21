@@ -18,20 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Sleeti\Middleware;
+namespace Sleeti\Models;
+
+use Illuminate\Database\Eloquent\Model;
 
 /**
- * Only allows access if the user hasn't set up 2fa
+ * User Settings model, one-to-one with User
  */
-class TwoFactorAuthSetupMiddleware extends Middleware
+class UserSettings extends Model
 {
-	public function __invoke($request, $response, $next) {
-		if ($this->container->auth->user()->settings->tfa_enabled) {
-			$this->container->flash->addMessage('danger', '<b>Hey!</b> You already have two-factor auth setup! Disable and re-enable it to set it up again.');
-			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('user.profile.2fa'));
-		}
+	protected $table = 'user_settings';
 
-		$response = $next($request, $response);
-		return $response;
+	protected $fillable = [
+		'user_id',
+		'tfa_enabled',
+		'tfa_secret',
+		'default_privacy_state',
+	];
+
+	public function user() {
+		return $this->belongsTo('Sleeti\\Models\\User', 'user_id', 'id');
 	}
 }

@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					<form action="{{ path_for('user.profile.2fa') }}" method="post" autocomplete="off">
 						<div class="checkbox">
 							<label>
-								<input type="checkbox" name="enable" value="1"{% if auth.user.tfa_secret != null %} checked{% endif %}>
+								<input type="checkbox" name="enable" value="1"{% if auth.user.settings.tfa_secret != null %} checked{% endif %}>
 								Enable two factor authentication
 							</label>
 						</div>

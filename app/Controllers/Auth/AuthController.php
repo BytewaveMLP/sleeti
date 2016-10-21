@@ -59,7 +59,7 @@ class AuthController extends Controller
 
 		$user = $this->container->auth->user();
 
-		if ($user->tfa_enabled) {
+		if ($user->settings->tfa_enabled) {
 			$_SESSION['tfa-partial'] = true;
 			return $response->withRedirect($redirect ?? $this->container->router->pathFor('auth.signin.2fa'));
 		}
@@ -77,7 +77,7 @@ class AuthController extends Controller
 	public function post2Fa($request, $response) {
 		$user   = $this->container->auth->user();
 		$tfa    = $this->container->tfa;
-		$secret = $user->tfa_secret;
+		$secret = $user->settings->tfa_secret;
 		$code   = $request->getParam('code');
 
 		$validation = $this->container->validator->validate($request, [
@@ -137,12 +137,10 @@ class AuthController extends Controller
 			'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10]),
 		]);
 
-		$userPerms = UserPermission::create([
+		$userPerms = UserPermissions::create([
 			'user_id' => $user->id,
 			'flags'   => '',
 		]);
-
-		$userPerms->user()->associate($user);
 
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome to ' . $this->container->settings['site']['title'] ?? 'sleeti' . '!');
 
@@ -200,7 +198,6 @@ class AuthController extends Controller
 		}
 
 		foreach ($user->files as $file) {
-			var_dump($this->container['settings']['site']['upload']['path'] . $file->getPath());
 			unlink($this->container['settings']['site']['upload']['path'] . $file->getPath());
 			$file->delete();
 		}
@@ -211,6 +208,8 @@ class AuthController extends Controller
 			rmdir($path);
 		}
 
+		$user->settings->delete();
+		$user->permissions->delete();
 		$user->delete();
 
 		$this->container->auth->signout();

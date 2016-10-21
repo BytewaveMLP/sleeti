@@ -35,16 +35,18 @@ class User extends Model
 	protected $fillable = [
 		'username',
 		'email',
-		'tfa_secret',
 		'name',
 		'website',
 		'bio',
 		'password',
-		'default_privacy_state',
 	];
 
-	public function permission() {
-		return $this->hasOne('Sleeti\\Models\\UserPermission', 'user_id', 'id');
+	public function permissions() {
+		return $this->hasOne('Sleeti\\Models\\UserPermissions', 'user_id', 'id');
+	}
+
+	public function settings() {
+		return $this->hasOne('Sleeti\\Models\\UserSettings', 'user_id', 'id');
 	}
 
 	public function files() {
@@ -52,22 +54,22 @@ class User extends Model
 	}
 
 	public function isAdmin() {
-		return $this->permission->contains('A');
+		return $this->permissions->contains('A');
 	}
 
 	public function isModerator() {
-		return $this->permission->contains('M') || $this->isAdmin();
+		return $this->permissions->contains('M') || $this->isAdmin();
 	}
 
 	public function addPermission(string $flag) {
-		if ($this->permission->contains($flag)) return;
-		$this->permission->flags .= $flag;
-		$this->permission->save();
+		if ($this->permissions->contains($flag)) return;
+		$this->permissions->flags .= $flag;
+		$this->permissions->save();
 	}
 
 	public function removePermission(string $flag) {
-		if (!$this->permission->contains($flag)) return;
-		$this->permission->flags = str_replace($flag, '', $this->permission->flags);
-		$this->permission->save();
+		if (!$this->permissions->contains($flag)) return;
+		$this->permissions->flags = str_replace($flag, '', $this->permission->flags);
+		$this->permissions->save();
 	}
 }

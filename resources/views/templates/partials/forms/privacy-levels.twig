@@ -18,21 +18,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <div class="radio">
 	<label>
-		<input type="radio" name="privacy" id="public" value="public"{% if auth.user.default_privacy_state == 0 %} checked{% endif %}>
+		<input type="radio" name="privacy" id="public" value="public"{% if auth.user.settings.default_privacy_state == 0 %} checked{% endif %}>
 		Public
 	</label>
 </div>
 
 <div class="radio">
 	<label>
-		<input type="radio" name="privacy" id="unlisted" value="unlisted"{% if auth.user.default_privacy_state == 1 %} checked{% endif %}>
+		<input type="radio" name="privacy" id="unlisted" value="unlisted"{% if auth.user.settings.default_privacy_state == 1 %} checked{% endif %}>
 		Unlisted
 	</label>
 </div>
 
 <div class="radio">
 	<label>
-		<input type="radio" name="privacy" id="private" value="private"{% if auth.user.default_privacy_state == 2 %} checked{% endif %}>
+		<input type="radio" name="privacy" id="private" value="private"{% if auth.user.settings.default_privacy_state == 2 %} checked{% endif %}>
 		Private
 	</label>
 </div>

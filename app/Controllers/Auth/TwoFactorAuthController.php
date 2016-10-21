@@ -36,16 +36,16 @@ class TwoFactorAuthController extends Controller
 
 		if ($enable) {
 			$secret = $tfa->createSecret();
-			$user->tfa_secret = $secret;
-			$user->save();
+			$user->settings->tfa_secret = $secret;
+			$user->settings->save();
 
 			$this->container->flash->addMessage('info', 'Follow the instructions below to set up two-factor authentication for your account.');
 			return $response->withRedirect($this->container->router->pathFor('user.profile.2fa.setup'));
 		}
 
-		$user->tfa_enabled = false;
-		$user->tfa_secret  = null;
-		$user->save();
+		$user->settings->tfa_enabled = false;
+		$user->settings->tfa_secret  = null;
+		$user->settings->save();
 
 		$this->container->flash->addMessage('success', 'Two-factor authentication successfully disabled.');
 		return $response->withRedirect($this->container->router->pathFor('user.profile.edit'));
@@ -53,7 +53,7 @@ class TwoFactorAuthController extends Controller
 
 	public function getSetup($request, $response) {
 		$user   = $this->container->auth->user();
-		$secret = $user->tfa_secret;
+		$secret = $user->settings->tfa_secret;
 		$tfa    = $this->container->tfa;
 
 		if ($secret === null) {
@@ -73,7 +73,7 @@ class TwoFactorAuthController extends Controller
 		$tfa    = $this->container->tfa;
 		$code   = $request->getParam('tfa_code');
 		$user   = $this->container->auth->user();
-		$secret = $user->tfa_secret;
+		$secret = $user->settings->tfa_secret;
 
 		$validation = $this->container->validator->validate($request, [
 			'tfa_code' => v::twoFactorAuthCode($tfa, $secret),
@@ -84,8 +84,8 @@ class TwoFactorAuthController extends Controller
 			return $response->withRedirect($this->container->router->pathFor('user.profile.2fa.setup'));
 		}
 
-		$user->tfa_enabled = true;
-		$user->save();
+		$user->settings->tfa_enabled = true;
+		$user->settings->save();
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> You\'ve successfully enabled two-factor authentication!');
 		return $response->withRedirect($this->container->router->pathFor('user.profile.edit'));

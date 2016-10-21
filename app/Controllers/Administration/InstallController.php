@@ -34,6 +34,9 @@ class InstallController extends Controller
 		$settings = [
 			'site' => [
 				'title' => $request->getParam('title'),
+				'upload' => [
+					'path' => $request->getParam('uploadpath') . (substr($request->getParam('uploadpath'), -1) !== '/' ? '/' : ''),
+				],
 			],
 			'db' => [
 				'driver'    => $request->getParam('dbdriver'),
@@ -46,9 +49,6 @@ class InstallController extends Controller
 			],
 			'password' => [
 				'cost' => (int) ($request->getParam('hashcost')),
-			],
-			'upload' => [
-				'path' => $request->getParam('uploadpath') . (substr($request->getParam('uploadpath'), -1) !== '/' ? '/' : ''),
 			],
 			'recaptcha' => [
 				'enabled'   => $request->getParam('recaptcha-enabled') == '1',
