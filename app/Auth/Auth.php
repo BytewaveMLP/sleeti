@@ -120,7 +120,20 @@ class Auth
 
 		$user = User::where('remember_identifier', $identifier)->where('remember_token', $tokenHash)->first();
 
-		if (!$user) return;
+		if (!$user) {
+			// Invalidate user's (forged?) remember_me cookie
+			setcookie(
+				"remember_me",
+				false,
+				1,
+				'/',
+				'',
+				isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
+				true
+			);
+			
+			return;
+		}
 
 		$_SESSION['user'] = $user->id;
 		$this->updateRememberCredentials();
