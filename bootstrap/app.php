@@ -22,6 +22,10 @@ use \Respect\Validation\Validator as v;
 use Aptoma\Twig\Extension\MarkdownExtension;
 use Aptoma\Twig\Extension\MarkdownEngine;
 
+ini_set('session.use_strict_mode', 1);
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_secure', isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on');
+
 session_start();
 
 require __DIR__ . '/../vendor/autoload.php';

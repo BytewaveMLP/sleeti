@@ -158,12 +158,15 @@ class Auth
 	public function signout() {
 		$user = $this->user();
 
+		// Actually log the user out
 		unset($_SESSION['user']);
 
+		// Remove remember credentials from user
 		$user->remember_identifier = null;
 		$user->remember_token      = null;
 		$user->save();
 
+		// Invalidate user's remember_me cookie
 		setcookie(
 			"remember_me",
 			false,
@@ -173,5 +176,11 @@ class Auth
 			isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
 			true
 		);
+
+		// Fully destroy session data in case session.use_strict_mode is 0
+		// Borrowed from eeti2 - thanks, Alex :^)
+		$params = session_get_cookie_params();
+		setcookie(session_name(), '', 1, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+		session_destroy();
 	}
 }
