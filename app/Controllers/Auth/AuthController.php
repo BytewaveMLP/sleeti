@@ -86,7 +86,7 @@ class AuthController extends Controller
 
 		if ($validation->failed()) {
 			$this->container->flash->addMessage('danger', '<b>Whoops!</b> Looks like something isn\'t quite right here...');
-			return $response->withRedirect($redirect ?? $this->container->router->pathFor('auth.signin.2fa') . ($redirect !== null ? '?redirect=' . $redirect : ''));
+			return $response->withRedirect($this->container->router->pathFor('auth.signin.2fa') . ($redirect !== null ? '?redirect=' . $redirect : ''));
 		}
 
 		$redirect = $request->getParam('redirect');
