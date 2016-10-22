@@ -20,6 +20,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block title %}ShareX Configuration{% endblock %}
 
+{% block extracss %}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/magula.min.css">
+{% endblock %}
+
+{% block extrajs %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+	<script>
+	hljs.initHighlightingOnLoad();
+	</script>
+{% endblock %}
+
 {% block content %}
 	<div class="row">
 		<div class="col-md-12">
@@ -40,7 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				<li>Go back to the Destinations dropdown, and set your image, text, and/or file uploaders to Custom</li>
 			</ol>
 
-			<pre><code>{
+			<pre><code class="json">{
 	"Name": "{{ settings.site.title | default('sleeti') }}",
 	"RequestType": "POST",
 	"RequestURL": "{{ site.url }}",

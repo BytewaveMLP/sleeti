@@ -20,6 +20,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block title %}Bash + cURL{% endblock %}
 
+{% block extracss %}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/magula.min.css">
+{% endblock %}
+
+{% block extrajs %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+	<script>
+	hljs.initHighlightingOnLoad();
+	</script>
+{% endblock %}
+
 {% block content %}
 	<div class="row">
 		<div class="col-md-12">
@@ -27,12 +38,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			<p>
 				To use {{ settings.site.title | default('sleeti') }} with cURL and bash, use the following command:
 			</p>
-			<pre><code>curl -s -F file=@"/path/to/file.ext" -F identifier="{{ auth.user.username }}" -F password="PUT YOUR PASSWORD HERE" "{{ site.url }}"</code></pre>
+			<pre><code class="bash">curl -s -F file=@"/path/to/file.ext" -F identifier="{{ auth.user.username }}" -F password="PUT YOUR PASSWORD HERE" "{{ site.url }}"</code></pre>
 
 			<p>
 				Alternatively, use the following Bash script.
 			</p>
-			<pre><code>#!/bin/bash
+			<pre><code class="bash">#!/bin/bash
 
 site="{{ site.url }}"
 
