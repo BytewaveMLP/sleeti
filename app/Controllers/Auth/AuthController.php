@@ -61,7 +61,11 @@ class AuthController extends Controller
 
 		if ($user->settings->tfa_enabled) {
 			$_SESSION['tfa-partial'] = true;
-			return $response->withRedirect($this->container->router->pathFor('auth.signin.2fa') . ($redirect ? '?redirect=' . $redirect : ''));
+			return $response->withRedirect($this->container->router->pathFor('auth.signin.2fa') . ($redirect ? '?redirect=' . $redirect : '') . ($redirect ? '&' : '?') . 'remember=' . $request->getParam('remember'));
+		}
+
+		if ($request->getParam('remember') === "1") {
+			$this->container->auth->updateRememberCredentials();
 		}
 
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome back!');
@@ -71,14 +75,20 @@ class AuthController extends Controller
 	public function get2Fa($request, $response) {
 		return $this->container->view->render($response, 'auth/2fa.twig', [
 			'redirect' => $request->getParam('redirect'),
+			'remember' => $request->getParam('remember'),
 		]);
 	}
 
 	public function post2Fa($request, $response) {
-		$user   = $this->container->auth->user();
-		$tfa    = $this->container->tfa;
-		$secret = $user->settings->tfa_secret;
-		$code   = $request->getParam('code');
+		$user     = $this->container->auth->user();
+		$tfa      = $this->container->tfa;
+		$secret   = $user->settings->tfa_secret;
+		$code     = $request->getParam('code');
+		$redirect = $request->getParam('redirect');
+
+		if ($redirect === '') {
+			$redirect = null;
+		}
 
 		$validation = $this->container->validator->validate($request, [
 			'tfa_code' => v::twoFactorAuthCode($tfa, $secret),
@@ -86,16 +96,14 @@ class AuthController extends Controller
 
 		if ($validation->failed()) {
 			$this->container->flash->addMessage('danger', '<b>Whoops!</b> Looks like something isn\'t quite right here...');
-			return $response->withRedirect($this->container->router->pathFor('auth.signin.2fa') . ($redirect ? '?redirect=' . $redirect : ''));
-		}
-
-		$redirect = $request->getParam('redirect');
-
-		if ($redirect === '') {
-			$redirect = null;
+			return $response->withRedirect($this->container->router->pathFor('auth.signin.2fa') . ($redirect ? '?redirect=' . $redirect : '') . ($redirect ? '&' : '?') . 'remember=' . $request->getParam('remember'));
 		}
 
 		unset($_SESSION['tfa-partial']);
+
+		if ($request->getParam('remember') === "1") {
+			$this->container->auth->updateRememberCredentials();
+		}
 
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome back!');
 		return $response->withRedirect($redirect ?? $this->container->router->pathFor('home'));

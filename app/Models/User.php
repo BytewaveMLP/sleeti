@@ -39,6 +39,8 @@ class User extends Model
 		'website',
 		'bio',
 		'password',
+		'remember_identifier',
+		'remember_token',
 	];
 
 	public function permissions() {

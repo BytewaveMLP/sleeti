@@ -114,6 +114,7 @@ $container['randomlib'] = function ($container) {
 
 $app->add(new \Sleeti\Middleware\ValidationErrorsMiddleware($container));
 $app->add(new \Sleeti\Middleware\OldInputMiddleware($container));
+$app->add(new \Sleeti\Middleware\RememberMeMiddleware($container));
 
 v::with('Sleeti\\Validation\\Rules');
 

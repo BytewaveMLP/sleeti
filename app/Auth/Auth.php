@@ -31,6 +31,8 @@ use Sleeti\Models\UserSettings;
  */
 class Auth
 {
+	const REMEMBER_ME_TOKEN_DELIMITER = '__|__';
+
 	protected $container;
 
 	public function __construct($container) {
@@ -60,7 +62,7 @@ class Auth
 	 * @param  string $password   The user's password
 	 * @return \Sleeti\Models\User  The User matching the given credentials (false if no user found)
 	 */
-	public function attempt($identifier, $password) {
+	public function attempt($identifier, $password, $remember = false) {
 		$user = User::where('email', $identifier)->orWhere('username', $identifier)->first();
 
 		// If there's no User with the given email or username, there's nothing to do
@@ -99,9 +101,77 @@ class Auth
 	}
 
 	/**
+	 * Attempts to authenticate a user with their remember token
+	 */
+	public function attemptRemember() {
+		if ($this->check()) return;
+
+		if (!isset($_COOKIE['remember_me']) || empty($_COOKIE['remember_me'])) return;
+
+		$cookie = $_COOKIE['remember_me'];
+
+		$parts      = explode($this::REMEMBER_ME_TOKEN_DELIMITER, $cookie);
+		$identifier = $parts[0];
+		$token      = $parts[1];
+
+		if (!$identifier || !$token) return;
+
+		$tokenHash = hash('sha384', $token);
+
+		$user = User::where('remember_identifier', $identifier)->where('remember_token', $tokenHash)->first();
+
+		if (!$user) return;
+
+		$_SESSION['user'] = $user->id;
+		$this->updateRememberCredentials();
+	}
+
+	public function updateRememberCredentials() {
+		if (!$this->check()) return;
+
+		$user = $this->user();
+
+		$rand = $this->container->randomlib;
+
+		$rememberIdentifier = $rand->generateString(255);
+		$rememberToken      = $rand->generateString(255);
+		$rememberTokenHash  = hash('sha384', $rememberToken);
+
+		$user->remember_identifier = $rememberIdentifier;
+		$user->remember_token      = $rememberTokenHash;
+		$user->save();
+
+		setcookie(
+			"remember_me",
+			$rememberIdentifier . $this::REMEMBER_ME_TOKEN_DELIMITER . $rememberToken,
+			strtotime('+30 days'),
+			'/',
+			'',
+			isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
+			true
+		);
+	}
+
+	/**
 	 * Deauthenticate the current user
 	 */
 	public function signout() {
+		$user = $this->user();
+
 		unset($_SESSION['user']);
+
+		$user->remember_identifier = null;
+		$user->remember_token      = null;
+		$user->save();
+
+		setcookie(
+			"remember_me",
+			false,
+			1,
+			'/',
+			'',
+			isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
+			true
+		);
 	}
 }
