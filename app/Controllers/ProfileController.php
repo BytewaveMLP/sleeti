@@ -104,6 +104,11 @@ class ProfileController extends Controller
 		$user->name    = $name;
 		$user->save();
 
+		$this->container->log->log('profile', \Monolog\Logger::INFO, 'User profile updated.', [
+			$user->id,
+			$user->username,
+		]);
+
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your profile was updated successfully.');
 		return $response->withRedirect($this->container->router->pathFor('user.profile', ['id' => $user->id]));
 	}

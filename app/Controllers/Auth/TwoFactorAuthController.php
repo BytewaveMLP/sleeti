@@ -47,6 +47,11 @@ class TwoFactorAuthController extends Controller
 		$user->settings->tfa_secret  = null;
 		$user->settings->save();
 
+		$this->container->log->log('2FA', \Monolog\Logger::INFO, 'User disabled 2FA.', [
+			'id'       => $user->id,
+			'username' => $user->username,
+		]);
+
 		$this->container->flash->addMessage('success', 'Two-factor authentication successfully disabled.');
 		return $response->withRedirect($this->container->router->pathFor('user.profile.edit'));
 	}
@@ -88,6 +93,12 @@ class TwoFactorAuthController extends Controller
 		$user->settings->save();
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> You\'ve successfully enabled two-factor authentication!');
+
+		$this->container->log->log('2FA', \Monolog\Logger::INFO, 'User enabled and set up 2FA.', [
+			'id'       => $user->id,
+			'username' => $user->username,
+		]);
+
 		return $response->withRedirect($this->container->router->pathFor('user.profile.edit'));
 	}
 }

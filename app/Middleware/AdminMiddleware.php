@@ -26,8 +26,16 @@ namespace Sleeti\Middleware;
 class AdminMiddleware extends Middleware
 {
 	public function __invoke($request, $response, $next) {
-		if (!$this->container->auth->user()->isAdmin()) {
+		$user = $this->container->auth->user();
+
+		if (!$user->isAdmin()) {
 			$this->container->flash->addMessage('danger', '<b>Hey!</b> Only admins are allowed there!');
+
+			$this->container->log->log('admin', \Monolog\Logger::WARNING, 'Non-admin user attempted to access admin-only area.', [
+				$user->id,
+				$user->username,
+			]);
+
 			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
 		}
 

@@ -42,11 +42,19 @@ class PasswordController extends Controller
 			return $response->withRedirect($this->container->router->pathFor('auth.password.change'));
 		}
 
-		$this->container->auth->user()->update([
+		$user = $this->container->auth->user();
+
+		$user->update([
 			'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10]),
 		]);
 
 		$this->container->flash->addMessage('success', '<b>Yay!</b> Your password has been updated successfully.');
+
+		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User password changed.', [
+			$user->id,
+			$user->username,
+		]);
+
 		return $response->withRedirect($this->container->router->pathFor('home'));
 	}
 }

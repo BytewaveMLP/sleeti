@@ -112,15 +112,32 @@ class FileController extends Controller
 
 	public function postUpload($request, $response) {
 		try {
-			$filename = $this->handleFileUpload($request, $this->container->auth->user());
+			$owner    = $this->container->auth->user();
+			$filename = $this->handleFileUpload($request, $owner);
 		} catch (FailedUploadException $e) {
 			$this->container->flash->addMessage('danger', '<b>Oh no!</b> We couldn\'t upload your file. Either the file name contains invalid characters, your file is too large, or we had trouble in handling. Sorry!');
+
+			$this->container->log->log('upload', \Monolog\Logger::ERROR, 'File upload failed.', [
+				$e->getMessage(),
+			]);
+
 			return $response->withRedirect($this->container->router->pathFor('file.upload'));
 		}
 
+		$safeFilename = rawurlencode($filename);
+
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your file was uploaded successfully. <a href="' . $this->container->router->pathFor('file.view', [
-			'filename' => rawurlencode($filename),
+			'filename' => $safeFilename,
 		]) . '">Click here</a> to view it.');
+
+		$this->container->log->log('upload', \Monolog\Logger::INFO, 'File uploaded.', [
+			'owner' => [
+				$owner->id,
+				$owner->username,
+			],
+			'filename' => $safeFilename,
+		]);
+
 		return $response->withRedirect($this->container->router->pathFor('file.upload'));
 	}
 
@@ -138,11 +155,26 @@ class FileController extends Controller
 		}
 
 		try {
+			$owner = $this->container->auth->user();
+
+			$safeFilename = rawurlencode($this->handleFileUpload($request, $owner));
+
+			$this->container->log->log('upload-sharex', \Monolog\Logger::INFO, 'File uploaded.', [
+				'owner' => [
+					$owner->id,
+					$owner->username,
+				],
+				'filename' => $safeFilename,
+			]);
+
 			return $response->write($request->getUri()->getBaseUrl() . $this->container->router->pathFor('file.view', [
-				'filename' => rawurlencode($this->handleFileUpload($request, $this->container->auth->user())),
+				'filename' => $safeFilename,
 			]));
 		} catch (FailedUploadException $e) {
-			// TODO: improve error handling
+			$this->container->log->log('upload-sharex', \Monolog\Logger::ERROR, 'File upload failed.', [
+				$e->getMessage(),
+			]);
+
 			return $response->withStatus(500)->write($e->getMessage());
 		}
 	}
@@ -187,21 +219,41 @@ class FileController extends Controller
 		$filename = $args['filename'];
 		$id       = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
 
-		if (File::where('id', $id)->count() === 0) {
+		$authedUser = $this->container->auth->user();
+
+		$files = File::where('id', $id);
+
+		if ($files->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
+
+		$file  = $files->first();
+		$owner = $file->user;
 
 		$filepath  = $this->container['settings']['site']['upload']['path'];
-		$filepath .= File::where('id', $id)->first()->getPath();
+		$filepath .= $file->getPath();
 
 		if (!file_exists($filepath) || file_get_contents($filepath) === false) {
+			$file->delete(); // broken link
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
-		if ($this->container->auth->user()->id != File::where('id', $id)->first()->owner_id && !$this->container->auth->user()->isModerator()) {
+		if ($authedUser->id != File::where('id', $id)->first()->owner_id && !$authedUser->isModerator()) {
 			// Slap people on the wrist who try to delete files they shoudn't be able to
 			return $response->withStatus(403)->redirect($this->container->router->pathFor('home'));
 		}
+
+		$this->container->log->log('file', \Monolog\Logger::INFO, 'File deleted.', [
+			'deleter' => [
+				$authedUser->id,
+				$authedUser->username,
+			],
+			'owner' => [
+				$owner->id,
+				$owner->username,
+			],
+			'file' => $filepath,
+		]);
 
 		if (unlink($filepath)) {
 			File::where('id', $id)->delete();
@@ -217,6 +269,7 @@ class FileController extends Controller
 	public function postPaste($request, $response) {
 		$title = $request->getParam('title');
 		$paste = $request->getParam('paste');
+		$owner = $this->container->auth->user();
 
 		$validation = $this->container->validator->validate($request, [
 			'title' => v::length(null, 100)->validFilename(),
@@ -252,7 +305,7 @@ class FileController extends Controller
 		}
 
 		$file = File::create([
-			'owner_id'      => $this->container->auth->user()->id,
+			'owner_id'      => $owner->id,
 			'filename'      => $filename,
 			'ext'           => $ext,
 			'privacy_state' => $privacy,
@@ -264,11 +317,22 @@ class FileController extends Controller
 			mkdir($path);
 		}
 
+		$safeFilename = rawurlencode($file->id . ($filename !== null ? '-' . $filename : '') . ($file->ext !== null ? '.' . $file->ext : ''));
+
 		file_put_contents($this->container['settings']['site']['upload']['path'] . $file->getPath(), $paste);
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your paste was uploaded successfully. <a href="' . $this->container->router->pathFor('file.view', [
-			'filename' => rawurlencode($file->id . ($filename !== null ? '-' . $filename : '') . ($file->ext !== null ? '.' . $file->ext : '')),
+			'filename' => $safeFilename,
 		]) . '">Click here</a> to view it.');
+
+		$this->container->log->log('upload-paste', \Monolog\Logger::INFO, 'Paste created.', [
+			'owner' => [
+				$owner->id,
+				$owner->username,
+			],
+			'filename' => $safeFilename,
+		]);
+
 		return $response->withRedirect($this->container->router->pathFor('file.upload.paste'));
 	}
 

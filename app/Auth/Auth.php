@@ -77,6 +77,11 @@ class Auth
 			if (password_needs_rehash($user->password, PASSWORD_DEFAULT, ['cost' => ($this->container['settings']['password']['cost'] ?? 10)])) {
 				$user->password = password_hash($password, PASSWORD_DEFAULT, ['cost' => ($this->container['settings']['password']['cost'] ?? 10)]);
 				$user->save();
+
+				$this->container->log->log('auth', \Monolog\Logger::DEBUG, 'User\'s password was rehashed.', [
+					'id'       => $user->id,
+					'username' => $user->username,
+				]);
 			}
 
 			// Just in case there isn't an associated UserPermission for this User, create one
@@ -85,14 +90,29 @@ class Auth
 					'user_id' => $user->id,
 					'flags'   => '',
 				]);
+
+				$this->container->log->log('auth', \Monolog\Logger::DEBUG, 'User permissions record created.', [
+					$user->id,
+					$user->username,
+				]);
 			}
 
 			// Same for UserSettings
 			if ($user->settings === null) {
+				$this->container->log->log('auth', \Monolog\Logger::DEBUG, 'User settings record created.', [
+					$user->id,
+					$user->username,
+				]);
+
 				$userSettings = UserSettings::create([
 					'user_id' => $user->id,
 				]);
 			}
+
+			$this->container->log->log('auth', \Monolog\Logger::INFO, 'User logged in.', [
+				$user->id,
+				$user->username,
+			]);
 
 			return true;
 		}
@@ -131,9 +151,14 @@ class Auth
 				isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
 				true
 			);
-			
+
 			return;
 		}
+
+		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User logged in with remember credentials.', [
+			$user->id,
+			$user->username,
+		]);
 
 		$_SESSION['user'] = $user->id;
 		$this->updateRememberCredentials();
@@ -195,5 +220,10 @@ class Auth
 		$params = session_get_cookie_params();
 		setcookie(session_name(), '', 1, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
 		session_destroy();
+
+		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User logged out.', [
+			$user->id,
+			$user->username,
+		]);
 	}
 }

@@ -28,6 +28,12 @@ class ModeratorMiddleware extends Middleware
 	public function __invoke($request, $response, $next) {
 		if (!$this->container->auth->user()->isModerator()) {
 			$this->container->flash->addMessage('danger', '<b>Hey!</b> Only moderators and admins are allowed there!');
+
+			$this->container->log->log('mod', \Monolog\Logger::WARNING, 'Non-mod user attempted to access mod-only area.', [
+				$user->id,
+				$user->username,
+			]);
+
 			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
 		}
 

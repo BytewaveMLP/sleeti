@@ -1,0 +1,66 @@
+{#
+This file is part of sleeti.
+Copyright (C) 2016  Eliot Partridge
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{% extends 'templates/admin/acp/main.twig' %}
+
+{% block title %}Log Settings{% endblock %}
+
+{% block acpcontent %}
+	<div class="col-md-6 col-md-offset-2">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Log Settings
+				</h3>
+			</div>
+			<div class="panel-body">
+				<form action="{{ path_for('admin.acp.log') }}" method="post" autocomplete="off">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="enabled" value="1"{{ settings.logging.enabled ? ' checked' : '' }}> Enable logging</code>
+						</label>
+					</div>
+
+					<div class="form-group">
+						<label for="path">Path</label>
+						<input type="text" class="form-control" name="path" value="{{ settings.logging.path }}" placeholder="/var/www/sleeti/logs/">
+					</div>
+
+					<div class="form-group">
+						<label for="maxFiles">Max days to retain files</label>
+						<input type="number" class="form-control" name="maxFiles" min="0" value="{{ settings.logging.maxFiles }}" placeholder="0">
+						<span class="help-block">Setting this to 0 will retain all files.</span>
+					</div>
+
+					<div class="form-group">
+						<label for="level">Log level</label>
+						<select name="level" class="form-control">
+							{% for name, value in levels %}
+								<option value="{{ value }}"{% if settings.logging.level == value %} selected{% endif %}>{{ name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					<button type="submit" class="btn btn-default">Submit</button>
+
+					{{ csrf.field | raw }}
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -105,6 +105,9 @@ $app->group('', function() use ($container) { // it's groups all the way down
 
 						$this->get('/recaptcha', 'AcpController:getReCaptchaSettings')->setName('admin.acp.recaptcha');
 						$this->post('/recaptcha', 'AcpController:postReCaptchaSettings');
+
+						$this->get('/log', 'AcpController:getLogSettings')->setName('admin.acp.log');
+						$this->post('/log', 'AcpController:postLogSettings');
 					});
 
 					$this->group('/user', function() {

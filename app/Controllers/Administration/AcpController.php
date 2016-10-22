@@ -24,6 +24,17 @@ use Sleeti\Controllers\Controller;
 
 class AcpController extends Controller
 {
+	const LOG_LEVELS = [
+		'DEBUG'     => \Monolog\Logger::DEBUG,
+		'INFO'      => \Monolog\Logger::INFO,
+		'NOTICE'    => \Monolog\Logger::NOTICE,
+		'WARNING'   => \Monolog\Logger::WARNING,
+		'ERROR'     => \Monolog\Logger::ERROR,
+		'CRITICAL'  => \Monolog\Logger::CRITICAL,
+		'ALERT'     => \Monolog\Logger::ALERT,
+		'EMERGENCY' => \Monolog\Logger::EMERGENCY,
+	];
+
 	/**
 	 * Merge current config with given config, and write to application config
 	 * @param  array   $config The config to merge and write with
@@ -62,6 +73,13 @@ class AcpController extends Controller
 			return $response->withRedirect($this->container->router->pathFor('admin.acp.database'));
 		}
 
+		$user = $this->container->auth->user();
+
+		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'Database settings updated.', [
+			$user->id,
+			$user->username,
+		]);
+
 		$this->container->flash->addMessage('success', 'Databse settings updated successfully!');
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.database'));
 	}
@@ -84,6 +102,14 @@ class AcpController extends Controller
 		}
 
 		$this->container->flash->addMessage('success', 'Site settings updated successfully!');
+
+		$user = $this->container->auth->user();
+
+		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'Site settings updated.', [
+			$user->id,
+			$user->username,
+		]);
+
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.site'));
 	}
 
@@ -99,6 +125,13 @@ class AcpController extends Controller
 			return $response->withRedirect($this->container->router->pathFor('admin.acp.password'));
 		}
 
+		$user = $this->container->auth->user();
+
+		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'Password settings updated.', [
+			$user->id,
+			$user->username,
+		]);
+
 		$this->container->flash->addMessage('success', 'Password settings updated successfully!');
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.password'));
 	}
@@ -110,12 +143,17 @@ class AcpController extends Controller
 	public function postErrorSettings($request, $response) {
 		$config = $this->getConfigElements($request, ['displayErrorDetails']);
 
-		$config['displayErrorDetails'] = $config['displayErrorDetails'] == '1';
-
 		if ($this->writeConfig($config) === false) {
 			$this->container->flash->addMessage('danger', '<b>Uh oh!</b> Looks like <code>/config/config.json</code> failed to write. :(');
 			return $response->withRedirect($this->container->router->pathFor('admin.acp.errors'));
 		}
+
+		$user = $this->container->auth->user();
+
+		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'Error settings updated.', [
+			$user->id,
+			$user->username,
+		]);
 
 		$this->container->flash->addMessage('success', 'Error settings updated successfully!');
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.errors'));
@@ -133,7 +171,49 @@ class AcpController extends Controller
 			return $response->withRedirect($this->container->router->pathFor('admin.acp.recaptcha'));
 		}
 
+		$user = $this->container->auth->user();
+
+		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'reCAPTCHA settings updated.', [
+			$user->id,
+			$user->username,
+		]);
+
 		$this->container->flash->addMessage('success', 'reCAPTCHA settings updated successfully!');
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.recaptcha'));
+	}
+
+	public function getLogSettings($request, $response) {
+		return $this->container->view->render($response, 'admin/acp/log.twig', [
+			'levels' => $this::LOG_LEVELS,
+		]);
+	}
+
+	public function postLogSettings($request, $response) {
+		$config = $this->getConfigElements($request, ['enabled', 'path', 'maxFiles', 'level']);
+
+		if (substr($config['path'], -1) != '/') $config['path'] .= '/';
+
+		if ($config['maxFiles'] < 0) $config['maxFiles'] = 0;
+
+		$config['level'] = (int) $config['level'];
+
+		if (!in_array($config['level'], $this::LOG_LEVELS)) {
+			$config['level'] = $this::LOG_LEVELS['INFO']['value'];
+		}
+
+		if ($this->writeConfig(['logging' => $config]) === false) {
+			$this->container->flash->addMessage('danger', '<b>Uh oh!</b> Looks like <code>/config/config.json</code> failed to write. :(');
+			return $response->withRedirect($this->container->router->pathFor('admin.acp.log'));
+		}
+
+		$user = $this->container->auth->user();
+
+		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'Log settings updated.', [
+			$user->id,
+			$user->username,
+		]);
+
+		$this->container->flash->addMessage('success', 'Log settings updated successfully!');
+		return $response->withRedirect($this->container->router->pathFor('admin.acp.log'));
 	}
 }

@@ -106,6 +106,12 @@ class AuthController extends Controller
 		}
 
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome back!');
+
+		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User finished logging in with 2FA.', [
+			$user->id,
+			$user->username,
+		]);
+
 		return $response->withRedirect($redirect ?? $this->container->router->pathFor('home'));
 	}
 
@@ -152,9 +158,16 @@ class AuthController extends Controller
 
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome to ' . $this->container->settings['site']['title'] ?? 'sleeti' . '!');
 
+		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User signed up.', [
+			$user->id,
+			$user->username,
+		]);
+
 		if ($user->id === 1) { // if this is the only user, give them admin
 			$user->addPermission('A');
 			$this->container->flash->addMessage('info', 'New administrative account created!');
+
+			$this->container->log->log('auth', \Monolog\Logger::INFO, 'Administrative account created.');
 		}
 
 		$this->container->auth->attempt(
@@ -215,6 +228,11 @@ class AuthController extends Controller
 		if (is_dir($path)) {
 			rmdir($path);
 		}
+
+		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User account deleted.', [
+			$user->id,
+			$user->username,
+		]);
 
 		$user->settings->delete();
 		$user->permissions->delete();

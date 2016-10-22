@@ -47,12 +47,13 @@ class AdminController extends Controller
 
 		if ($user === null) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
-		} elseif ($user === $this->container->auth->user()) {
+		} elseif ($user->id === $this->container->auth->user()->id) {
 			$this->container->flash->addMessage('danger', '<b>Hey!</b> You can\'t change your own group!');
 			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
 		}
 
-		$group = $request->getParam('group');
+		$group    = $request->getParam('group');
+		$oldGroup = $user->permissions->flags;
 
 		if ($group === "admin") {
 			$user->removePermission('M');
@@ -64,6 +65,23 @@ class AdminController extends Controller
 			$user->removePermission('M');
 			$user->removePermission('A');
 		}
+
+		$authedUser = $this->container->auth->user();
+
+		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'Usergroup changed.', [
+			'changer' => [
+				'id'       => $authedUser->id,
+				'username' => $authedUser->username,
+			],
+			'changed' => [
+				'id'       => $user->id,
+				'username' => $user->username,
+			],
+			'groups' => [
+				'old' => $oldGroup,
+				'new' => $user->permissions->flags,
+			],
+		]);
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> ' . $user->username . '\'s usergroup was changed successfully.');
 		return $response->withRedirect($this->container->router->pathFor('user.profile', [
