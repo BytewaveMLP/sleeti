@@ -22,7 +22,7 @@ namespace Sleeti\Controllers\Auth;
 
 use Sleeti\Controllers\Controller;
 use Sleeti\Models\User;
-use Sleeti\Models\UserPermission;
+use Sleeti\Models\UserPermissions;
 use Respect\Validation\Validator as v;
 
 class AuthController extends Controller
