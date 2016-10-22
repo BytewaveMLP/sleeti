@@ -131,10 +131,11 @@ class Auth
 		$cookie = $_COOKIE['remember_me'];
 
 		$parts      = explode($this::REMEMBER_ME_TOKEN_DELIMITER, $cookie);
+
+		if (!isset($parts[0]) || !isset($parts[1])) return;
+
 		$identifier = $parts[0];
 		$token      = $parts[1];
-
-		if (!$identifier || !$token) return;
 
 		$tokenHash = hash('sha384', $token);
 
