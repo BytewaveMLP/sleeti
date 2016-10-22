@@ -261,7 +261,7 @@ class FileController extends Controller
 				],
 				'file' => $safeFilename,
 			]);
-			return $response->withStatus(403)->redirect($this->container->router->pathFor('home'));
+			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
 		}
 
 		$this->container->log->log('file', \Monolog\Logger::INFO, 'File deleted.', [
