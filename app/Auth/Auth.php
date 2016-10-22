@@ -23,6 +23,7 @@ namespace Sleeti\Auth;
 use Sleeti\Models\User;
 use Sleeti\Models\UserPermissions;
 use Sleeti\Models\UserSettings;
+use Sleeti\Models\UserRememberToken;
 
 /**
  * General auth handler class
@@ -120,49 +121,65 @@ class Auth
 		return false;
 	}
 
-	/**
-	 * Attempts to authenticate a user with their remember token
-	 */
-	public function attemptRemember() {
-		if ($this->check()) return;
-
-		if (!isset($_COOKIE['remember_me']) || empty($_COOKIE['remember_me'])) return;
+	public function getRememberCredentialsFromCookie() {
+		if (!isset($_COOKIE['remember_me']) || empty($_COOKIE['remember_me'])) return null;
 
 		$cookie = $_COOKIE['remember_me'];
 
 		$parts = explode($this::REMEMBER_ME_TOKEN_DELIMITER, $cookie);
 
 		if (!isset($parts[0]) || !isset($parts[1])) {
-			$this->removeRememberMeCookie();
+			$this->removeRememberCookie();
+			return null;
+		}
+
+		return $parts;
+	}
+
+	/**
+	 * Attempts to authenticate a user with their remember token
+	 */
+	public function attemptRemember() {
+		if ($this->check()) return;
+
+		$parts = $this->getRememberCredentialsFromCookie();
+
+		if (!$parts) {
+			$this->removeRememberCookie();
 			return;
 		}
 
-		$identifier = $parts[0];
-		$token      = $parts[1];
+		$tokens = UserRememberToken::where('identifier', $parts[0])->get();
 
-		$tokenHash = hash('sha384', $token);
-
-		$user = User::where('remember_identifier', $identifier)->first();
-
-		if (!$user || !hash_equals($user->remember_token, $tokenHash)) {
-			// Invalidate user's (forged?) remember_me cookie
-			$this->removeRememberMeCookie();
-
-			$this->container->log->log('auth', \Monolog\Logger::WARNING, 'User attempted to log in with invalid remember credentials.', [
-				'forwarded-ip' => $_SERVER['HTTP_X_FORWARDED_FOR'],
-				'ip'           => $_SERVER['REMOTE_ADDR'],
-			]);
-
+		if ($tokens->count() <= 0) {
+			$this->removeRememberCookie();
 			return;
 		}
 
-		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User logged in with remember credentials.', [
-			$user->id,
-			$user->username,
+		$tokenHash = hash('sha384', $parts[1]);
+
+		foreach ($tokens as $token) {
+			if (hash_equals($token->token, $tokenHash) && strtotime($token->expires) > time()) {
+				$_SESSION['user'] = $token->user_id;
+
+				$user = $this->user();
+
+				$this->container->log->log('auth', \Monolog\Logger::INFO, 'User logged in with remember credentials.', [
+					$user->id,
+					$user->username,
+				]);
+
+				return;
+			}
+		}
+
+		// Invalidate user's (forged?) remember_me cookie
+		$this->removeRememberCookie();
+
+		$this->container->log->log('auth', \Monolog\Logger::WARNING, 'User attempted to log in with invalid remember credentials.', [
+			'forwarded-ip' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '',
+			'ip'           => $_SERVER['REMOTE_ADDR'],
 		]);
-
-		$_SESSION['user'] = $user->id;
-		$this->updateRememberCredentials();
 	}
 
 	public function updateRememberCredentials() {
@@ -176,9 +193,12 @@ class Auth
 		$rememberToken      = $rand->generateString(255);
 		$rememberTokenHash  = hash('sha384', $rememberToken);
 
-		$user->remember_identifier = $rememberIdentifier;
-		$user->remember_token      = $rememberTokenHash;
-		$user->save();
+		UserRememberToken::create([
+			'user_id'    => $user->id,
+			'identifier' => $rememberIdentifier,
+			'token'      => $rememberTokenHash,
+			'expires'    => date('Y-m-d H:i:s', strtotime('+30 days')),
+		]);
 
 		setcookie(
 			"remember_me",
@@ -191,7 +211,22 @@ class Auth
 		);
 	}
 
-	public function removeRememberMeCookie() {
+	public function removeRememberCredentials() {
+		$parts = $this->getRememberCredentialsFromCookie();
+		if (!$parts) return;
+
+		$tokens = UserRememberToken::where('identifier', $parts[0])->get();
+		if ($tokens->count() == 0) return;
+
+		foreach ($tokens as $token) {
+			if (hash_equals($token->token, hash('sha384', $parts[1]))) {
+				$token->delete();
+				break;
+			}
+		}
+	}
+
+	public function removeRememberCookie() {
 		setcookie(
 			"remember_me",
 			false,
@@ -212,13 +247,9 @@ class Auth
 		// Actually log the user out
 		unset($_SESSION['user']);
 
-		// Remove remember credentials from user
-		$user->remember_identifier = null;
-		$user->remember_token      = null;
-		$user->save();
-
-		// Invalidate user's remember_me cookie
-		$this->removeRememberMeCookie();
+		// Invalidate user's remember_me credentials
+		$this->removeRememberCredentials();
+		$this->removeRememberCookie();
 
 		// Fully destroy session data in case session.use_strict_mode is 0
 		// Borrowed from eeti2 - thanks, Alex :^)

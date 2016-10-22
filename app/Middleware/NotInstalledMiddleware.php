@@ -30,7 +30,7 @@ class NotInstalledMiddleware extends Middleware
 			$this->container->flash->addMessage('danger', '<b>Hey!</b> This instance of sleeti is already configured!');
 
 			$this->container->log->log('install', \Monolog\Logger::WARNING, 'Someone tried to access the install page when Sleeti was already installed.', [
-				'forwarded-ip' => $_SERVER['HTTP_X_FORWARDED_FOR'],
+				'forwarded-ip' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '',
 				'ip'           => $_SERVER['REMOTE_ADDR'],
 			]);
 

@@ -39,8 +39,6 @@ class User extends Model
 		'website',
 		'bio',
 		'password',
-		'remember_identifier',
-		'remember_token',
 	];
 
 	public function permissions() {
@@ -53,6 +51,10 @@ class User extends Model
 
 	public function files() {
 		return $this->hasMany('Sleeti\\Models\\File', 'owner_id', 'id');
+	}
+
+	public function rememberTokens() {
+		return $this->hasMany('Sleeti\\Models\\UserRememberToken', 'user_id', 'id');
 	}
 
 	public function isAdmin() {
