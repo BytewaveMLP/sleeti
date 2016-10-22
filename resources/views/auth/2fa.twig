@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					<form action="{{ path_for('auth.signin.2fa') }}" method="post">
 						<div class="form-group{{ errors.tfa_code ? ' has-error' : '' }}">
 							<label for="tfa_code">Code</label>
-							<input type="text" name="tfa_code" id="tfa_code" placeholder="XXXXXX" class="form-control" required>
+							<input type="text" name="tfa_code" id="tfa_code" placeholder="123456" class="form-control" required autofocus>
 							{% if errors.tfa_code %}
 								<span class="help-block">{{ errors.tfa_code | first }}</span>
 							{% endif %}
