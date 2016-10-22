@@ -12,6 +12,10 @@ class Logger {
 	public function __construct($container) {
 		$this->container = $container;
 
+		if (!is_dir($this->container['settings']['logging']['path']) && $this->container['settings']['logging']['enabled']) {
+			mkdir($this->container['settings']['logging']['path']);
+		}
+
 		$logfile       = $this->container['settings']['logging']['path'] . 'sleeti.log';
 		$this->handler = new \Monolog\Handler\RotatingFileHandler($logfile, $container['settings']['logging']['maxFiles'] ?? 0);
 
