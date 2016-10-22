@@ -130,9 +130,12 @@ class Auth
 
 		$cookie = $_COOKIE['remember_me'];
 
-		$parts      = explode($this::REMEMBER_ME_TOKEN_DELIMITER, $cookie);
+		$parts = explode($this::REMEMBER_ME_TOKEN_DELIMITER, $cookie);
 
-		if (!isset($parts[0]) || !isset($parts[1])) return;
+		if (!isset($parts[0]) || !isset($parts[1])) {
+			$this->removeRememberMeCookie();
+			return;
+		}
 
 		$identifier = $parts[0];
 		$token      = $parts[1];
