@@ -118,6 +118,10 @@ class FileController extends Controller
 			$this->container->flash->addMessage('danger', '<b>Oh no!</b> We couldn\'t upload your file. Either the file name contains invalid characters, your file is too large, or we had trouble in handling. Sorry!');
 
 			$this->container->log->log('upload', \Monolog\Logger::ERROR, 'File upload failed.', [
+				'uploader' => [
+					$owner->id,
+					$owner->username,
+				],
 				$e->getMessage(),
 			]);
 
@@ -172,6 +176,10 @@ class FileController extends Controller
 			]));
 		} catch (FailedUploadException $e) {
 			$this->container->log->log('upload-sharex', \Monolog\Logger::ERROR, 'File upload failed.', [
+				'uploader' => [
+					$owner->id,
+					$owner->username,
+				],
 				$e->getMessage(),
 			]);
 
