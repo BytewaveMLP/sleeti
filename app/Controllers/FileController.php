@@ -261,6 +261,7 @@ class FileController extends Controller
 				],
 				'file' => $safeFilename,
 			]);
+			
 			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
 		}
 
