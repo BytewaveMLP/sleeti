@@ -61,7 +61,7 @@ class AuthController extends Controller
 
 		if ($user->settings->tfa_enabled) {
 			$_SESSION['tfa-partial'] = true;
-			return $response->withRedirect($redirect ?? $this->container->router->pathFor('auth.signin.2fa'));
+			return $response->withRedirect($this->container->router->pathFor('auth.signin.2fa') . ($redirect !== null ? '?redirect=' . $redirect : ''));
 		}
 
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome back!');
