@@ -138,20 +138,11 @@ class Auth
 
 		$tokenHash = hash('sha384', $token);
 
-		$user = User::where('remember_identifier', $identifier)->where('remember_token', $tokenHash)->first();
+		$user = User::where('remember_identifier', $identifier)->first();
 
-		if (!$user) {
+		if (!$user || !hash_equals($user->remember_token, $tokenHash)) {
 			// Invalidate user's (forged?) remember_me cookie
-			setcookie(
-				"remember_me",
-				false,
-				1,
-				'/',
-				'',
-				isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
-				true
-			);
-
+			$this->removeRememberMeCookie();
 			return;
 		}
 
@@ -190,6 +181,18 @@ class Auth
 		);
 	}
 
+	public function removeRememberMeCookie() {
+		setcookie(
+			"remember_me",
+			false,
+			1,
+			'/',
+			'',
+			isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
+			true
+		);
+	}
+
 	/**
 	 * Deauthenticate the current user
 	 */
@@ -205,15 +208,7 @@ class Auth
 		$user->save();
 
 		// Invalidate user's remember_me cookie
-		setcookie(
-			"remember_me",
-			false,
-			1,
-			'/',
-			'',
-			isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
-			true
-		);
+		$this->removeRememberMeCookie();
 
 		// Fully destroy session data in case session.use_strict_mode is 0
 		// Borrowed from eeti2 - thanks, Alex :^)
