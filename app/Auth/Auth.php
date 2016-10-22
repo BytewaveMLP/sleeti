@@ -143,6 +143,12 @@ class Auth
 		if (!$user || !hash_equals($user->remember_token, $tokenHash)) {
 			// Invalidate user's (forged?) remember_me cookie
 			$this->removeRememberMeCookie();
+
+			$this->container->log->log('auth', \Monolog\Logger::WARNING, 'User attempted to log in with invalid remember credentials.', [
+				'forwarded-ip' => $_SERVER['HTTP_X_FORWARDED_FOR'],
+				'ip'           => $_SERVER['REMOTE_ADDR'],
+			]);
+
 			return;
 		}
 
