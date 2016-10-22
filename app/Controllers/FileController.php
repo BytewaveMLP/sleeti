@@ -251,6 +251,8 @@ class FileController extends Controller
 			return $response->withStatus(403)->redirect($this->container->router->pathFor('home'));
 		}
 
+		$safeFilename = rawurlencode($file->id . ($filename !== null ? '-' . $filename : '') . ($file->ext !== null ? '.' . $file->ext : ''));
+
 		$this->container->log->log('file', \Monolog\Logger::INFO, 'File deleted.', [
 			'deleter' => [
 				$authedUser->id,
@@ -260,7 +262,7 @@ class FileController extends Controller
 				$owner->id,
 				$owner->username,
 			],
-			'file' => $filepath,
+			'file' => $safeFilename,
 		]);
 
 		if (unlink($filepath)) {
