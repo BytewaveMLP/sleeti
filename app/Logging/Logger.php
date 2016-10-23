@@ -20,11 +20,26 @@
 
 namespace Sleeti\Logging;
 
-class Logger {
+/**
+ * Handles Sleeti logging
+ */
+class Logger
+{
+	/**
+	 * Slim 3 container object
+	 */
 	protected $container;
 
+	/**
+	 * Log file handler
+	 * @var \Monolog\Handler\RotatingFileHandler
+	 */
 	protected $handler;
 
+	/**
+	 * Array of cached Monolog logger instances
+	 * @var array
+	 */
 	protected $loggers;
 
 	public function __construct($container) {
@@ -44,12 +59,23 @@ class Logger {
 		$this->handler->setFormatter($formatter);
 	}
 
+	/**
+	 * Adds a logger to the loggers cache
+	 * @param string $name The name of the log channel this logger uses
+	 */
 	private function addLogger($name) {
 		$logger = new \Monolog\Logger($name);
 		$logger->pushHandler($this->handler, $this->container['settings']['logging']['level'] ?? \Monolog\Logger::INFO);
 		$this->loggers[$name] = $logger;
 	}
 
+	/**
+	 * Logs to a specific logger channel
+	 * @param  string $name    [description]
+	 * @param  int    $level   [description]
+	 * @param  mixed  $message [description]
+	 * @param  array  $context [description]
+	 */
 	public function log($name, $level, $message, array $context = []) {
 		if (!$this->container['settings']['logging']['enabled']) return;
 

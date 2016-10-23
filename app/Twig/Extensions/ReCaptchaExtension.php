@@ -20,6 +20,9 @@
 
 namespace Sleeti\Twig\Extensions;
 
+/**
+ * Provides reCAPTCHA support to Twig views
+ */
 class ReCaptchaExtension extends \Twig_Extension
 {
 	/**
@@ -28,6 +31,10 @@ class ReCaptchaExtension extends \Twig_Extension
 	 */
 	private $siteKey;
 
+	/**
+	 * Creates a new instance of the reCAPTCHA extension
+	 * @param string $siteKey The reCAPTCHA site key
+	 */
 	public function __construct($siteKey) {
 		$this->siteKey = $siteKey;
 	}
@@ -60,8 +67,10 @@ class ReCaptchaExtension extends \Twig_Extension
 	 */
 	public function getGlobals() {
 		return [
-			'recaptcha_script' => $this->reCaptchaScript(),
-			'recaptcha_form'   => $this->reCaptchaForm(),
+			'recaptcha' => [
+				'script' => $this->reCaptchaScript(),
+				'form'   => $this->reCaptchaForm(),
+			],
 		];
 	}
 }

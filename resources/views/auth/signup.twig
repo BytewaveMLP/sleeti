@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	</script>
 
 	{% if settings.recaptcha.enabled %}
-		{{ recaptcha_script | raw }}
+		{{ recaptcha.script | raw }}
 	{% endif %}
 {% endblock %}
 
@@ -81,7 +81,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 						{% if settings.recaptcha.enabled %}
 							<div class="form-group{{ errors['g-recaptcha-response'] ? ' has-error' : '' }}">
-								{{ recaptcha_form | raw }}
+								{{ recaptcha.form | raw }}
 								{% if errors['g-recaptcha-response'] %}
 									<span class="help-block">{{ errors['g-recaptcha-response'] | first }}</span>
 								{% endif %}
