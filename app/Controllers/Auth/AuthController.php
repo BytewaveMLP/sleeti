@@ -234,11 +234,11 @@ class AuthController extends Controller
 			$user->username,
 		]);
 
+		$this->container->auth->signout();
+
 		$user->settings->delete();
 		$user->permissions->delete();
 		$user->delete();
-
-		$this->container->auth->signout();
 
 		$this->container->flash->addMessage('info', 'Account deleted.');
 		return $response->withRedirect($this->container->router->pathFor('home'));
