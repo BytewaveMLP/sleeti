@@ -213,10 +213,26 @@ class FileController extends Controller
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
-		// Check privacy state of file, show error if the user isn't authenticated when they need to be
-		if ($file->privacy_state == 2 && !$this->container->auth->check()) {
-			$this->container->flash->addMessage('danger', '<b>Whoops!</b> You need to sign in before you can view this file.');
-			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('auth.signin') . '?redirect=' . $this->container->router->pathFor('file.view', ['filename' => $filename]));
+		$user  = $this->container->auth->user();
+		$owner = $file->user;
+
+		$safeFilename = rawurlencode($file->id . ($name !== null ? '-' . $name : '') . ($ext !== null ? '.' . $ext : ''));
+
+		// Check privacy state of file, show error if the user doesn't have permission to view
+		if ($file->privacy_state == 2 && (!$this->container->auth->check() || ($user->id !== $owner->id && !$user->isModerator()))) {
+			$this->container->log->log('file', \Monolog\Logger::WARNING, 'User attempted to view a file they don\'t have permission to.', [
+				'viewer' => [
+					$user->id ?? 'NONE',
+					$user->username ?? 'NONE',
+				],
+				'owner' => [
+					$owner->id,
+					$owner->username,
+				],
+				'file' => $safeFilename,
+			]);
+
+			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
 		// Output file with file's MIME content type
@@ -261,7 +277,7 @@ class FileController extends Controller
 				],
 				'file' => $safeFilename,
 			]);
-			
+
 			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
 		}
 
