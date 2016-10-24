@@ -23,10 +23,18 @@ namespace Sleeti\Validation;
 use Respect\Validation\Validator as Respect;
 use Respect\Validation\Exceptions\NestedValidationException;
 
+/**
+ * Respect validation wrapper
+ */
 class Validator
 {
 	protected $errors;
 
+	/**
+	 * Validates form data with the given Respect rules
+	 * @param  array  $rules   The rules to validate against
+	 * @return Validator       A new Sleeti validator with the given errors
+	 */
 	public function validate($request, array $rules) {
 		foreach ($rules as $field => $rule) {
 			try {
