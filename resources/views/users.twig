@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			</p>
 		</div>
 		<div class="col-md-8">
-			{% if page.users %}
+			{% if page.users|length != 0 %}
 				<table class="table table-striped table-bordered table-hover">
 					<tbody>
 						{% for user in page.users %}
@@ -69,7 +69,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				{% endif %}
 			{% else %}
 				<p>
-					No one has an account! D:
+					<b>No one has an account!</b> D:
 				</p>
 			{% endif %}
 		</div>
