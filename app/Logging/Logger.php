@@ -86,10 +86,10 @@ class Logger
 
 	/**
 	 * Logs to a specific logger channel
-	 * @param  string $name    [description]
-	 * @param  int    $level   [description]
-	 * @param  mixed  $message [description]
-	 * @param  array  $context [description]
+	 * @param  string $name    The logger channel to log to
+	 * @param  int    $level   The logging level to output on
+	 * @param  mixed  $message The log message to write
+	 * @param  array  $context Any extra details to log with the message
 	 */
 	public function log($name, $level, $message, array $context = []) {
 		if (!$this->container['settings']['logging']['enabled']) return;
