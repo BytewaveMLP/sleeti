@@ -26,6 +26,21 @@ namespace Sleeti\Logging;
 class Logger
 {
 	/**
+	 * Log levels constant array
+	 * @var array
+	 */
+	const LOG_LEVELS = [
+		'DEBUG'     => \Monolog\Logger::DEBUG,
+		'INFO'      => \Monolog\Logger::INFO,
+		'NOTICE'    => \Monolog\Logger::NOTICE,
+		'WARNING'   => \Monolog\Logger::WARNING,
+		'ERROR'     => \Monolog\Logger::ERROR,
+		'CRITICAL'  => \Monolog\Logger::CRITICAL,
+		'ALERT'     => \Monolog\Logger::ALERT,
+		'EMERGENCY' => \Monolog\Logger::EMERGENCY,
+	];
+
+	/**
 	 * Slim 3 container object
 	 */
 	protected $container;

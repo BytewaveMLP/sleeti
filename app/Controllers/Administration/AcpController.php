@@ -24,17 +24,6 @@ use Sleeti\Controllers\Controller;
 
 class AcpController extends Controller
 {
-	const LOG_LEVELS = [
-		'DEBUG'     => \Monolog\Logger::DEBUG,
-		'INFO'      => \Monolog\Logger::INFO,
-		'NOTICE'    => \Monolog\Logger::NOTICE,
-		'WARNING'   => \Monolog\Logger::WARNING,
-		'ERROR'     => \Monolog\Logger::ERROR,
-		'CRITICAL'  => \Monolog\Logger::CRITICAL,
-		'ALERT'     => \Monolog\Logger::ALERT,
-		'EMERGENCY' => \Monolog\Logger::EMERGENCY,
-	];
-
 	/**
 	 * Merge current config with given config, and write to application config
 	 * @param  array   $config The config to merge and write with
@@ -184,7 +173,7 @@ class AcpController extends Controller
 
 	public function getLogSettings($request, $response) {
 		return $this->container->view->render($response, 'admin/acp/log.twig', [
-			'levels' => $this::LOG_LEVELS,
+			'levels' => \Sleeti\Logging\Logger::LOG_LEVELS,
 		]);
 	}
 
@@ -197,8 +186,8 @@ class AcpController extends Controller
 
 		$config['level'] = (int) $config['level'];
 
-		if (!in_array($config['level'], $this::LOG_LEVELS)) {
-			$config['level'] = $this::LOG_LEVELS['INFO']['value'];
+		if (!in_array($config['level'], \Sleeti\Logging\Logger::LOG_LEVELS)) {
+			$config['level'] = \Sleeti\Logging\Logger::LOG_LEVELS['INFO']['value'];
 		}
 
 		if ($this->writeConfig(['logging' => $config]) === false) {
