@@ -187,7 +187,7 @@ class AcpController extends Controller
 		$config['level'] = (int) $config['level'];
 
 		if (!in_array($config['level'], \Sleeti\Logging\Logger::LOG_LEVELS)) {
-			$config['level'] = \Sleeti\Logging\Logger::LOG_LEVELS['INFO']['value'];
+			$config['level'] = \Sleeti\Logging\Logger::LOG_LEVELS['INFO'];
 		}
 
 		if ($this->writeConfig(['logging' => $config]) === false) {
