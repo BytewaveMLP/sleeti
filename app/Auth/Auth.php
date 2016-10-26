@@ -169,6 +169,22 @@ class Auth
 					$user->username,
 				]);
 
+				// Regenerate remember_me token on successful remember
+				$newToken = $this->container->randomlib->generateString(255);
+
+				$token->token = hash('sha384', $newToken);
+				$token->save();
+
+				setcookie(
+					"remember_me",
+					$token->identifier . $this::REMEMBER_ME_TOKEN_DELIMITER . $newToken,
+					strtotime($token->expires),
+					'/',
+					'',
+					isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
+					true
+				);
+
 				return;
 			}
 		}
