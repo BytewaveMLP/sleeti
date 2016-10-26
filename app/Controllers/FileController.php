@@ -266,8 +266,6 @@ class FileController extends Controller
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
-		$safeFilename = rawurlencode($file->id . ($filename !== null ? '-' . $filename : '') . ($file->ext !== null ? '.' . $file->ext : ''));
-
 		if ($authedUser->id != File::where('id', $id)->first()->owner_id && !$authedUser->isModerator()) {
 			// Slap people on the wrist who try to delete files they shoudn't be able to
 			$this->container->log->log('file', \Monolog\Logger::WARNING, 'User attempted to delete a file they aren\'t allowed to.', [
@@ -279,7 +277,7 @@ class FileController extends Controller
 					$owner->id,
 					$owner->username,
 				],
-				'file' => $safeFilename,
+				'file' => $filename,
 			]);
 
 			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
