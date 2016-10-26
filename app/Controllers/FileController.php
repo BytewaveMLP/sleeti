@@ -36,7 +36,11 @@ class FileController extends Controller
 		$files = $request->getUploadedFiles();
 
 		// If file upload fails, explain why
-		if (!isset($files['file']) || $files['file']->getError() !== UPLOAD_ERR_OK) {
+		if (empty($files) || !isset($files['file'])) {
+			throw new FailedUploadException("No file provided", 1);
+		}
+
+		if ($files['file']->getError() !== UPLOAD_ERR_OK) {
 			throw new FailedUploadException("File upload failed", $files['file']->getError() ?? -1);
 		}
 
