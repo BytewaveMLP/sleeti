@@ -21,20 +21,26 @@
 namespace Sleeti\Middleware;
 
 /**
- * Only allows access if the sleeti instance isn't fully installed
+ * Logs all page views to debug channel
  */
-class NotInstalledMiddleware extends Middleware
+class LogPageViewMiddleware extends Middleware
 {
 	public function __invoke($request, $response, $next) {
-		if (file_exists(__DIR__ . '/../../config/lock')) {
-			$this->container->flash->addMessage('danger', '<b>Hey!</b> This instance of sleeti is already configured!');
+		$path = $request->getUri()->getPath();
+		if ($this->container->auth->check()) {
+			$user = $this->container->auth->user();
 
-			$this->container->log->log('install', \Monolog\Logger::WARNING, 'Someone tried to access the install page when Sleeti was already installed.', [
+			$this->container->log->log('pageview', \Monolog\Logger::DEBUG, 'Pageview from user.', [
+				$user->id,
+				$user->username,
+				$path,
+			]);
+		} else {
+			$this->container->log->log('pageview', \Monolog\Logger::DEBUG, 'Pageview from anonymous.', [
 				$_SERVER['HTTP_X_FORWARDED_FOR'] ?? '',
 				$_SERVER['REMOTE_ADDR'],
+				$path,
 			]);
-
-			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
 		}
 
 		$response = $next($request, $response);

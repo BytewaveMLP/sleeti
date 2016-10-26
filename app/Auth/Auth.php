@@ -193,8 +193,8 @@ class Auth
 		$this->removeRememberCookie();
 
 		$this->container->log->log('auth', \Monolog\Logger::WARNING, 'User attempted to log in with invalid remember credentials.', [
-			'forwarded-ip' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '',
-			'ip'           => $_SERVER['REMOTE_ADDR'],
+			$_SERVER['HTTP_X_FORWARDED_FOR'] ?? '',
+			$_SERVER['REMOTE_ADDR'],
 		]);
 	}
 
