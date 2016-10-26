@@ -65,7 +65,7 @@ class Logger
 		}
 
 		$logfile       = $this->container['settings']['logging']['path'] . 'sleeti.log';
-		$this->handler = new \Monolog\Handler\RotatingFileHandler($logfile, $container['settings']['logging']['maxFiles'] ?? 0);
+		$this->handler = new \Monolog\Handler\RotatingFileHandler($logfile, $container['settings']['logging']['maxFiles'] ?? 0, $this->container['settings']['logging']['level'] ?? \Monolog\Logger::INFO);
 
 		$dateFormat   = 'H:i:s';
 		$outputFormat = "[%datetime%] [%level_name%] %channel%: %message% %context%\n";
@@ -80,7 +80,7 @@ class Logger
 	 */
 	private function addLogger($name) {
 		$logger = new \Monolog\Logger($name);
-		$logger->pushHandler($this->handler, $this->container['settings']['logging']['level'] ?? \Monolog\Logger::INFO);
+		$logger->pushHandler($this->handler);
 		$this->loggers[$name] = $logger;
 	}
 
