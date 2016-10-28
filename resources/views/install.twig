@@ -72,7 +72,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 						<div class="form-group{{ errors.dbpass ? ' has-error' : '' }}">
 							<label for="dbpass">Database password</label>
-							<input type="password" name="dbpass" id="dbpass" placeholder="root" class="form-control" value="{{ old.dbpass }}" required>
+							<input type="password" name="dbpass" id="dbpass" placeholder="root" class="form-control" value="{{ old.dbpass }}">
 							{% if errors.dbpass %}
 								<span class="help-block">{{ errors.dbpass | first }}</span>
 							{% endif %}
