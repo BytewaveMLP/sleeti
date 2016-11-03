@@ -100,8 +100,6 @@ $container['validator'] = function ($container) {
 	return new \Sleeti\Validation\Validator;
 };
 
-require __DIR__ . '/registercontrollers.php';
-
 $container['csrf'] = function ($container) {
 	return new \Slim\Csrf\Guard;
 };
@@ -119,6 +117,8 @@ $container['randomlib'] = function ($container) {
 $container['log'] = function ($container) {
 	return new \Sleeti\Logging\Logger($container);
 };
+
+require __DIR__ . '/registercontrollers.php';
 
 $app->add(new \Sleeti\Middleware\LogPageViewMiddleware($container));
 $app->add(new \Sleeti\Middleware\ValidationErrorsMiddleware($container));
