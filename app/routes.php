@@ -28,6 +28,7 @@ use Sleeti\Middleware\NotInstalledMiddleware;
 use Sleeti\Middleware\TwoFactorAuthSetupMiddleware;
 use Sleeti\Middleware\TwoFactorAuthFullMiddleware;
 use Sleeti\Middleware\TwoFactorAuthPartialMiddleware;
+use Sleeti\Middleware\TwoFactorAuthEnabledMiddleware;
 
 // ugly af grouping
 $app->group('', function() use ($container) { // it's groups all the way down
@@ -69,7 +70,7 @@ $app->group('', function() use ($container) { // it's groups all the way down
 						$this->group('', function() {
 							$this->get('/setup', 'TwoFactorAuthController:getSetup')->setName('user.profile.2fa.setup');
 							$this->post('/setup', 'TwoFactorAuthController:postSetup');
-						})->add(new TwoFactorAuthSetupMiddleware($container));
+						})->add(new TwoFactorAuthEnabledMiddleware($container))->add(new TwoFactorAuthSetupMiddleware($container));
 					});
 				});
 

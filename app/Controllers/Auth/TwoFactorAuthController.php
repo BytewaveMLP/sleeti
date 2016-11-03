@@ -61,11 +61,6 @@ class TwoFactorAuthController extends Controller
 		$secret = $user->settings->tfa_secret;
 		$tfa    = $this->container->tfa;
 
-		if ($secret === null) {
-			$this->container->flash->addMessage('danger', '<b>Hey!</b> You need to enable two-factor auth before you can set it up!');
-			return $response->withRedirect($this->container->router->pathFor('user.profile.2fa'));
-		}
-
 		return $this->container->view->render($response, 'user/2fa/setup.twig', [
 			'tfa' => [
 				'qr_code' => $tfa->getQRCodeImageAsDataUri(($this->container['settings']['site']['title'] ?? "sleeti") . ':' . $user->username, $secret),
