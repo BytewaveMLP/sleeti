@@ -25,9 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<div class="col-md-12">
 			<h1>Welcome to {{ settings.site.title | default('sleeti') }}!</h1>
 
-			<h2>What is {{ settings.site.title | default('sleeti') }}?</h2>
+			<h2>What is all this?</h2>
 			<p>
-				{{ settings.site.title | default('sleeti') }} is an attempt to convert <a href="https://eeti.me/">eeti.me</a> from procedural code to MVC with Slim 3 and Eloquent, maintained by myself, <a href="https://github.com/BytewaveMLP">Bytewave</a>. This is a personal project, mostly because Alex doesn't like MVC and I do. :)
+				This is {{ settings.site.title | default('sleeti') }},{% if settings.site.title %} which runs sleeti,{% endif %} an attempt to convert <a href="https://eeti.me/">eeti.me</a> from procedural code to MVC with Slim 3 and Eloquent, maintained by myself, <a href="https://github.com/BytewaveMLP">Bytewave</a>. This is a personal project, mostly because Alex doesn't like MVC and I do. :)
 			</p>
 
 			<h2>How can I join {{ settings.site.title | default('sleeti') }}?</h2>
