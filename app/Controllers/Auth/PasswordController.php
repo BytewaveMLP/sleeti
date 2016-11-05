@@ -48,7 +48,12 @@ class PasswordController extends Controller
 			'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10]),
 		]);
 
+		// Invalidate all remember tokens
+		$this->container->auth->removeAllRememberCredentials();
+		$this->container->auth->signout();
+
 		$this->container->flash->addMessage('success', '<b>Yay!</b> Your password has been updated successfully.');
+		$this->container->flash->addMessage('info', 'For security reasons, you will need to log in again on all your devices.');
 
 		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User password changed.', [
 			$user->id,

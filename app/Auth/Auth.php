@@ -242,6 +242,15 @@ class Auth
 		}
 	}
 
+	public function removeAllRememberCredentials() {
+		$user = $this->user();
+		if (!$user) return;
+
+		foreach ($user->rememberTokens as $token) {
+			$token->delete();
+		}
+	}
+
 	public function removeRememberCookie() {
 		setcookie(
 			"remember_me",

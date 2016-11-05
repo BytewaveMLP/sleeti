@@ -42,6 +42,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				</div>
 
 				<div class="panel-body">
+					<p class="text-danger">
+						<b>NOTE:</b> Changing your password will log you out on all of your devices for security purposes.
+					</p>
+
 					<form action="{{ path_for('auth.password.change') }}" method="post">
 						<div class="form-group{{ errors.password_old ? ' has-error' : '' }}">
 							<label for="password_old">Current password</label>
