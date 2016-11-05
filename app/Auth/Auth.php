@@ -267,12 +267,6 @@ class Auth
 		$this->removeRememberCredentials();
 		$this->removeRememberCookie();
 
-		// Fully destroy session data in case session.use_strict_mode is 0
-		// Borrowed from eeti2 - thanks, Alex :^)
-		$params = session_get_cookie_params();
-		setcookie(session_name(), '', 1, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
-		session_destroy();
-
 		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User logged out.', [
 			$user->id,
 			$user->username,
