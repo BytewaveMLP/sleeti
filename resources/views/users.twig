@@ -35,29 +35,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		</div>
 		<div class="col-md-8">
 			{% if page.users|length != 0 %}
-				<table class="table table-striped table-bordered table-hover">
-					<tbody>
-						{% for user in page.users %}
-							<tr>
-								<td>
-									<a href="{{ path_for('user.profile', {'id': user.id}) }}">{{ user.name ? user.name : user.username }}</a>
-									{% if user.name %}({{ user.username }}){% endif %}
-
-									{% if user.isAdmin() %}
-										<span class="label label-danger">Administrator</span>
-									{% elseif user.isModerator() %}
-										<span class="label label-warning">Moderator</span>
-									{% endif %}
-								</td>
-								{% if auth.user.isAdmin() %}
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered table-hover">
+						<tbody>
+							{% for user in page.users %}
+								<tr>
 									<td>
-										<a href="{{ path_for('user.profile.delete', {'id': user.id}) }}" class="btn btn-danger btn-xs">Delete</a>
+										<a href="{{ path_for('user.profile', {'id': user.id}) }}">{{ user.name ? user.name : user.username }}</a>
+										{% if user.name %}({{ user.username }}){% endif %}
+
+										{% if user.isAdmin() %}
+											<span class="label label-danger">Administrator</span>
+										{% elseif user.isModerator() %}
+											<span class="label label-warning">Moderator</span>
+										{% endif %}
 									</td>
-								{% endif %}
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+									{% if auth.user.isAdmin() %}
+										<td>
+											<a href="{{ path_for('user.profile.delete', {'id': user.id}) }}" class="btn btn-danger btn-xs">Delete</a>
+										</td>
+									{% endif %}
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
 
 				{% if page.last != 1 %}
 					{% include '/templates/partials/pagination.twig' with {
