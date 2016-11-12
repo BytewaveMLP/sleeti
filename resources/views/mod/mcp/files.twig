@@ -27,12 +27,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 
 	$(function() {
-		$('[id^=delete-file-]').click(function(event) {
+		$('.delete-file').click(function(event) {
 			event.preventDefault();
-			var filename = $(this).attr('id').replace('delete-file-', '');
-			var element = this;
+			var filename = $(this).data('filename');
+			var owner    = $(this).data('owner');
+			var element  = this;
 			$.get({
-				url: {{ path_for('file.delete', {filename: ''}) }} + filename,
+				// This is a hack until I can figure out something better
+				url: '/delete/' + owner + '/' + filename,
 				success: function() {
 					$(element).parent().parent().remove();
 				}
@@ -57,10 +59,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 						</tr>
 					</thead>
 					{% for file in page.files %}
-						{% set filename = file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') %}
+						{% set filename = file.filename %}
 						<tr>
 							<td>
-								<a id="file-entry-{{ filename | url_encode }}" href="{{ path_for('file.view', {'filename': filename | url_encode}) }}">{{ filename }}</a>
+								<a id="file-entry-{{ filename | url_encode }}" href="{{ path_for('file.view', {'owner': file.user.id, 'filename': filename | url_encode}) }}">{{ filename }}</a>
 							</td>
 							<td>
 								<a href="{{ path_for('user.profile', {'id': file.user.id}) }}">{{ file.user.username }}</a>
@@ -76,7 +78,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 								{{ privacy }}
 							</td>
 							<td>
-								<button type="button" class="btn btn-danger btn-xs" id="delete-file-{{ filename | url_encode }}">Delete</button>
+								<button type="button" class="btn btn-danger btn-xs delete-file" data-filename="{{ filename | url_encode }}" data-owner="{{ file.user.id }}">Delete</button>
 							</td>
 						</tr>
 					{% endfor %}

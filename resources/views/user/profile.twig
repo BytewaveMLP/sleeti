@@ -27,10 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	}
 
 	$(function() {
-		$('[id^=delete-file-]').click(function(event) {
+		$('.delete-file').click(function(event) {
 			event.preventDefault();
-			var filename = $(this).attr('id').replace('delete-file-', '');
-			var element = this;
+			var filename = $(this).data('filename');
+			var element  = this;
 			$.get({
 				url: '{{ path_for('file.delete', {owner: user.id, filename: ''}) }}' + filename,
 				success: function() {
@@ -105,7 +105,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 								{% set filename = file.filename %}
 								<tr>
 									<td>
-										<a id="file-entry-{{ filename | url_encode }}" href="{{ path_for('file.view', {'owner': user.id, 'filename': filename | url_encode }) }}">{{ filename }}</a>
+										<a id="file-entry-{{ filename | url_encode }}" href="{{ path_for('file.view', {'owner': file.user.id, 'filename': filename | url_encode }) }}">{{ filename }}</a>
 									</td>
 									{% if user.id == auth.user.id or auth.user.isModerator() %}
 										{% if file.privacy_state == 0 %}
@@ -119,7 +119,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 											{{ privacy }}
 										</td>
 										<td>
-											<button type="button" class="btn btn-danger btn-xs" id="delete-file-{{ filename | url_encode }}">Delete</button>
+											<button type="button" class="btn btn-danger btn-xs delete-file" data-filename="{{ filename | url_encode }}">Delete</button>
 										</td>
 									{% endif %}
 								</tr>
