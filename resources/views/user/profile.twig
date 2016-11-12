@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			var filename = $(this).attr('id').replace('delete-file-', '');
 			var element = this;
 			$.get({
-				url: {{ path_for('file.delete', {filename: ''}) }} + filename,
+				url: '{{ path_for('file.delete', {owner: user.id, filename: ''}) }}' + filename,
 				success: function() {
 					$(element).parent().parent().remove();
 				}
@@ -101,10 +101,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					</thead>
 					<tbody>
 						{% for file in page.files %}
-							{% set filename = file.id ~ (file.filename is not empty ? '-' ~ file.filename : '') ~ (file.ext is not empty ? '.' ~ file.ext : '') %}
+							{% set filename = file.filename %}
 							<tr>
 								<td>
-									<a id="file-entry-{{ filename | url_encode }}" href="{{ path_for('file.view', {'filename': filename | url_encode }) }}">{{ filename }}</a>
+									<a id="file-entry-{{ filename | url_encode }}" href="{{ path_for('file.view', {'owner': user.id, 'filename': filename | url_encode }) }}">{{ filename }}</a>
 								</td>
 								{% if user.id == auth.user.id or auth.user.isModerator() %}
 									{% if file.privacy_state == 0 %}

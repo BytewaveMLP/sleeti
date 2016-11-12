@@ -30,9 +30,10 @@ class FileController extends Controller
 {
 	/**
 	 * Handles file uploads from clients
-	 * @param  \Sleeti\Models\User $user    The user to associate with the uploaded file
+	 * @param  \Sleeti\Models\User $user        The user to associate with the uploaded file
+	 * @param  bool                $flashDupe   Should we tell the user if there was a duplicate file?
 	 */
-	private function handleFileUpload($request, $user) {
+	private function handleFileUpload($request, $user, $flash = false) {
 		$files = $request->getUploadedFiles();
 
 		// If file upload fails, explain why
@@ -47,21 +48,18 @@ class FileController extends Controller
 		$file = $files['file'];
 
 		$clientFilename = $file->getClientFilename();
-		$dbFilename     = pathinfo($clientFilename, PATHINFO_FILENAME);
-		$ext            = pathinfo($clientFilename, PATHINFO_EXTENSION);
+
+		if (!$clientFilename) {
+			throw new FailedUploadException("Empty filenames are not allowed.", 99);
+		}
 
 		// Maintain cross-platform compatability by ensuring all file names are valid in NTFS
-		if (strpbrk($dbFilename, "\\/?%*:|\"<>") || strpbrk($ext, "\\/?%*:|\"<>")) {
-			throw new FailedUploadException("Invalid filename or extension (filename: " . ($dbFilename) . ", ext: " . ($ext) . ").", $files['file']->getError() ?? -1);
+		if (strpbrk($clientFilename, "\\/?%*:|\"<>")) {
+			throw new FailedUploadException("Invalid filename (" . $clientFilename . ").", $files['file']->getError() ?? -1);
 		}
 
-		if ($dbFilename === '') {
-			$dbFilename = null;
-		}
-
-		if ($ext === '') {
-			$ext = null;
-		}
+		$path      = $this->container['settings']['site']['upload']['path'] . $user->id . '/';
+		$filename  = $this->handleDuplicateFilename($path, $clientFilename);
 
 		$privStr = $request->getParam('privacy');
 
@@ -77,37 +75,39 @@ class FileController extends Controller
 
 		$fileRecord = File::create([
 			'owner_id'      => $user->id,
-			'filename'      => $dbFilename,
+			'filename'      => $filename,
 			'privacy_state' => $privacy,
 		]);
-
-		$filename = $fileRecord->id;
-
-		if ($dbFilename !== null) {
-			$filename .= '-' . $dbFilename;
-		}
-
-		if ($ext !== null) {
-			$filename .= '.' . $ext;
-			$fileRecord->ext = $ext;
-			$fileRecord->save();
-		}
-
-		$path = $this->container['settings']['site']['upload']['path'] . $fileRecord->user->id;
 
 		try {
 			// Move file to uploaded files path
 			if (!is_dir($path)) {
 				mkdir($path);
 			}
-			$file->moveTo($path . '/' . $filename);
+			$file->moveTo($path . $filename);
 		} catch (InvalidArgumentException $e) {
 			// Remove inconsistent file record
 			$fileRecord->delete();
 			throw new FailedUploadException("File moving failed", $files['file']->getError() ?? -1);
 		}
 
+		if ($flash && $filename != $clientFilename) {
+			$this->container->flash->addMessage('info', '<b>Note:</b> Looks like you already had a file named "' . $clientFilename . '". Your new file is named "' . $filename . '" instead.');
+		}
+
 		return $filename;
+	}
+
+	private function handleDuplicateFilename($path, $filename) {
+		$counter     = 1;
+		$newFilename = $filename;
+
+		while (file_exists($path . $newFilename)) {
+			$newFilename = $counter . '-' . $filename;
+			$counter++;
+		}
+
+		return $newFilename;
 	}
 
 	public function getUpload($request, $response) {
@@ -117,7 +117,7 @@ class FileController extends Controller
 	public function postUpload($request, $response) {
 		try {
 			$owner    = $this->container->auth->user();
-			$filename = $this->handleFileUpload($request, $owner);
+			$filename = $this->handleFileUpload($request, $owner, true);
 		} catch (FailedUploadException $e) {
 			$this->container->flash->addMessage('danger', '<b>Oh no!</b> We couldn\'t upload your file. Either the file name contains invalid characters, your file is too large, or we had trouble in handling. Sorry!');
 
@@ -135,6 +135,7 @@ class FileController extends Controller
 		$safeFilename = rawurlencode($filename);
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your file was uploaded successfully. <a href="' . $this->container->router->pathFor('file.view', [
+			'owner'    => $owner->id,
 			'filename' => $safeFilename,
 		]) . '">Click here</a> to view it.');
 
@@ -176,6 +177,7 @@ class FileController extends Controller
 			]);
 
 			return $response->write($request->getUri()->getBaseUrl() . $this->container->router->pathFor('file.view', [
+				'owner'    => $owner->id,
 				'filename' => $safeFilename,
 			]));
 		} catch (FailedUploadException $e) {
@@ -193,16 +195,8 @@ class FileController extends Controller
 
 	public function viewFile($request, $response, $args) {
 		$filename = $args['filename'];
-		$name     = pathinfo($filename, PATHINFO_FILENAME);
-		$id       = (int) (strpos($name, '-') !== false ? explode('-', $name)[0] : $name);
-		$name     = (strpos($name, '-') !== false ? substr($name, strpos($name, '-') + 1) : null);
-		$ext      = pathinfo($filename, PATHINFO_EXTENSION);
 
-		if ($ext === '') {
-			$ext = null;
-		}
-
-		$files = File::where('id', $id)->where('filename', $name)->where('ext', $ext);
+		$files = File::where('filename', $filename);
 
 		if ($files->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
@@ -245,11 +239,11 @@ class FileController extends Controller
 
 	public function deleteFile($request, $response, $args) {
 		$filename = $args['filename'];
-		$id       = strpos($filename, '.') !== false ? explode('.', $filename)[0] : $filename;
+		$owner    = $args['owner'];
 
 		$authedUser = $this->container->auth->user();
 
-		$files = File::where('id', $id);
+		$files = File::where('filename', $filename)->where('owner_id', $owner);
 
 		if ($files->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
@@ -266,7 +260,7 @@ class FileController extends Controller
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
-		if ($authedUser->id != File::where('id', $id)->first()->owner_id && !$authedUser->isModerator()) {
+		if ($authedUser->id != $file->first()->owner_id && !$authedUser->isModerator()) {
 			// Slap people on the wrist who try to delete files they shoudn't be able to
 			$this->container->log->log('file', \Monolog\Logger::WARNING, 'User attempted to delete a file they aren\'t allowed to.', [
 				'deleter' => [
@@ -292,11 +286,11 @@ class FileController extends Controller
 				$owner->id,
 				$owner->username,
 			],
-			'file' => $safeFilename,
+			'file' => $filename,
 		]);
 
 		if (unlink($filepath)) {
-			File::where('id', $id)->delete();
+			$file->delete();
 		}
 
 		return $response;
@@ -316,17 +310,6 @@ class FileController extends Controller
 			'paste' => v::notEmpty(),
 		]);
 
-		$filename = pathinfo($title, PATHINFO_FILENAME);
-		$ext      = pathinfo($title, PATHINFO_EXTENSION);
-
-		if ($filename === '') {
-			$filename = null;
-		}
-
-		if ($ext === '') {
-			$ext = null;
-		}
-
 		if ($validation->failed()) {
 			$this->container->flash->addMessage('danger', '<b>Whoops!</b> Looks like we\'re missing something...');
 			return $response->withRedirect($this->container->router->pathFor('file.upload.paste'));
@@ -341,27 +324,32 @@ class FileController extends Controller
 		} elseif ($privStr == 'private') {
 			$privacy = 2;
 		} else {
-			$privacy = $user->settings->default_privacy_state;
+			$privacy = $owner->settings->default_privacy_state;
+		}
+
+		$path     = $this->container['settings']['site']['upload']['path'] . $owner->id . '/';
+		$filename = $this->handleDuplicateFilename($path, $title);
+
+		if ($filename != $title) {
+			$this->container->flash->addMessage('info', '<b>Note:</b> Looks like you already had a file named "' . $title . '". Your new file is named "' . $filename . '" instead.');
 		}
 
 		$file = File::create([
 			'owner_id'      => $owner->id,
 			'filename'      => $filename,
-			'ext'           => $ext,
 			'privacy_state' => $privacy,
 		]);
-
-		$path = $this->container['settings']['site']['upload']['path'] . $file->user->id;
 
 		if (!is_dir($path)) {
 			mkdir($path);
 		}
 
-		$safeFilename = rawurlencode($file->id . ($filename !== null ? '-' . $filename : '') . ($file->ext !== null ? '.' . $file->ext : ''));
+		$safeFilename = rawurlencode($filename);
 
 		file_put_contents($this->container['settings']['site']['upload']['path'] . $file->getPath(), $paste);
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your paste was uploaded successfully. <a href="' . $this->container->router->pathFor('file.view', [
+			'owner'    => $owner->id,
 			'filename' => $safeFilename,
 		]) . '">Click here</a> to view it.');
 

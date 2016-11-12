@@ -41,6 +41,6 @@ class File extends Model
 	}
 
 	public function getPath() {
-		return $this->user->id . '/' . $this->id . ($this->filename !== null ? '-' . $this->filename : '') . ($this->ext !== null ? '.' . $this->ext : '');
+		return $this->user->id . '/' . $this->filename;
 	}
 }

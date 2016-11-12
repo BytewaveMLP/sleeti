@@ -38,7 +38,7 @@ $app->group('', function() use ($container) { // it's groups all the way down
 
 			$this->get('/user/{id}', 'ProfileController:viewProfile')->setName('user.profile');
 
-			$this->get('/viewfile/{filename}', 'FileController:viewFile')->setName('file.view');
+			$this->get('/viewfile/{owner}/{filename}', 'FileController:viewFile')->setName('file.view');
 
 			$this->get('/community', 'CommunityController:community')->setName('community');
 
@@ -86,7 +86,7 @@ $app->group('', function() use ($container) { // it's groups all the way down
 					$this->get('/bash', 'FileController:getBashScript')->setName('file.upload.bash');
 				});
 
-				$this->get('/delete/{filename}', 'FileController:deleteFile')->setName('file.delete');
+				$this->get('/delete/{owner}/{filename}', 'FileController:deleteFile')->setName('file.delete');
 
 				$this->group('/admin', function() use ($container) {
 					$this->group('/acp', function() {
