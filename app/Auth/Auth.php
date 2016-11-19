@@ -32,6 +32,10 @@ use Sleeti\Models\UserRememberToken;
  */
 class Auth
 {
+	/**
+	 * Delimiter for the remember_me cookie
+	 * @var string
+	 */
 	const REMEMBER_ME_TOKEN_DELIMITER = '__|__';
 
 	protected $container;
@@ -51,7 +55,8 @@ class Auth
 
 	/**
 	 * Determines if there is a user ID set in the current session
-	 * @return boolean Is a user currently authenticated?
+	 * Does not recognize partially authenticated users (2FA stage 2) as authenticated.
+	 * @return boolean Is a user currently fully authenticated?
 	 */
 	public function check() {
 		return isset($_SESSION['user']) && !isset($_SESSION['tfa-partial']);
@@ -100,13 +105,13 @@ class Auth
 
 			// Same for UserSettings
 			if ($user->settings === null) {
+				$userSettings = UserSettings::create([
+					'user_id' => $user->id,
+				]);
+
 				$this->container->log->log('auth', \Monolog\Logger::DEBUG, 'User settings record created.', [
 					$user->id,
 					$user->username,
-				]);
-
-				$userSettings = UserSettings::create([
-					'user_id' => $user->id,
 				]);
 			}
 
@@ -122,12 +127,14 @@ class Auth
 	}
 
 	public function getRememberCredentialsFromCookie() {
+		// If the cookie doesn't exist, don't try
 		if (!isset($_COOKIE['remember_me']) || empty($_COOKIE['remember_me'])) return null;
 
 		$cookie = $_COOKIE['remember_me'];
 
 		$parts = explode($this::REMEMBER_ME_TOKEN_DELIMITER, $cookie);
 
+		// If the cookie is malformed, invalidate the cookie and fail
 		if (!isset($parts[0]) || !isset($parts[1])) {
 			$this->removeRememberCookie();
 			return null;
@@ -140,14 +147,13 @@ class Auth
 	 * Attempts to authenticate a user with their remember token
 	 */
 	public function attemptRemember() {
+		// If a user is already logged in, don't try
 		if ($this->check()) return;
 
 		$parts = $this->getRememberCredentialsFromCookie();
 
-		if (!$parts) {
-			$this->removeRememberCookie();
-			return;
-		}
+		// If parsing the cookie failed, don't try
+		if (!$parts) return;
 
 		$tokens = UserRememberToken::where('identifier', $parts[0])->get();
 
@@ -158,9 +164,11 @@ class Auth
 
 		$tokenHash = hash('sha384', $parts[1]);
 
+		// God forbid there are duplicate identifiers, but if there are, this iterates over all of them
 		foreach ($tokens as $token) {
+			// If the token half matches and the token isn't expired...
 			if (hash_equals($token->token, $tokenHash) && strtotime($token->expires) > time()) {
-				$_SESSION['user'] = $token->user_id;
+				$_SESSION['user'] = $token->user_id; // Log the user in
 
 				$user = $this->user();
 
@@ -199,6 +207,7 @@ class Auth
 	}
 
 	public function updateRememberCredentials() {
+		// If no one is logged in, we can't do anything
 		if (!$this->check()) return;
 
 		$user = $this->user();
@@ -242,6 +251,9 @@ class Auth
 		}
 	}
 
+	/**
+	 * Remove every remember me token from the current user
+	 */
 	public function removeAllRememberCredentials() {
 		$user = $this->user();
 		if (!$user) return;
@@ -251,6 +263,9 @@ class Auth
 		}
 	}
 
+	/**
+	 * Tells the client to invlaidate the remember_me cookie
+	 */
 	public function removeRememberCookie() {
 		setcookie(
 			"remember_me",
