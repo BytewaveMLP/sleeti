@@ -19,8 +19,6 @@
  */
 
 use \Respect\Validation\Validator as v;
-use Aptoma\Twig\Extension\MarkdownExtension;
-use Aptoma\Twig\Extension\MarkdownEngine;
 
 ini_set('session.use_strict_mode', 1);
 ini_set('session.cookie_httponly', 1);
@@ -51,79 +49,9 @@ $capsule->addConnection($container['settings']['db'] ?? []);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
-// Save decoded config.json for modification through ACP (nasty hack, I know :()
-$container['config'] = function($container) use ($settings) {
-	return $settings['settings'];
-};
-
-$container['db'] = function($container) use ($capsule) {
-	return $capsule;
-};
-
-$container['auth'] = function ($container) {
-	return new \Sleeti\Auth\Auth($container);
-};
-
-$container['flash'] = function ($container) {
-	return new \Slim\Flash\Messages;
-};
-
-$container['view'] = function ($container) {
-	$view = new \Slim\Views\Twig(__DIR__ . '/../resources/views', [
-		'cache' => false,
-	]);
-
-	$view->addExtension(new \Slim\Views\TwigExtension(
-		$container->router,
-		$container->request->getUri()
-	));
-
-	$markdownEngine = new MarkdownEngine\ParsedownEngine;
-
-	$view->addExtension(new MarkdownExtension($markdownEngine));
-
-	$view->addExtension(new \Sleeti\Twig\Extensions\ReCaptchaExtension($container['settings']['recaptcha']['sitekey']));
-
-	$view->getEnvironment()->addGlobal('auth', [
-		'check' => $container->auth->check(),
-		'user'  => $container->auth->user(),
-	]);
-
-	$view->getEnvironment()->addGlobal('flash', $container->flash);
-
-	$view->getEnvironment()->addGlobal('settings', $container->settings);
-
-	return $view;
-};
-
-$container['validator'] = function ($container) {
-	return new \Sleeti\Validation\Validator;
-};
-
-$container['csrf'] = function ($container) {
-	return new \Slim\Csrf\Guard;
-};
-
-$container['tfa'] = function ($container) {
-	return new \RobThree\Auth\TwoFactorAuth($container['settings']['site']['title'] ?? "sleeti");
-};
-
-$container['randomlib'] = function ($container) {
-	$factory  = new \RandomLib\Factory;
-	$strength = new \SecurityLib\Strength(\SecurityLib\Strength::MEDIUM);
-	return $factory->getGenerator($strength);
-};
-
-$container['log'] = function ($container) {
-	return new \Sleeti\Logging\Logger($container);
-};
-
+require __DIR__ . '/buildcontainer.php';
 require __DIR__ . '/registercontrollers.php';
-
-$app->add(new \Sleeti\Middleware\LogPageViewMiddleware($container));
-$app->add(new \Sleeti\Middleware\ValidationErrorsMiddleware($container));
-$app->add(new \Sleeti\Middleware\OldInputMiddleware($container));
-$app->add(new \Sleeti\Middleware\RememberMeMiddleware($container));
+require __DIR__ . '/globalmiddleware.php';
 
 v::with('Sleeti\\Validation\\Rules');
 
