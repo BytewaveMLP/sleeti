@@ -109,6 +109,9 @@ $app->group('', function() use ($container) { // it's groups all the way down
 
 						$this->get('/log', 'AcpController:getLogSettings')->setName('admin.acp.log');
 						$this->post('/log', 'AcpController:postLogSettings');
+
+						$this->get('/cache', 'AcpController:getCacheSettings')->setName('admin.acp.cache');
+						$this->post('/cache', 'AcpController:postCacheSettings');
 					});
 
 					$this->group('/user', function() {

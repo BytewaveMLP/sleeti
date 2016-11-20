@@ -205,4 +205,29 @@ class AcpController extends Controller
 		$this->container->flash->addMessage('success', 'Log settings updated successfully!');
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.log'));
 	}
+
+	public function getCacheSettings($request, $response) {
+		return $this->container->view->render($response, 'admin/acp/cache.twig');
+	}
+
+	public function postCacheSettings($request, $response) {
+		$config = $this->getConfigElements($request, ['enabled', 'path', 'auto_reload']);
+
+		if (substr($config['path'], -1) != '/') $config['path'] .= '/';
+
+		if ($this->writeConfig(['cache' => $config]) === false) {
+			$this->container->flash->addMessage('danger', '<b>Uh oh!</b> Looks like <code>/config/config.json</code> failed to write. :(');
+			return $response->withRedirect($this->container->router->pathFor('admin.acp.cache'));
+		}
+
+		$user = $this->container->auth->user();
+
+		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'Cache settings updated.', [
+			$user->id,
+			$user->username,
+		]);
+
+		$this->container->flash->addMessage('success', 'Cache settings updated successfully!');
+		return $response->withRedirect($this->container->router->pathFor('admin.acp.cache'));
+	}
 }

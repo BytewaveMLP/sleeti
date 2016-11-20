@@ -39,8 +39,13 @@ $container['flash'] = function ($container) {
 };
 
 $container['view'] = function ($container) {
+	$cacheEnabled    = $container['settings']['cache']['enabled'];
+	$cachePath       = $container['settings']['cache']['path'];
+	$cacheAutoReload = $container['settings']['cache']['auto_reload'];
+
 	$view = new \Slim\Views\Twig(__DIR__ . '/../resources/views', [
-		'cache' => false,
+		'cache' => $cacheEnabled ? $cachePath : false,
+		'auto_reload' => $cacheAutoReload,
 	]);
 
 	$view->addExtension(new \Slim\Views\TwigExtension(
