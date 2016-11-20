@@ -52,6 +52,7 @@ $capsule->bootEloquent();
 require __DIR__ . '/buildcontainer.php';
 require __DIR__ . '/registercontrollers.php';
 require __DIR__ . '/globalmiddleware.php';
+require __DIR__ . '/errorhandlers.php';
 
 v::with('Sleeti\\Validation\\Rules');
 
