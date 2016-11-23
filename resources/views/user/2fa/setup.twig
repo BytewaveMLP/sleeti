@@ -29,28 +29,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				</div>
 
 				<div class="panel-body">
-					<h4>
+					<p class="lead">
 						Scan the following QR code with your 2FA app
-					</h4>
+					</p>
 
 					<img src="{{ tfa.qr_code }}" alt="{{ tfa.secret }}" class="img-responsive center-block">
 
-					<h4>
+					<p class="lead">
 						Or, enter the following code manually
-					</h4>
+					</p>
 
 					<p>
 						<code>{{ tfa.secret }}</code>
 					</p>
 
-					<h4>
+					<p class="lead">
 						Then, verify
-					</h4>
+					</p>
 
 					<form action="{{ path_for('user.profile.2fa.setup') }}" method="post" autocomplete="off">
 						<div class="form-group{{ errors.tfa_code ? ' has-error' : '' }}">
 							<label for="tfa_code">Code</label>
-							<input type="text" class="form-control" name="tfa_code" id="tfa_code" placeholder="XXXXXX">
+							<input type="text" class="form-control" name="tfa_code" id="tfa_code" placeholder="XXXXXX" autofocus>
 							{% if errors.tfa_code %}
 								<span class="help-block">{{ errors.tfa_code | first }}</span>
 							{% endif %}
