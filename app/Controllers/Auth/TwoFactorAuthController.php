@@ -61,7 +61,7 @@ class TwoFactorAuthController extends Controller
 		]);
 
 		$this->container->flash->addMessage('success', 'Two-factor authentication successfully disabled.');
-		return $response->withRedirect($this->container->router->pathFor('user.profile.edit'));
+		return $response->withRedirect($this->container->router->pathFor('user.profile.2fa'));
 	}
 
 	public function getSetup($request, $response) {
