@@ -65,18 +65,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				{% endif %}
 			</p>
 
-			<dl>
-				{% if user.website is not empty %}
-					<dt>Website</dt>
-					<dd><a href="{{ user.website }}">{{ user.website }}</a></dd>
-				{% endif %}
-				{% if user.bio is not empty %}
-					<dt>Bio</dt>
-					<dd>
-						{{ user.bio | markdown }}
-					</dd>
-				{% endif %}
-			</dl>
+			{% if user.website is not empty %}
+				<h2>Website</h2>
+				<p>
+					<a href="{{ user.website }}">{{ user.website }}</a></dd>
+				</p>
+			{% endif %}
+			{% if user.bio is not empty %}
+				<h2>Bio</h2>
+				{{ user.bio | markdown }}
+			{% endif %}
 			{% if user.id == auth.user.id %}
 				<p>
 					<a href="{{ path_for('user.profile.edit') }}">Edit your profile</a>
