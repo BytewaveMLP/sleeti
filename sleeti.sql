@@ -57,6 +57,14 @@ CREATE TABLE `user_settings` (
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+CREATE TABLE `user_tfa_recovery_tokens` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 
 ALTER TABLE `uploaded_files`
   ADD PRIMARY KEY (`id`);
@@ -71,6 +79,9 @@ ALTER TABLE `user_remember_tokens`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `user_settings`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `user_tfa_recovery_tokens`
   ADD PRIMARY KEY (`id`);
 
 
@@ -83,6 +94,8 @@ ALTER TABLE `user_permissions`
 ALTER TABLE `user_remember_tokens`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `user_settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `user_tfa_recovery_tokens`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

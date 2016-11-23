@@ -18,30 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Sleeti\Validation\Rules;
+namespace Sleeti\Models;
 
-use Sleeti\Models\UserTfaRecoveryToken;
-use Respect\Validation\Rules\AbstractRule;
+use Illuminate\Database\Eloquent\Model;
 
-class TwoFactorAuthCode extends AbstractRule
+/**
+ * UserTfaRecoveryToken model
+ *
+ * Many-to-one with User
+ */
+class UserTfaRecoveryToken extends Model
 {
-	protected $tfa;
+	protected $table = 'user_tfa_recovery_tokens';
 
-	protected $user;
+	protected $fillable = [
+		'user_id',
+		'token',
+	];
 
-	public function __construct($tfa, $user) {
-		$this->tfa  = $tfa;
-		$this->user = $user;
-	}
-
-	public function validate($input) {
-		$recoveryToken = UserTfaRecoveryToken::where('user_id', $this->user->id)->where('token', hash('sha384', $input))->first();
-
-		if ($recoveryToken) {
-			$recoveryToken->delete();
-			return true;
-		}
-
-		return $this->tfa->verifyCode($this->user->settings->tfa_secret, $input);
+	public function user() {
+		return $this->belongsTo('Sleeti\\Models\\User', 'user_id', 'id');
 	}
 }

@@ -82,7 +82,6 @@ class AuthController extends Controller
 	public function post2Fa($request, $response) {
 		$user     = $this->container->auth->user();
 		$tfa      = $this->container->tfa;
-		$secret   = $user->settings->tfa_secret;
 		$code     = $request->getParam('code');
 		$redirect = $request->getParam('redirect');
 
@@ -91,7 +90,7 @@ class AuthController extends Controller
 		}
 
 		$validation = $this->container->validator->validate($request, [
-			'tfa_code' => v::twoFactorAuthCode($tfa, $secret),
+			'tfa_code' => v::twoFactorAuthCode($tfa, $user),
 		]);
 
 		if ($validation->failed()) {

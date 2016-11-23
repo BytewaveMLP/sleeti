@@ -21,10 +21,14 @@
 namespace Sleeti\Controllers\Auth;
 
 use Sleeti\Controllers\Controller;
+use Sleeti\Models\UserTfaRecoveryToken;
 use Respect\Validation\Validator as v;
 
 class TwoFactorAuthController extends Controller
 {
+	const NUM_TFA_RECOVERY_CODES   = 10;
+	const TFA_RECOVERY_CODE_LENGTH = 10;
+
 	public function getEnable($request, $response) {
 		return $this->container->view->render($response, 'user/2fa/enable.twig');
 	}
@@ -46,6 +50,10 @@ class TwoFactorAuthController extends Controller
 		$user->settings->tfa_enabled = false;
 		$user->settings->tfa_secret  = null;
 		$user->settings->save();
+
+		foreach ($user->tfaRecoveryTokens as $token) {
+			$token->delete();
+		}
 
 		$this->container->log->log('2FA', \Monolog\Logger::INFO, 'User disabled 2FA.', [
 			'id'       => $user->id,
@@ -73,10 +81,9 @@ class TwoFactorAuthController extends Controller
 		$tfa    = $this->container->tfa;
 		$code   = $request->getParam('tfa_code');
 		$user   = $this->container->auth->user();
-		$secret = $user->settings->tfa_secret;
 
 		$validation = $this->container->validator->validate($request, [
-			'tfa_code' => v::twoFactorAuthCode($tfa, $secret),
+			'tfa_code' => v::twoFactorAuthCode($tfa, $user),
 		]);
 
 		if ($validation->failed()) {
@@ -87,6 +94,17 @@ class TwoFactorAuthController extends Controller
 		$user->settings->tfa_enabled = true;
 		$user->settings->save();
 
+		$tokens = [];
+
+		for ($i = 0; $i < $this::NUM_TFA_RECOVERY_CODES; $i++) {
+			$tokens[$i] = $this->container->randomlib->generateString($this::TFA_RECOVERY_CODE_LENGTH);
+			$hash       = hash('sha384', $tokens[$i]);
+			UserTfaRecoveryToken::create([
+				'user_id' => $user->id,
+				'token'   => $hash,
+			]);
+		}
+
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> You\'ve successfully enabled two-factor authentication!');
 
 		$this->container->log->log('2FA', \Monolog\Logger::INFO, 'User enabled and set up 2FA.', [
@@ -94,6 +112,8 @@ class TwoFactorAuthController extends Controller
 			'username' => $user->username,
 		]);
 
-		return $response->withRedirect($this->container->router->pathFor('user.profile.edit'));
+		return $this->container->view->render($response, 'user/2fa/recovery-tokens.twig', [
+			'tokens' => $tokens,
+		]);
 	}
 }
