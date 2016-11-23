@@ -62,7 +62,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 							<li><a href="{{ path_for('user.profile', {'id': auth.user.id}) }}">View profile</a></li>
 							<li><a href="{{ path_for('user.profile.edit') }}">Edit profile</a></li>
 							<li><a href="{{ path_for('auth.password.change') }}">Change password</a></li>
+							<li><a href="{{ path_for('user.profile.2fa') }}">2FA settings</a></li>
 							<li><a href="{{ path_for('auth.signout') }}">Sign out</a></li>
+							<li><a href="{{ path_for('user.profile.delete') }}">Delete account</a></li>
 						</ul>
 					</li>
 				{% else %}
