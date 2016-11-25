@@ -28,16 +28,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 	$(function() {
 		$('.delete-file').click(function(event) {
-			event.preventDefault();
 			var filename = $(this).data('filename');
-			var element  = this;
+			var route    = $(this).data('route');
+
+			$('.confirm-text').html("Really delete <code>" + filename + "</code>?");
+			$('[data-action="delete"]').data('route', route);
+		});
+
+		$('[data-action="delete"]').click(function(event) {
+			var route = $(this).data('route');
 			$.get({
-				url: '{{ path_for('file.delete', {owner: user.id, filename: ''}) }}' + filename,
+				url: route,
 				success: function() {
-					$(element).parent().parent().remove();
+					location.reload(true);
 				}
 			});
-			return false;
 		});
 	});
 	</script>
@@ -117,7 +122,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 											{{ privacy }}
 										</td>
 										<td>
-											<button type="button" class="btn btn-danger btn-xs delete-file" data-filename="{{ filename | url_encode }}">Delete</button>
+											<button type="button" class="btn btn-danger btn-xs delete-file" data-toggle="modal" data-target="#deleteConfirm" data-filename="{{ filename | url_encode }}" data-route="{{ path_for('file.delete', {owner: user.id, filename: filename}) }}">Delete</button>
 										</td>
 									{% endif %}
 								</tr>
@@ -141,5 +146,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		{% if user.id == auth.user.id or auth.user.isModerator() %}
 			{% include 'templates/partials/privacy-levels-desc.twig' %}
 		{% endif %}
+	</div>
+
+	<div class="modal fade" id="deleteConfirm" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="deleteConfirmLabel">Confirm deletion</h4>
+				</div>
+				<div class="modal-body confirm-text">
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-action="delete" data-dismiss="modal">Yes</button>
+					<button type="butotn" class="btn btn-default" data-dismiss="modal">No</button>
+				</div>
+			</div>
+		</div>
 	</div>
 {% endblock %}
