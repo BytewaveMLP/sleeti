@@ -92,7 +92,7 @@ class FileController extends Controller
 		}
 
 		if ($flash && $filename != $clientFilename) {
-			$this->container->flash->addMessage('info', '<b>Note:</b> Looks like you already had a file named "' . $clientFilename . '". Your new file is named "' . $filename . '" instead.');
+			$this->container->flash->addMessage('info', '<b>Note:</b> Looks like you already had a file named <code>' . $clientFilename . '</code>. Your new file is named <code>' . $filename . '</code> instead.');
 		}
 
 		return $filename;
@@ -331,7 +331,7 @@ class FileController extends Controller
 		$filename = $this->handleDuplicateFilename($path, $title);
 
 		if ($filename != $title) {
-			$this->container->flash->addMessage('info', '<b>Note:</b> Looks like you already had a file named "' . $title . '". Your new file is named "' . $filename . '" instead.');
+			$this->container->flash->addMessage('info', '<b>Note:</b> Looks like you already had a file named <code>' . $title . '</code>. Your new file is named <code>' . $filename . '</code> instead.');
 		}
 
 		$file = File::create([
