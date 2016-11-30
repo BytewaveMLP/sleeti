@@ -128,7 +128,7 @@ class AuthController extends Controller
 	public function postSignUp($request, $response) {
 		$rules = [
 			'email'                => v::notEmpty()->noWhitespace()->email()->emailAvailable(),
-			'username'             => v::notEmpty()->alnum('-_')->usernameAvailable(),
+			'username'             => v::notEmpty()->alnum('-_')->noTrailingWhitespace()->usernameAvailable(),
 			'password'             => v::notEmpty(),
 			'password_confirm'     => v::passwordConfirmation($request->getParam('password')),
 		];
