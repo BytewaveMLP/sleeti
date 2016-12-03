@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 						<tbody>
 							{% for user in page.users %}
 								<tr>
-									<td>
+									<td class="vert-align">
 										<a href="{{ path_for('user.profile', {'id': user.id}) }}">{{ user.name ? user.name : user.username }}</a>
 										{% if user.name %}({{ user.username }}){% endif %}
 
@@ -51,7 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 										{% endif %}
 									</td>
 									{% if auth.user.isAdmin() %}
-										<td>
+										<td class="vert-align">
 											<a href="{{ path_for('user.profile.delete', {'id': user.id}) }}" class="btn btn-danger btn-xs">Delete</a>
 										</td>
 									{% endif %}

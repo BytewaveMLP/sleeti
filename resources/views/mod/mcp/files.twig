@@ -37,27 +37,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 							<th>Delete</th>
 						</tr>
 					</thead>
-					{% for file in page.files %}
-						{% set filename = file.filename %}
-						<tr>
-							<td>
-								<a id="file-entry-{{ filename | url_encode }}" href="{{ path_for('file.view', {'owner': file.user.id, 'filename': filename | url_encode}) }}">{{ filename }}</a>
-							</td>
-							<td>
-								<a href="{{ path_for('user.profile', {'id': file.user.id}) }}">{{ file.user.username }}</a>
-							</td>
-							<td>
-								<select data-role="privacy-dropdown" class="form-control input-sm">
-									<option data-route="{{ path_for('file.privacy.change', {'owner': file.user.id, 'filename': file.filename, 'privacy': 0}) }}" {% if file.privacy_state == 0 %} selected{% endif %}>Public</option>
-									<option data-route="{{ path_for('file.privacy.change', {'owner': file.user.id, 'filename': file.filename, 'privacy': 1}) }}" {% if file.privacy_state == 1 %} selected{% endif %}>Unlisted</option>
-									<option data-route="{{ path_for('file.privacy.change', {'owner': file.user.id, 'filename': file.filename, 'privacy': 2}) }}" {% if file.privacy_state == 2 %} selected{% endif %}>Private</option>
-								</select>
-							</td>
-							<td>
-								<button type="button" class="btn btn-danger btn-xs delete-file" data-toggle="modal" data-target="#deleteConfirm" data-filename="{{ filename | url_encode }}" data-route="{{ path_for('file.delete', {owner: file.user.id, filename: filename}) }}">Delete</button>
-							</td>
-						</tr>
-					{% endfor %}
+					<tbody>
+						{% for file in page.files %}
+							{% set filename = file.filename %}
+							<tr>
+								<td class="vert-align">
+									<a id="file-entry-{{ filename | url_encode }}" href="{{ path_for('file.view', {'owner': file.user.id, 'filename': filename | url_encode}) }}">{{ filename }}</a>
+								</td>
+								<td class="vert-align">
+									<a href="{{ path_for('user.profile', {'id': file.user.id}) }}">{{ file.user.username }}</a>
+								</td>
+								<td class="vert-align">
+									<select data-role="privacy-dropdown" class="form-control input-sm">
+										<option data-route="{{ path_for('file.privacy.change', {'owner': file.user.id, 'filename': file.filename, 'privacy': 0}) }}" {% if file.privacy_state == 0 %} selected{% endif %}>Public</option>
+										<option data-route="{{ path_for('file.privacy.change', {'owner': file.user.id, 'filename': file.filename, 'privacy': 1}) }}" {% if file.privacy_state == 1 %} selected{% endif %}>Unlisted</option>
+										<option data-route="{{ path_for('file.privacy.change', {'owner': file.user.id, 'filename': file.filename, 'privacy': 2}) }}" {% if file.privacy_state == 2 %} selected{% endif %}>Private</option>
+									</select>
+								</td>
+								<td class="vert-align">
+									<button type="button" class="btn btn-danger btn-xs delete-file" data-toggle="modal" data-target="#deleteConfirm" data-filename="{{ filename | url_encode }}" data-route="{{ path_for('file.delete', {owner: file.user.id, filename: filename}) }}">Delete</button>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
 				</table>
 			</div>
 

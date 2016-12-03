@@ -6,3 +6,7 @@ pre {
 	-moz-tab-size: 4;
 	tab-size: 4;
 }
+
+.table tbody > tr > td.vert-align {
+	vertical-align: middle !important;
+}
