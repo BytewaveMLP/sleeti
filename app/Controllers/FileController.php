@@ -296,6 +296,51 @@ class FileController extends Controller
 		return $response;
 	}
 
+	public function changePrivacy($request, $response, $args) {
+		$owner   = $args['owner'];
+		$file    = $args['filename'];
+		$privacy = $args['privacy'];
+		$user    = $this->container->auth->user();
+
+		if (($owner !== $user->id) && !$user->isModerator()) {
+			$this->container->log->log('file', \Monolog\Logger::WARNING, 'User attempted to change the privacy of a file they aren\'t allowed to.', [
+				'user' => [
+					$user->id,
+					$user->username,
+				],
+				'file' => $owner . '/' . $file,
+			]);
+
+			return $response->withStatus(403)->write('Permission denied.');
+		}
+
+		$files = File::where('owner_id', $owner)->where('filename', $file);
+
+		if ($files->count() === 0) {
+			throw new \Slim\Exception\NotFoundException($request, $response);
+		}
+
+		$file = $files->first();
+
+		if ($privacy < 0 && $privacy > 2) {
+			return $response->withStatus(400)->write('Invalid privacy state: ' . $privacy);
+		}
+
+		$file->privacy_state = $privacy;
+		$file->save();
+
+		$this->container->log->log('file', \Monolog\Logger::WARNING, 'File privacy state changed.', [
+			'user' => [
+				$user->id,
+				$user->username,
+			],
+			'file' => $owner . '/' . $file,
+			'privacy' => $privacy,
+		]);
+
+		return $response;
+	}
+
 	public function getPaste($request, $response) {
 		return $this->container->view->render($response, 'upload/paste.twig');
 	}

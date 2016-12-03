@@ -1,0 +1,28 @@
+<script>
+$(function() {
+	$('.delete-file').click(function(event) {
+		var filename = $(this).data('filename');
+		var route    = $(this).data('route');
+
+		$('.confirm-text').html("Really delete <code>" + filename + "</code>?");
+		$('[data-action="delete"]').data('route', route);
+	});
+
+	$('[data-action="delete"]').click(function(event) {
+		var route = $(this).data('route');
+		$.get({
+			url: route,
+			success: function() {
+				location.reload(true);
+			}
+		});
+	});
+
+	$('[data-role="privacy-dropdown"]').change(function() {
+		var route = $('option:selected', this).data('route');
+		$.get({
+			url: route
+		});
+	});
+});
+</script>

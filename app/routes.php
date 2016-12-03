@@ -88,6 +88,8 @@ $app->group('', function() use ($container) { // it's groups all the way down
 
 				$this->get('/delete/{owner}/{filename}', 'FileController:deleteFile')->setName('file.delete');
 
+				$this->get('/setprivacy/{owner}/{filename}/{privacy}', 'FileController:changePrivacy')->setName('file.privacy.change');
+
 				$this->group('/admin', function() use ($container) {
 					$this->group('/acp', function() {
 						$this->get('', 'AcpController:getAcpHome')->setName('admin.acp.home');
