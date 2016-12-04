@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pwstrength-bootstrap/2.0.3/pwstrength-bootstrap.min.js"></script>
 	<script>
 	$(function () {
-		$('#password').pwstrength({
+		$('#password_new').pwstrength({
 			ui: {
 				showVerdictsInsideProgressBar: true
 			}
@@ -48,24 +48,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 					<form action="{{ path_for('auth.password.change') }}" method="post">
 						<div class="form-group{{ errors.password_old ? ' has-error' : '' }}">
-							<label for="password_old">Current password</label>
-							<input type="password" name="password_old" id="password_old" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" class="form-control" required>
+							<label for="password">Current password</label>
+							<input type="password" name="password" id="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" class="form-control" required>
 							{% if errors.password_old %}
 								<span class="help-block">{{ errors.password_old | first }}</span>
 							{% endif %}
 						</div>
 
 						<div class="form-group{{ errors.password ? ' has-error' : '' }}">
-							<label for="password">New password</label>
-							<input type="password" name="password" id="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" class="form-control" required>
+							<label for="password_new">New password</label>
+							<input type="password" name="password_new" id="password_new" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" class="form-control" required>
 							{% if errors.password %}
 								<span class="help-block">{{ errors.password | first }}</span>
 							{% endif %}
 						</div>
 
 						<div class="form-group{{ errors.password_confirm ? ' has-error' : '' }}">
-							<label for="password_confirm">Confirm password</label>
-							<input type="password" name="password_confirm" id="password_confirm" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" class="form-control" required>
+							<label for="password_new_confirm">Confirm password</label>
+							<input type="password" name="password_new_confirm" id="password_new_confirm" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" class="form-control" required>
 							{% if errors.password_confirm %}
 								<span class="help-block">{{ errors.password_confirm | first }}</span>
 							{% endif %}
