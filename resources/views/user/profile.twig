@@ -37,7 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<p>
 				{% if user.isAdmin() %}
 					<span class="label label-danger">Administrator</span>
@@ -66,7 +66,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				</p>
 			{% endif %}
 		</div>
-		<div class="col-md-{{ (user.id == auth.user.id or auth.user.isModerator()) ? '6' : '8' }}">
+		<div class="col-md-{{ (user.id == auth.user.id or auth.user.isModerator()) ? '7' : '9' }}">
 			{% if page.files.count > 0 %}
 				<div class="table-responsive">
 					<table class="table table-striped table-bordered table-hover">
