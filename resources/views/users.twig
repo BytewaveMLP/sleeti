@@ -51,7 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 										{% endif %}
 									</td>
 									{% if auth.user.isAdmin() %}
-										<td class="vert-align">
+										<td class="vert-align text-center">
 											<a href="{{ path_for('user.profile.delete', {'id': user.id}) }}" class="btn btn-danger btn-xs">Delete</a>
 										</td>
 									{% endif %}
