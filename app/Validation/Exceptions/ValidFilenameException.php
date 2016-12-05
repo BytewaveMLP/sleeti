@@ -26,7 +26,7 @@ class ValidFilenameException extends ValidationException
 {
 	public static $defaultTemplates = [
 		self::MODE_DEFAULT => [
-			self::STANDARD => 'Filenames must not contain any of the following: \/?%*:|"<>',
+			self::STANDARD => 'Filenames must not be empty, nor contain any of the following: \/?%*:|"<>',
 		],
 	];
 }
