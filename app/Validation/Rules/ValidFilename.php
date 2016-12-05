@@ -26,6 +26,8 @@ use Respect\Validation\Rules\AbstractRule;
 class ValidFilename extends AbstractRule
 {
 	public function validate($input) {
+		if ($input == '') return;
+		
 		$filename = pathinfo($input, PATHINFO_FILENAME);
 		$ext      = pathinfo($input, PATHINFO_EXTENSION);
 
