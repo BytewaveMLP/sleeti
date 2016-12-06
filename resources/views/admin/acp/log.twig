@@ -32,24 +32,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				<form action="{{ path_for('admin.acp.log') }}" method="post" autocomplete="off">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" name="enabled" value="1"{{ settings.logging.enabled ? ' checked' : '' }}> Enable logging</code>
+							<input type="checkbox" name="enabled" value="1"{{ settings.logging.enabled ? ' checked' : '' }}> Enable logging
 						</label>
 					</div>
 
 					<div class="form-group">
 						<label for="path">Path</label>
-						<input type="text" class="form-control" name="path" value="{{ settings.logging.path }}" placeholder="/var/www/sleeti/logs/">
+						<input type="text" class="form-control" name="path" id="path" value="{{ settings.logging.path }}" placeholder="/var/www/sleeti/logs/">
 					</div>
 
 					<div class="form-group">
 						<label for="maxFiles">Max days to retain files</label>
-						<input type="number" class="form-control" name="maxFiles" min="0" value="{{ settings.logging.maxFiles }}" placeholder="0">
+						<input type="number" class="form-control" name="maxFiles" id="maxFiles" min="0" value="{{ settings.logging.maxFiles }}" placeholder="0">
 						<span class="help-block">Setting this to 0 will retain all files.</span>
 					</div>
 
 					<div class="form-group">
 						<label for="level">Log level</label>
-						<select name="level" class="form-control">
+						<select name="level" id="level" class="form-control">
 							{% for name, value in levels %}
 								<option value="{{ value }}"{% if settings.logging.level == value %} selected{% endif %}>{{ name }}</option>
 							{% endfor %}

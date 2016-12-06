@@ -37,18 +37,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				<form action="{{ path_for('admin.acp.cache') }}" method="post" autocomplete="off">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" name="enabled" value="1"{{ settings.cache.enabled ? ' checked' : '' }}> Enable Twig caching</code>
+							<input type="checkbox" name="enabled" value="1"{{ settings.cache.enabled ? ' checked' : '' }}> Enable Twig caching
 						</label>
 					</div>
 
 					<div class="form-group">
 						<label for="path">Path</label>
-						<input type="text" class="form-control" name="path" value="{{ settings.cache.path }}" placeholder="/var/www/sleeti/resources/cache/">
+						<input type="text" class="form-control" name="path" id="path" value="{{ settings.cache.path }}" placeholder="/var/www/sleeti/resources/cache/">
 					</div>
 
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" name="auto_reload" value="1"{{ settings.cache.auto_reload ? ' checked' : '' }}> Enable auto-reloading</code>
+							<input type="checkbox" name="auto_reload" value="1"{{ settings.cache.auto_reload ? ' checked' : '' }}> Enable auto-reloading
 						</label>
 						<span class="help-block">At the cost of some performance, you can enable this to recompile your Twig templates when you edit them.</span>
 					</div>
