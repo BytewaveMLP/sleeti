@@ -207,7 +207,7 @@ class FileController extends Controller
 		$filepath  = $this->container['settings']['site']['upload']['path'];
 		$filepath .= $file->getPath();
 
-		if (!file_exists($filepath) || file_get_contents($filepath) === false) {
+		if (!file_exists($filepath)) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
@@ -255,7 +255,7 @@ class FileController extends Controller
 		$filepath  = $this->container['settings']['site']['upload']['path'];
 		$filepath .= $file->getPath();
 
-		if (!file_exists($filepath) || file_get_contents($filepath) === false) {
+		if (!file_exists($filepath)) {
 			$file->delete(); // broken link
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
@@ -351,7 +351,7 @@ class FileController extends Controller
 		$owner = $this->container->auth->user();
 
 		$validation = $this->container->validator->validate($request, [
-			'title' => v::length(null, 100)->validFilename(),
+			'title' => v::notEmpty()->length(null, 100)->validFilename(),
 			'paste' => v::notEmpty(),
 		]);
 
