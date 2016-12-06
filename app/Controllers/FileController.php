@@ -351,7 +351,7 @@ class FileController extends Controller
 		$owner = $this->container->auth->user();
 
 		$validation = $this->container->validator->validate($request, [
-			'title' => v::notEmpty()->length(null, 100)->validFilename(),
+			'title' => v::notEmpty()->noTrailingWhitespace()->length(null, 100)->validFilename(),
 			'paste' => v::notEmpty(),
 		]);
 
