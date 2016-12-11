@@ -30,8 +30,8 @@ class FileController extends Controller
 {
 	/**
 	 * Handles file uploads from clients
-	 * @param  \Sleeti\Models\User $user        The user to associate with the uploaded file
-	 * @param  bool                $flashDupe   Should we tell the user if there was a duplicate file?
+	 * @param  \Sleeti\Models\User $user    The user to associate with the uploaded file
+	 * @param  bool                $flash   Should we tell the user if there was a duplicate file?
 	 */
 	private function handleFileUpload($request, $user, $flash = false) {
 		$files = $request->getUploadedFiles();
