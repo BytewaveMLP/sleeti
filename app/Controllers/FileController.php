@@ -214,8 +214,6 @@ class FileController extends Controller
 		$user  = $this->container->auth->user();
 		$owner = $file->user;
 
-		$safeFilename = rawurlencode($file->id . ($name !== null ? '-' . $name : '') . ($ext !== null ? '.' . $ext : ''));
-
 		// Check privacy state of file, show error if the user doesn't have permission to view
 		if ($file->privacy_state == 2 && (!$this->container->auth->check() || ($user->id !== $owner->id && !$user->isModerator()))) {
 			$this->container->log->log('file', \Monolog\Logger::WARNING, 'User attempted to view a file they don\'t have permission to.', [
@@ -227,14 +225,21 @@ class FileController extends Controller
 					$owner->id,
 					$owner->username,
 				],
-				'file' => $safeFilename,
+				'file' => $filename,
 			]);
 
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
-		// Output file with file's MIME content type
-		return $response->withHeader('Content-Type', mime_content_type($filepath))->withBody(new \GuzzleHttp\Psr7\LazyOpenStream($filepath, 'r'));
+		$contentType = mime_content_type($filepath);
+
+		$response = $response->withHeader('Content-Type', $contentType);
+
+		if ($contentType == 'text/html') {
+			$response = $response->withHeader('Content-Disposition', 'attachment; filename*=UTF-8\'\'' . rawurlencode($filename) . '; ');
+		}
+
+		return $response->withBody(new \GuzzleHttp\Psr7\LazyOpenStream($filepath, 'r'));
 	}
 
 	public function deleteFile($request, $response, $args) {
