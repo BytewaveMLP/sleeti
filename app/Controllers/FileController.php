@@ -55,7 +55,7 @@ class FileController extends Controller
 
 		// Maintain cross-platform compatability by ensuring all file names are valid in NTFS
 		if (strpbrk($clientFilename, "\\/?%*:|\"<>")) {
-			throw new FailedUploadException("Invalid filename (" . $clientFilename . ").", $files['file']->getError() ?? -1);
+			throw new FailedUploadException("Invalid filename (" . $clientFilename . ").", 99);
 		}
 
 		$path      = $this->container['settings']['site']['upload']['path'] . $user->id . '/';
@@ -88,7 +88,7 @@ class FileController extends Controller
 		} catch (InvalidArgumentException $e) {
 			// Remove inconsistent file record
 			$fileRecord->delete();
-			throw new FailedUploadException("File moving failed", $files['file']->getError() ?? -1);
+			throw new FailedUploadException("File moving failed", 100);
 		}
 
 		if ($flash && $filename != $clientFilename) {
