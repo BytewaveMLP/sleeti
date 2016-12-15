@@ -20,6 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block title %}Not Found{% endblock %}
 
+{% block extrameta %}
+	<meta name="robots" content="noindex">
+{% endblock %}
+
 {% block content %}
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">

@@ -20,6 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block title %}Home{% endblock %}
 
+{% block extrameta %}
+	<meta name="description" content="{{ settings.site.title | default('sleeti') }} - simple FOSS file sharing">
+{% endblock %}
+
 {% block content %}
 	<div class="row">
 		<div class="col-md-12">

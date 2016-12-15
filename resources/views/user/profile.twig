@@ -20,6 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block title %}Profile - {{ user.username }}{% endblock %}
 
+{% block extrameta %}
+	<meta name="description" content="{% if user.name %}{{ user.name }} ({{ user.username }}){% else %}{{ user.username }}{% endif %}'s account on {{ settings.site.title | default('sleeti') }}">
+{% endblock %}
+
 {% block extrajs %}
 	{% include 'templates/partials/js/file-list.twig' %}
 {% endblock %}

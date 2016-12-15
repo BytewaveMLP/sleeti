@@ -20,6 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block title %}Community{% endblock %}
 
+{% block extrameta %}
+	<meta name="description" content="A list of every account on {{ settings.site.title | default('sleeti') }}.">
+{% endblock %}
+
 {% block content %}
 	<div class="row">
 		<div class="col-md-12">
@@ -30,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<div class="row">
 		<div class="col-md-4">
 			<p>
-				This is a list of every account on the website.
+				This is a list of every account on {{ settings.site.title | default('sleeti') }}.
 			</p>
 		</div>
 		<div class="col-md-8">
