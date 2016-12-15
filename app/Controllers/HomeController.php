@@ -25,4 +25,9 @@ class HomeController extends Controller
 	public function index($request, $response) {
 		return $this->container->view->render($response, 'home.twig');
 	}
+
+	public function robots($request, $response) {
+		$response = $this->container->view->render($response, 'robots.twig');
+		return $response->withStatus(200)->withHeader('Content-Type', 'text/plain');
+	}
 }

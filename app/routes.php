@@ -148,3 +148,5 @@ $app->group('', function() use ($container) { // it's groups all the way down
 // No CSRF protection for ShareX uploads
 // TODO: upload tokens instead of user creds
 $app->post('/upload/sharex', 'FileController:sharexUpload');
+
+$app->get('/robots.txt', 'HomeController:robots');
