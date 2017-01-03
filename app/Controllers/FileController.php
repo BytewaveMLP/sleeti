@@ -133,11 +133,12 @@ class FileController extends Controller
 		}
 
 		$safeFilename = rawurlencode($filename);
-
-		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your file was uploaded successfully. <a href="' . $this->container->router->pathFor('file.view', [
+		$path = $this->container->router->pathFor('file.view', [
 			'owner'    => $owner->id,
 			'filename' => $safeFilename,
-		]) . '">Click here</a> to view it.');
+		]);
+
+		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your file was uploaded successfully. <a href="' . $path . '">Click here</a> to view it.<br><br><button type="button" role="button" class="btn btn-default btn-sm copy-to-clipboard" data-clipboard-text="' . $request->getUri()->getBaseUrl() . $path . '"><span class="fa fa-clipboard fa-fw"></span> Copy link to clipboard</button>');
 
 		$this->container->log->log('upload', \Monolog\Logger::INFO, 'File uploaded.', [
 			'owner' => [
