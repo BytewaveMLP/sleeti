@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Register our global middleware
 $app->add(new \Sleeti\Middleware\LogPageViewMiddleware($container));
 $app->add(new \Sleeti\Middleware\ValidationErrorsMiddleware($container));
 $app->add(new \Sleeti\Middleware\OldInputMiddleware($container));

@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Register our custom 404 page
 $container['notFoundHandler'] = function ($container) {
 	return function ($request, $response) use ($container) {
 		$response = $response->withStatus(404);

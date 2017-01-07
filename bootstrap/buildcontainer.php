@@ -26,19 +26,24 @@ $container['config'] = function($container) use ($settings) {
 	return $settings['settings'];
 };
 
+// Globally give us DB access
 $container['db'] = function($container) use ($capsule) {
 	return $capsule;
 };
 
+// Give us access to our auth handler
 $container['auth'] = function ($container) {
 	return new \Sleeti\Auth\Auth($container);
 };
 
+// Slim\Flash messages
 $container['flash'] = function ($container) {
 	return new \Slim\Flash\Messages;
 };
 
+// Initialize Twig with custom extensions, views, and settings
 $container['view'] = function ($container) {
+	// Get our settings from our config
 	$cacheEnabled    = $container['settings']['cache']['enabled'];
 	$cachePath       = $container['settings']['cache']['path'];
 	$cacheAutoReload = $container['settings']['cache']['auto_reload'];
@@ -48,47 +53,58 @@ $container['view'] = function ($container) {
 		'auto_reload' => $cacheAutoReload,
 	]);
 
+	// Add Slim's Twig extension
 	$view->addExtension(new \Slim\Views\TwigExtension(
 		$container->router,
 		$container->request->getUri()
 	));
 
+	// Create our Markdown parser...
 	$markdownEngine = new MarkdownEngine\ParsedownEngine;
-
+	// ... and add it to Twig
 	$view->addExtension(new MarkdownExtension($markdownEngine));
 
+	// Add our ReCaptcha extension
 	$view->addExtension(new \Sleeti\Twig\Extensions\ReCaptchaExtension($container['settings']['recaptcha']['sitekey']));
 
+	// Cache the values of auth->check() and auth->user() so we don't query the DB a bunch in views
 	$view->getEnvironment()->addGlobal('auth', [
 		'check' => $container->auth->check(),
 		'user'  => $container->auth->user(),
 	]);
 
+	// Add access to the flash messages
 	$view->getEnvironment()->addGlobal('flash', $container->flash);
 
+	// Add our settings object for ACP forms
 	$view->getEnvironment()->addGlobal('settings', $container->settings);
 
 	return $view;
 };
 
+// Add Respect\Validation globally
 $container['validator'] = function ($container) {
 	return new \Sleeti\Validation\Validator;
 };
 
+// Add our CSRF guard to the container
 $container['csrf'] = function ($container) {
 	return new \Slim\Csrf\Guard;
 };
 
+// Add our two-factor authentication handler class
 $container['tfa'] = function ($container) {
 	return new \RobThree\Auth\TwoFactorAuth($container['settings']['site']['title'] ?? "sleeti");
 };
 
+// Add a medium-strength randomlib generator
 $container['randomlib'] = function ($container) {
 	$factory  = new \RandomLib\Factory;
 	$strength = new \SecurityLib\Strength(\SecurityLib\Strength::MEDIUM);
 	return $factory->getGenerator($strength);
 };
 
+// Add our logging handler
 $container['log'] = function ($container) {
 	return new \Sleeti\Logging\Logger($container);
 };

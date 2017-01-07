@@ -76,8 +76,9 @@ class Auth
 			return false;
 		}
 
+		// Verify that the password is correct
 		if (password_verify($password, $user->password)) {
-			$_SESSION['user'] = $user->id;
+			$_SESSION['user'] = $user->id; // If so, log them in
 
 			// Lazy password rehash in case settings or algo changes
 			if (password_needs_rehash($user->password, PASSWORD_DEFAULT, ['cost' => ($this->container['settings']['password']['cost'] ?? 10)])) {
@@ -120,12 +121,17 @@ class Auth
 				$user->username,
 			]);
 
-			return true;
+			return true; // Yay
 		}
 
-		return false;
+		return false; // Nay
 	}
 
+	/**
+	 * Splits up a user's remember credentials cookie into its identifier
+	 * and token parts.
+	 * @return array the identifier and token, in that order, of the cookie
+	 */
 	public function getRememberCredentialsFromCookie() {
 		// If the cookie doesn't exist, don't try
 		if (!isset($_COOKIE['remember_me']) || empty($_COOKIE['remember_me'])) return null;
@@ -206,6 +212,9 @@ class Auth
 		]);
 	}
 
+	/**
+	 * Regenerate a remember token for the user
+	 */
 	public function updateRememberCredentials() {
 		// If no one is logged in, we can't do anything
 		if (!$this->check()) return;
@@ -236,6 +245,9 @@ class Auth
 		);
 	}
 
+	/**
+	 * Invalidates a user's remember credentials serverside
+	 */
 	public function removeRememberCredentials() {
 		$parts = $this->getRememberCredentialsFromCookie();
 		if (!$parts) return;

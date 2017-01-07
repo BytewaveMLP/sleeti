@@ -48,7 +48,7 @@ class PasswordController extends Controller
 			'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10]),
 		]);
 
-		// Invalidate all remember tokens
+		// Invalidate all remember tokens for security
 		$this->container->auth->removeAllRememberCredentials();
 		$this->container->auth->signout();
 

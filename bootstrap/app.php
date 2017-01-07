@@ -20,6 +20,7 @@
 
 use \Respect\Validation\Validator as v;
 
+// Set secure session INI settings
 ini_set('session.use_strict_mode', 1);
 ini_set('session.cookie_httponly', 1);
 ini_set('session.cookie_secure', isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on');
@@ -34,13 +35,16 @@ if (!file_exists(__DIR__ . '/../config/config.json')) {
 		mkdir(__DIR__ . '/../config');
 	}
 
-	file_put_contents(__DIR__ . '/../config/config.json', '{}');
+	file_put_contents(__DIR__ . '/../config/config.json', '{}'); // Hacky hack hack hack hack
 }
 
+// Load the config
 $settings['settings'] = json_decode(file_get_contents(__DIR__ . '/../config/config.json'), true);
 
+// Load up Slim...
 $app = new \Slim\App($settings);
 
+// ... and get its container object
 $container = $app->getContainer();
 
 // Create database connection
@@ -49,11 +53,14 @@ $capsule->addConnection($container['settings']['db'] ?? []);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
+// Build up Slim's container and middleware
 require __DIR__ . '/buildcontainer.php';
 require __DIR__ . '/registercontrollers.php';
 require __DIR__ . '/globalmiddleware.php';
 require __DIR__ . '/errorhandlers.php';
 
+// Initialize Respect\Validation with our custom validation rules
 v::with('Sleeti\\Validation\\Rules');
 
+// Load our routes
 require __DIR__ . '/../app/routes.php';
