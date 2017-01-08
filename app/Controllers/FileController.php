@@ -196,8 +196,9 @@ class FileController extends Controller
 
 	public function viewFile($request, $response, $args) {
 		$filename = $args['filename'];
+		$owner    = $args['owner'];
 
-		$files = File::where('filename', $filename);
+		$files = File::where('owner_id', $owner)->where('filename', $filename);
 
 		if ($files->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
@@ -249,14 +250,13 @@ class FileController extends Controller
 
 		$authedUser = $this->container->auth->user();
 
-		$files = File::where('filename', $filename)->where('owner_id', $owner);
+		$files = File::where('owner_id', $owner)->where('filename', $filename);
 
 		if ($files->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
 		$file  = $files->first();
-		$owner = $file->user;
 
 		$filepath  = $this->container['settings']['site']['upload']['path'];
 		$filepath .= $file->getPath();
@@ -266,8 +266,9 @@ class FileController extends Controller
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
-		if ($authedUser->id != $file->first()->owner_id && !$authedUser->isModerator()) {
-			// Slap people on the wrist who try to delete files they shoudn't be able to
+		if ($authedUser->id != $owner && !$authedUser->isModerator()) {
+			$owner = User::where('id', $owner)->first();
+
 			$this->container->log->log('file', \Monolog\Logger::WARNING, 'User attempted to delete a file they aren\'t allowed to.', [
 				'deleter' => [
 					$authedUser->id,
@@ -280,6 +281,7 @@ class FileController extends Controller
 				'file' => $filename,
 			]);
 
+			// Slap people on the wrist who try to delete files they shoudn't be able to
 			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
 		}
 
@@ -303,10 +305,10 @@ class FileController extends Controller
 	}
 
 	public function changePrivacy($request, $response, $args) {
-		$owner   = $args['owner'];
-		$file    = $args['filename'];
-		$privacy = $args['privacy'];
-		$user    = $this->container->auth->user();
+		$owner    = $args['owner'];
+		$filename = $args['filename'];
+		$privacy  = $args['privacy'];
+		$user     = $this->container->auth->user();
 
 		if (($owner !== $user->id) && !$user->isModerator()) {
 			$this->container->log->log('file', \Monolog\Logger::WARNING, 'User attempted to change the privacy of a file they aren\'t allowed to.', [
@@ -314,13 +316,13 @@ class FileController extends Controller
 					$user->id,
 					$user->username,
 				],
-				'file' => $owner . '/' . $file,
+				'file' => $owner . '/' . $filename,
 			]);
 
 			return $response->withStatus(403)->write('Permission denied.');
 		}
 
-		$files = File::where('owner_id', $owner)->where('filename', $file);
+		$files = File::where('owner_id', $owner)->where('filename', $filename);
 
 		if ($files->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
@@ -340,7 +342,7 @@ class FileController extends Controller
 				$user->id,
 				$user->username,
 			],
-			'file' => $owner . '/' . $file,
+			'file' => $owner . '/' . $filename,
 			'privacy' => $privacy,
 		]);
 
