@@ -28,6 +28,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	</style>
 {% endblock %}
 
+{% block extrajs %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.16/clipboard.min.js"></script>
+	<script>
+		function setTooltip(btn, message) {
+			$(btn).tooltip('hide')
+				.attr('data-original-title', message)
+				.tooltip('show');
+		}
+
+		function hideTooltip(btn) {
+			setTimeout(function() {
+				$(btn).tooltip('hide');
+			}, 1000);
+		}
+
+		$(function () {
+			$('.copy-to-clipboard').tooltip({
+				trigger: 'click',
+				placement: 'bottom'
+			});
+
+			var clipboard = new Clipboard('.copy-to-clipboard');
+
+			clipboard.on('success', function(e) {
+				setTooltip(e.trigger, 'Copied!');
+				hideTooltip(e.trigger);
+			});
+
+			clipboard.on('error', function(e) {
+				setTooltip(e.trigger, 'Failed! :(');
+				hideTooltip(e.trigger);
+			});
+		});
+	</script>
+{% endblock %}
+
 {% block content %}
 	<div class="row">
 		<div class="col-md-6 col-md-offset-2">
