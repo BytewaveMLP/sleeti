@@ -26,6 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block extrajs %}
 	{% include 'templates/partials/js/file-list.twig' %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.5.4/jquery.timeago.min.js"></script>
+	<script>
+	$(function () {
+		$('time.timeago').timeago();
+	});
+	</script>
 {% endblock %}
 
 {% block content %}
@@ -48,6 +54,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				{% elseif user.isModerator() %}
 					<span class="label label-warning">Moderator</span>
 				{% endif %}
+			</p>
+
+			<p>
+				Joined <time class="timeago" datetime="{{ user.created_at | date('c') }}">{{ user.created_at | date('m/d/Y g:i:s A T') }}</time>.
 			</p>
 
 			{% if user.website is not empty %}
