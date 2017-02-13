@@ -78,7 +78,11 @@ class Auth
 
 		// Verify that the password is correct
 		if (password_verify($password, $user->password)) {
-			$_SESSION['user'] = $user->id; // If so, log them in
+			// Regenerate the session ID to prevent session fixation
+			session_regenerate_id(true);
+
+			// Log the user in
+			$_SESSION['user'] = $user->id;
 
 			// Lazy password rehash in case settings or algo changes
 			if (password_needs_rehash($user->password, PASSWORD_DEFAULT, ['cost' => ($this->container['settings']['password']['cost'] ?? 10)])) {
@@ -161,50 +165,49 @@ class Auth
 		// If parsing the cookie failed, don't try
 		if (!$parts) return;
 
-		$tokens = UserRememberToken::where('identifier', $parts[0])->get();
+		$token = UserRememberToken::where('identifier', $parts[0])->first();
 
-		if ($tokens->count() <= 0) {
-			$this->removeRememberCookie();
-			return;
-		}
+		// If the identifier is wrong, forget it
+		if (!$token) return;
 
 		$tokenHash = hash('sha384', $parts[1]);
 
-		// God forbid there are duplicate identifiers, but if there are, this iterates over all of them
-		foreach ($tokens as $token) {
-			// If the token half matches and the token isn't expired...
-			if (hash_equals($token->token, $tokenHash) && strtotime($token->expires) > time()) {
-				$_SESSION['user'] = $token->user_id; // Log the user in
+		// If the token half matches and the token isn't expired...
+		if (hash_equals($token->token, $tokenHash) && strtotime($token->expires) > time()) {
+			// Regenerate the session ID, just in case
+			session_regenerate_id(true);
 
-				$user = $this->user();
+			$_SESSION['user'] = $token->user_id; // Log the user in
 
-				$this->container->log->log('auth', \Monolog\Logger::INFO, 'User logged in with remember credentials.', [
-					$user->id,
-					$user->username,
-				]);
+			$user = $this->user();
 
-				// Regenerate remember_me token on successful remember
-				$newToken = $this->container->randomlib->generateString(255);
+			$this->container->log->log('auth', \Monolog\Logger::INFO, 'User logged in with remember credentials.', [
+				$user->id,
+				$user->username,
+			]);
 
-				$token->token = hash('sha384', $newToken);
-				$token->save();
+			// Regenerate remember_me token on successful remember
+			$newToken = $this->container->randomlib->generateString(255);
 
-				setcookie(
-					"remember_me",
-					$token->identifier . $this::REMEMBER_ME_TOKEN_DELIMITER . $newToken,
-					strtotime($token->expires),
-					'/',
-					'',
-					isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
-					true
-				);
+			$token->token = hash('sha384', $newToken);
+			$token->save();
 
-				return;
-			}
+			setcookie(
+				"remember_me",
+				$token->identifier . $this::REMEMBER_ME_TOKEN_DELIMITER . $newToken,
+				strtotime($token->expires),
+				'/',
+				'',
+				isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
+				true
+			);
+
+			return;
 		}
 
-		// Invalidate user's (forged?) remember_me cookie
+		// Invalidate user's (forged?) remember_me cookie and the affected token
 		$this->removeRememberCookie();
+		$token->delete();
 
 		$this->container->log->log('auth', \Monolog\Logger::WARNING, 'User attempted to log in with invalid remember credentials.', [
 			$_SERVER['HTTP_X_FORWARDED_FOR'] ?? '',
@@ -261,6 +264,8 @@ class Auth
 				break;
 			}
 		}
+
+		$this->removeRememberCookie();
 	}
 
 	/**
@@ -273,6 +278,8 @@ class Auth
 		foreach ($user->rememberTokens as $token) {
 			$token->delete();
 		}
+
+		$this->removeRememberCookie();
 	}
 
 	/**
@@ -301,7 +308,6 @@ class Auth
 
 		// Invalidate user's remember_me credentials
 		$this->removeRememberCredentials();
-		$this->removeRememberCookie();
 
 		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User logged out.', [
 			$user->id,
