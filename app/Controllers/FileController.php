@@ -121,13 +121,7 @@ class FileController extends Controller
 		} catch (FailedUploadException $e) {
 			$this->container->flash->addMessage('danger', '<b>Oh no!</b> We couldn\'t upload your file. Either the file name contains invalid characters, your file is too large, or we had trouble in handling. Sorry!');
 
-			$this->container->log->log('upload', \Monolog\Logger::ERROR, 'File upload failed.', [
-				'uploader' => [
-					$owner->id,
-					$owner->username,
-				],
-				$e->getMessage(),
-			]);
+			$this->container->log->error('upload', $owner->username . '(' . $owner->id . ")'s file upload failed.\nException: " . $e->getMessage());
 
 			return $response->withRedirect($this->container->router->pathFor('file.upload'));
 		}
@@ -140,13 +134,7 @@ class FileController extends Controller
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your file was uploaded successfully. <a href="' . $path . '">Click here</a> to view it.<br><br><button type="button" role="button" class="btn btn-default btn-sm copy-to-clipboard" data-clipboard-text="' . $request->getUri()->getBaseUrl() . $path . '"><span class="fa fa-clipboard fa-fw"></span> Copy link to clipboard</button>');
 
-		$this->container->log->log('upload', \Monolog\Logger::INFO, 'File uploaded.', [
-			'owner' => [
-				$owner->id,
-				$owner->username,
-			],
-			'filename' => $safeFilename,
-		]);
+		$this->container->log->info('upload', $owner->username . '(' . $owner->id . ') uploaded ' . $filename . '.');
 
 		return $response->withRedirect($this->container->router->pathFor('file.upload'));
 	}
@@ -167,30 +155,18 @@ class FileController extends Controller
 		try {
 			$owner = $this->container->auth->user();
 
-			$safeFilename = rawurlencode($this->handleFileUpload($request, $owner));
+			$filename = $this->handleFileUpload($request, $owner);
 
-			$this->container->log->log('upload-sharex', \Monolog\Logger::INFO, 'File uploaded.', [
-				'owner' => [
-					$owner->id,
-					$owner->username,
-				],
-				'filename' => $safeFilename,
-			]);
+			$this->container->log->info('upload-sharex', $owner->username . '(' . $owner->id . ') uploaded ' . $filename . '.');
 
 			return $response->write($request->getUri()->getBaseUrl() . $this->container->router->pathFor('file.view', [
 				'owner'    => $owner->id,
-				'filename' => $safeFilename,
+				'filename' => rawurlencode($filename),
 			]));
 		} catch (FailedUploadException $e) {
-			$this->container->log->log('upload-sharex', \Monolog\Logger::ERROR, 'File upload failed.', [
-				'uploader' => [
-					$owner->id,
-					$owner->username,
-				],
-				$e->getMessage(),
-			]);
+			$this->container->log->error('upload-sharex', $owner->username . '(' . $owner->id . ")'s file upload failed.\nException: " . $e->getMessage());
 
-			return $response->withStatus(500)->write($e->getMessage());
+			return $response->withStatus(500)->write('Upload failed - ' . $e->getMessage());
 		}
 	}
 
@@ -218,17 +194,13 @@ class FileController extends Controller
 
 		// Check privacy state of file, show error if the user doesn't have permission to view
 		if ($file->privacy_state == 2 && (!$this->container->auth->check() || ($user->id !== $owner->id && !$user->isModerator()))) {
-			$this->container->log->log('file', \Monolog\Logger::WARNING, 'User attempted to view a file they don\'t have permission to.', [
-				'viewer' => [
-					$user->id ?? 'NONE',
-					$user->username ?? 'NONE',
-				],
-				'owner' => [
-					$owner->id,
-					$owner->username,
-				],
-				'file' => $filename,
-			]);
+			if ($this->container->auth->check()) {
+				$viewer = $user->username . ' (' . $user->id . ')';
+			} else {
+				$viewer = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'];
+			}
+
+			$this->container->log->warning('file', $viewer . ' attempted to view ' . $owner->username . '(' . $owner->id . ')\'s file ' . $filename . '.');
 
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
@@ -257,6 +229,7 @@ class FileController extends Controller
 		}
 
 		$file  = $files->first();
+		$owner = $file->user;
 
 		$filepath  = $this->container['settings']['site']['upload']['path'];
 		$filepath .= $file->getPath();
@@ -266,40 +239,18 @@ class FileController extends Controller
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
-		if ($authedUser->id != $owner && !$authedUser->isModerator()) {
-			$owner = User::where('id', $owner)->first();
-
-			$this->container->log->log('file', \Monolog\Logger::WARNING, 'User attempted to delete a file they aren\'t allowed to.', [
-				'deleter' => [
-					$authedUser->id,
-					$authedUser->username,
-				],
-				'owner' => [
-					$owner->id,
-					$owner->username,
-				],
-				'file' => $filename,
-			]);
+		if ($authedUser->id != $owner->id && !$authedUser->isModerator()) {
+			$this->container->log->warning('file', $authedUser->username . ' (' . $authedUser->id . ') attempted to delete ' . $owner->username . ' (' . $owner->id . ')\'s file ' . $filename . '.');
 
 			// Slap people on the wrist who try to delete files they shoudn't be able to
 			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
 		}
 
-		$this->container->log->log('file', \Monolog\Logger::INFO, 'File deleted.', [
-			'deleter' => [
-				$authedUser->id,
-				$authedUser->username,
-			],
-			'owner' => [
-				$owner->id,
-				$owner->username,
-			],
-			'file' => $filename,
-		]);
-
 		if (unlink($filepath)) {
 			$file->delete();
 		}
+
+		$this->container->log->info('file', $authedUser->username . '(' . $authedUser->id . ') deleted ' . $owner->username . '(' . $owner->id . ')\'s file' . $filename . '.');
 
 		return $response;
 	}
@@ -311,40 +262,28 @@ class FileController extends Controller
 		$user     = $this->container->auth->user();
 
 		if (($owner !== $user->id) && !$user->isModerator()) {
-			$this->container->log->log('file', \Monolog\Logger::WARNING, 'User attempted to change the privacy of a file they aren\'t allowed to.', [
-				'user' => [
-					$user->id,
-					$user->username,
-				],
-				'file' => $owner . '/' . $filename,
-			]);
+			$this->container->log->warning('file', $user->username . '(' . $user->id . ') attempted to change the privacy of ' . $owner->username . '(' . $owner->id . ')\'s file' . $filename . '.');
 
 			return $response->withStatus(403)->write('Permission denied.');
 		}
 
-		$files = File::where('owner_id', $owner)->where('filename', $filename);
+		$file = File::where('owner_id', $owner)->where('filename', $filename)->first();
 
-		if ($files->count() === 0) {
+		if (!$file) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
-		$file = $files->first();
+		$owner = $file->user;
 
 		if ($privacy < 0 && $privacy > 2) {
 			return $response->withStatus(400)->write('Invalid privacy state: ' . $privacy);
 		}
 
+		$oldPrivacy = $file->privacy_state;
 		$file->privacy_state = $privacy;
 		$file->save();
 
-		$this->container->log->log('file', \Monolog\Logger::WARNING, 'File privacy state changed.', [
-			'user' => [
-				$user->id,
-				$user->username,
-			],
-			'file' => $owner . '/' . $filename,
-			'privacy' => $privacy,
-		]);
+		$this->container->log->info('file', $user->username . ' (' . $user->id . ') changed the privacy of ' . $owner->username . ' (' . $owner->id . ')\'s file ' . $filename . ' from ' . $oldPrivacy . ' to ' . $privacy . '.');
 
 		return $response;
 	}
@@ -408,13 +347,7 @@ class FileController extends Controller
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your paste was created successfully. <a href="' . $path . '">Click here</a> to view it.<br><br><button type="button" role="button" class="btn btn-default btn-sm copy-to-clipboard" data-clipboard-text="' . $request->getUri()->getBaseUrl() . $path . '"><span class="fa fa-clipboard fa-fw"></span> Copy link to clipboard</button>');
 
-		$this->container->log->log('upload-paste', \Monolog\Logger::INFO, 'Paste created.', [
-			'owner' => [
-				$owner->id,
-				$owner->username,
-			],
-			'filename' => $safeFilename,
-		]);
+		$this->container->log->info('upload-paste', $owner->username . '(' . $owner->id . ') created paste ' . $title . '.');
 
 		return $response->withRedirect($this->container->router->pathFor('file.upload.paste'));
 	}
