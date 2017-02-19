@@ -56,8 +56,8 @@ $capsule->bootEloquent();
 // Build up Slim's container and middleware
 require __DIR__ . '/buildcontainer.php';
 require __DIR__ . '/registercontrollers.php';
-require __DIR__ . '/globalmiddleware.php';
 require __DIR__ . '/errorhandlers.php';
+require __DIR__ . '/globalmiddleware.php';
 
 // Initialize Respect\Validation with our custom validation rules
 v::with('Sleeti\\Validation\\Rules');

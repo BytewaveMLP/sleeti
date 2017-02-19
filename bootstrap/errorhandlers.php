@@ -25,3 +25,10 @@ $container['notFoundHandler'] = function ($container) {
 		return $container->view->render($response, 'errors/404.twig');
 	};
 };
+
+// whoops! general error handling
+$whoopsGuard = new \Zeuxisoo\Whoops\Provider\Slim\WhoopsGuard();
+$whoopsGuard->setApp($app);
+$whoopsGuard->setRequest($container['request']);
+$whoopsGuard->setHandlers([]);
+$whoopsGuard->install();

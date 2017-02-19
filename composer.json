@@ -11,7 +11,8 @@
         "guzzlehttp/guzzle": "^6.2",
         "robthree/twofactorauth": "^1.5",
         "ircmaxell/random-lib": "^1.2",
-        "monolog/monolog": "^1.21"
+        "monolog/monolog": "^1.21",
+        "zeuxisoo/slim-whoops": "0.6.*"
     },
 	"autoload": {
 		"psr-4": {
