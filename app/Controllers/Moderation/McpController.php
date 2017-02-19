@@ -25,15 +25,14 @@ use \Sleeti\Models\File;
 
 class McpController extends Controller
 {
-	const MAX_PER_PAGE = 10;
-
 	public function getMcpHome($request, $response) {
 		return $this->container->view->render($response, 'mod/mcp/home.twig');
 	}
 
 	public function getFiles($request, $response) {
-		$totalPages = ceil(File::count() / $this::MAX_PER_PAGE);
-		$page       = $request->getParam('page') ?? 1;
+		$itemsPerPage = $this->container->auth->check() ? $this->container->auth->user()->settings->items_per_page : 10;
+		$totalPages   = ceil(File::count() / $itemsPerPage);
+		$page         = $request->getParam('page') ?? 1;
 
 		if ($page > $totalPages) {
 			$page = $totalPages;
@@ -43,7 +42,7 @@ class McpController extends Controller
 
 		return $this->container->view->render($response, 'mod/mcp/files.twig', [
 			'page' => [
-				'files'   => File::orderBy('id', 'DESC')->skip(($page - 1) * $this::MAX_PER_PAGE)->take($this::MAX_PER_PAGE)->get(),
+				'files'   => File::orderBy('id', 'DESC')->skip(($page - 1) * $itemsPerPage)->take($itemsPerPage)->get(),
 				'current' => $page,
 				'last'    => $totalPages,
 			],

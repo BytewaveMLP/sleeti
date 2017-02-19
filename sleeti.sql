@@ -53,6 +53,7 @@ CREATE TABLE `user_settings` (
   `tfa_enabled` tinyint(1) NOT NULL DEFAULT '0',
   `tfa_secret` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `default_privacy_state` int(1) NOT NULL DEFAULT '0',
+  `items_per_page` int(10) NOT NULL DEFAULT '10',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

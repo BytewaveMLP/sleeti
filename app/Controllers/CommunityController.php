@@ -24,11 +24,10 @@ use Sleeti\Models\User;
 
 class CommunityController extends Controller
 {
-	const MAX_PER_PAGE = 10;
-
 	public function community($request, $response) {
-		$totalPages = ceil(User::count() / $this::MAX_PER_PAGE);
-		$page       = $request->getParam('page') ?? 1;
+		$itemsPerPage = $this->container->auth->check() ? $this->container->auth->user()->settings->items_per_page : 10;
+		$totalPages   = ceil(User::count() / $itemsPerPage);
+		$page         = $request->getParam('page') ?? 1;
 
 		if ($page > $totalPages) {
 			$page = $totalPages;
@@ -38,7 +37,7 @@ class CommunityController extends Controller
 
 		return $this->container->view->render($response, 'users.twig', [
 			'page' => [
-				'users'   => User::skip(($page - 1) * $this::MAX_PER_PAGE)->take($this::MAX_PER_PAGE)->get(),
+				'users'   => User::skip(($page - 1) * $itemsPerPage)->take($itemsPerPage)->get(),
 				'current' => $page,
 				'last'    => $totalPages,
 			],
