@@ -26,12 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block extrajs %}
 	{% include 'templates/partials/js/file-list.twig' %}
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.5.4/jquery.timeago.min.js"></script>
-	<script>
-	$(function () {
-		$('time.timeago').timeago();
-	});
-	</script>
+	{% include 'templates/partials/js/timeago.twig' %}
 {% endblock %}
 
 {% block content %}
@@ -87,6 +82,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 						<thead>
 							<tr>
 								<th>File</th>
+								<th>Size</th>
+								<th>Date uploaded</th>
 								{% if user.id == auth.user.id or auth.user.isModerator() %}
 									<th>Privacy</th>
 									<th>Delete</th>
@@ -99,6 +96,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 								<tr>
 									<td class="vert-align">
 										<a id="file-entry-{{ filename | url_encode }}" href="{{ path_for('file.view', {'owner': file.user.id, 'filename': filename | url_encode }) }}">{{ filename }}</a>
+									</td>
+									<td class="vert-align">
+										{{ filesize(settings.site.upload.path ~ file.getPath()) | format_bytes }}
+									</td>
+									<td class="vert-align">
+										<time class="timeago" datetime="{{ file.created_at | date('c') }}">{{ file.created_at | date('m/d/Y g:i:s A T') }}</time>
 									</td>
 									{% if user.id == auth.user.id or auth.user.isModerator() %}
 										<td class="vert-align">
