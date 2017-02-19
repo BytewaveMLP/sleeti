@@ -89,10 +89,7 @@ class Auth
 				$user->password = password_hash($password, PASSWORD_DEFAULT, ['cost' => ($this->container['settings']['password']['cost'] ?? 10)]);
 				$user->save();
 
-				$this->container->log->log('auth', \Monolog\Logger::DEBUG, 'User\'s password was rehashed.', [
-					'id'       => $user->id,
-					'username' => $user->username,
-				]);
+				$this->container->log->debug('auth', $user->username . ' (' . $user->id . ')\'s password was rehashed.');
 			}
 
 			// Just in case there isn't an associated UserPermission for this User, create one
@@ -102,10 +99,7 @@ class Auth
 					'flags'   => '',
 				]);
 
-				$this->container->log->log('auth', \Monolog\Logger::DEBUG, 'User permissions record created.', [
-					$user->id,
-					$user->username,
-				]);
+				$this->container->log->debug('auth', 'User permissions record created for ' . $user->username . ' (' . $user->id . ').');
 			}
 
 			// Same for UserSettings
@@ -114,16 +108,10 @@ class Auth
 					'user_id' => $user->id,
 				]);
 
-				$this->container->log->log('auth', \Monolog\Logger::DEBUG, 'User settings record created.', [
-					$user->id,
-					$user->username,
-				]);
+				$this->container->log->debug('auth', 'User settings record created for ' . $user->username . ' (' . $user->id . ').');
 			}
 
-			$this->container->log->log('auth', \Monolog\Logger::INFO, 'User logged in.', [
-				$user->id,
-				$user->username,
-			]);
+			$this->container->log->info('auth', $user->username . ' (' . $user->id . ') logged in.');
 
 			return true; // Yay
 		}
@@ -181,10 +169,7 @@ class Auth
 
 			$user = $this->user();
 
-			$this->container->log->log('auth', \Monolog\Logger::INFO, 'User logged in with remember credentials.', [
-				$user->id,
-				$user->username,
-			]);
+			$this->container->log->info('auth', $user->username . ' (' . $user->id . ') logged in with remember credentials.');
 
 			// Regenerate remember_me token on successful remember
 			$newToken = $this->container->randomlib->generateString(255);
@@ -209,10 +194,7 @@ class Auth
 		$this->removeRememberCookie();
 		$token->delete();
 
-		$this->container->log->log('auth', \Monolog\Logger::WARNING, 'User attempted to log in with invalid remember credentials.', [
-			$_SERVER['HTTP_X_FORWARDED_FOR'] ?? '',
-			$_SERVER['REMOTE_ADDR'],
-		]);
+		$this->container->log->warning('auth', ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR']) . ' attempted to log in with invalid remember credentials.');
 	}
 
 	/**
@@ -309,9 +291,6 @@ class Auth
 		// Invalidate user's remember_me credentials
 		$this->removeRememberCredentials();
 
-		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User logged out.', [
-			$user->id,
-			$user->username,
-		]);
+		$this->container->log->info('auth', $user->username . ' (' . $user->id . ') logged out.');
 	}
 }

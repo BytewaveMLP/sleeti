@@ -106,10 +106,7 @@ class AuthController extends Controller
 
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome back!');
 
-		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User finished logging in with 2FA.', [
-			$user->id,
-			$user->username,
-		]);
+		$this->container->log->info('auth', $user->username . ' (' . $user->id . ') finished logging in with 2FA.');
 
 		return $response->withRedirect($redirect ?? $this->container->router->pathFor('home'));
 	}
@@ -150,23 +147,15 @@ class AuthController extends Controller
 			'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10]),
 		]);
 
-		$userPerms = UserPermissions::create([
-			'user_id' => $user->id,
-			'flags'   => '',
-		]);
-
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome to ' . $this->container->settings['site']['title'] ?? 'sleeti' . '!');
 
-		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User signed up.', [
-			$user->id,
-			$user->username,
-		]);
+		$this->container->log->info('auth', $user->username . ' (' . $user->id . ') signed up.');
 
 		if ($user->id === 1) { // if this is the only user, give them admin
 			$user->addPermission('A');
 			$this->container->flash->addMessage('info', 'New administrative account created!');
 
-			$this->container->log->log('auth', \Monolog\Logger::INFO, 'Administrative account created.');
+			$this->container->log->notice('auth', 'Administrative account created.');
 		}
 
 		$this->container->auth->attempt(
@@ -228,12 +217,13 @@ class AuthController extends Controller
 			rmdir($path);
 		}
 
-		$this->container->log->log('auth', \Monolog\Logger::INFO, 'User account deleted.', [
-			$user->id,
-			$user->username,
-		]);
+		$authedUser = $this->container->auth->user();
 
-		$this->container->auth->signout();
+		$this->container->log->info('auth', $user->username . ' (' . $user->id . ')\'s account was deleted by ' . $authedUser->username . '(' . $authedUser->id . ').');
+
+		if ($this->container->auth->user()->id == $args['id']) {
+			$this->container->auth->signout();
+		}
 
 		$user->settings->delete();
 		$user->permissions->delete();

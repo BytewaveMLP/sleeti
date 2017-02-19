@@ -55,10 +55,7 @@ class TwoFactorAuthController extends Controller
 			$token->delete();
 		}
 
-		$this->container->log->log('2FA', \Monolog\Logger::INFO, 'User disabled 2FA.', [
-			'id'       => $user->id,
-			'username' => $user->username,
-		]);
+		$this->container->log->info('2FA', $user->username . ' (' . $user->id . ') disabled 2FA.');
 
 		$this->container->flash->addMessage('success', 'Two-factor authentication successfully disabled.');
 		return $response->withRedirect($this->container->router->pathFor('user.profile.2fa'));
@@ -107,10 +104,7 @@ class TwoFactorAuthController extends Controller
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> You\'ve successfully enabled two-factor authentication!');
 
-		$this->container->log->log('2FA', \Monolog\Logger::INFO, 'User enabled and set up 2FA.', [
-			'id'       => $user->id,
-			'username' => $user->username,
-		]);
+		$this->container->log->info('2FA', $user->username . ' (' . $user->id . ') enabled and set up 2FA.');
 
 		return $this->container->view->render($response, 'user/2fa/recovery-tokens.twig', [
 			'tokens' => $tokens,
