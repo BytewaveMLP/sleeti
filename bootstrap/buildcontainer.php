@@ -67,6 +67,8 @@ $container['view'] = function ($container) {
 	// Add our ReCaptcha extension
 	$view->addExtension(new \Sleeti\Twig\Extensions\ReCaptchaExtension($container['settings']['recaptcha']['sitekey']));
 
+	$view->addExtension(new \Sleeti\Twig\Extensions\FileHelperExtension);
+
 	// Cache the values of auth->check() and auth->user() so we don't query the DB a bunch in views
 	$view->getEnvironment()->addGlobal('auth', [
 		'check' => $container->auth->check(),
