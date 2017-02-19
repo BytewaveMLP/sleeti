@@ -45,7 +45,8 @@ class ProfileController extends Controller
 			$files = $files->where('privacy_state', 0);
 		}
 
-		$totalPages = ceil($files->get()->count() / $this::MAX_PER_PAGE);
+		$itemsPerPage = $this->container->auth->check() ? $this->container->auth->user()->settings->items_per_page : 10;
+		$totalPages   = ceil($files->get()->count() / $itemsPerPage);
 
 		if ($page > $totalPages) {
 			$page = $totalPages;
@@ -56,7 +57,7 @@ class ProfileController extends Controller
 		return $this->container->view->render($response, 'user/profile.twig', [
 			'user' => $user,
 			'page' => [
-				'files'   => $files->skip(($page - 1) * $this::MAX_PER_PAGE)->take($this::MAX_PER_PAGE)->get(),
+				'files'   => $files->skip(($page - 1) * $itemsPerPage)->take($itemsPerPage)->get(),
 				'current' => $page,
 				'last'    => $totalPages,
 			],
@@ -76,12 +77,15 @@ class ProfileController extends Controller
 
 		$privacy = $request->getParam('privacy');
 
+		$itemsPerPage = $request->getParam('items_per_page');
+
 		$bio = preg_replace('~\r\n?~', "\n", $bio);
 
 		$validation = $this->container->validator->validate($request, [
-			'website' => v::optional(v::url())->length(null, 255),
-			'bio'     => v::length(null, 500),
-			'name'    => v::length(null, 50),
+			'website'        => v::optional(v::url())->length(null, 255),
+			'bio'            => v::length(null, 500),
+			'name'           => v::length(null, 50),
+			'items_per_page' => v::intVal()->between(5, 50),
 		]);
 
 		if ($validation->failed()) {
@@ -97,11 +101,14 @@ class ProfileController extends Controller
 			$user->settings->default_privacy_state = 2;
 		}
 
+		$user->settings->items_per_page = $itemsPerPage;
+
 		$user->settings->save();
 
 		$user->website = $website;
 		$user->bio     = strip_tags($bio); // no XSS 4 u
 		$user->name    = $name;
+
 		$user->save();
 
 		$this->container->log->log('profile', \Monolog\Logger::INFO, 'User profile updated.', [
