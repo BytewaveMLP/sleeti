@@ -31,10 +31,7 @@ class AdminMiddleware extends Middleware
 		if (!$user->isAdmin()) {
 			$this->container->flash->addMessage('danger', '<b>Hey!</b> Only admins are allowed there!');
 
-			$this->container->log->log('admin', \Monolog\Logger::WARNING, 'Non-admin user attempted to access admin-only area.', [
-				$user->id,
-				$user->username,
-			]);
+			$this->container->log->warning('admin', $user->username . ' (' . $user->id . ') attempted to access admin-only area.');
 
 			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
 		}

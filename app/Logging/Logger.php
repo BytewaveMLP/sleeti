@@ -68,7 +68,7 @@ class Logger
 		$this->handler = new \Monolog\Handler\RotatingFileHandler($logfile, $container['settings']['logging']['maxFiles'] ?? 0, $this->container['settings']['logging']['level'] ?? \Monolog\Logger::INFO);
 
 		$dateFormat   = 'H:i:s';
-		$outputFormat = "[%datetime%] [%level_name%] %channel%: %message% %context%\n";
+		$outputFormat = "[%datetime%] [%channel%] [%level_name%]: %message%\n";
 		$formatter    = new \Monolog\Formatter\LineFormatter($outputFormat, $dateFormat);
 
 		$this->handler->setFormatter($formatter);
@@ -89,15 +89,86 @@ class Logger
 	 * @param  string $name    The logger channel to log to
 	 * @param  int    $level   The logging level to output on
 	 * @param  mixed  $message The log message to write
-	 * @param  array  $context Any extra details to log with the message
 	 */
-	public function log($name, $level, $message, array $context = []) {
+	public function log($name, $level, $message) {
 		if (!$this->container['settings']['logging']['enabled']) return;
 
 		if (!isset($loggers[$name])) {
 			$this->addLogger($name);
 		}
 
-		$this->loggers[$name]->log($level, $message, $context);
+		$this->loggers[$name]->log($level, $message, []);
+	}
+
+	/**
+	 * Shorthand for logging with the DEBUG level
+	 * @param  string $name    The logger channel to log to
+	 * @param  mixed  $message The log message to write
+	 */
+	public function debug($name, $message) {
+		$this->log($name, \Monolog\Logger::DEBUG, $message);
+	}
+
+	/**
+	 * Shorthand for logging with the INFO level
+	 * @param  string $name    The logger channel to log to
+	 * @param  mixed  $message The log message to write
+	 */
+	public function info($name, $message) {
+		$this->log($name, \Monolog\Logger::INFO, $message);
+	}
+
+	/**
+	 * Shorthand for logging with the NOTICE level
+	 * @param  string $name    The logger channel to log to
+	 * @param  mixed  $message The log message to write
+	 */
+	public function notice($name, $message) {
+		$this->log($name, \Monolog\Logger::NOTICE, $message);
+	}
+
+	/**
+	 * Shorthand for logging with the WARNING level
+	 * @param  string $name    The logger channel to log to
+	 * @param  mixed  $message The log message to write
+	 */
+	public function warning($name, $message) {
+		$this->log($name, \Monolog\Logger::WARNING, $message);
+	}
+
+	/**
+	 * Shorthand for logging with the ERROR level
+	 * @param  string $name    The logger channel to log to
+	 * @param  mixed  $message The log message to write
+	 */
+	public function error($name, $message) {
+		$this->log($name, \Monolog\Logger::ERROR, $message);
+	}
+
+	/**
+	 * Shorthand for logging with the CTRITICAL level
+	 * @param  string $name    The logger channel to log to
+	 * @param  mixed  $message The log message to write
+	 */
+	public function critical($name, $message) {
+		$this->log($name, \Monolog\Logger::CRITICAL, $message);
+	}
+
+	/**
+	 * Shorthand for logging with the ALERT level
+	 * @param  string $name    The logger channel to log to
+	 * @param  mixed  $message The log message to write
+	 */
+	public function alert($name, $message) {
+		$this->log($name, \Monolog\Logger::ALERT, $message);
+	}
+
+	/**
+	 * Shorthand for logging with the EMERGENCY level
+	 * @param  string $name    The logger channel to log to
+	 * @param  mixed  $message The log message to write
+	 */
+	public function emergency($name, $message) {
+		$this->log($name, \Monolog\Logger::EMERGENCY, $message);
 	}
 }

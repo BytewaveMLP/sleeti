@@ -28,20 +28,13 @@ class LogPageViewMiddleware extends Middleware
 	public function __invoke($request, $response, $next) {
 		$path = $request->getUri()->getPath();
 		if ($this->container->auth->check()) {
-			$user = $this->container->auth->user();
-
-			$this->container->log->log('pageview', \Monolog\Logger::DEBUG, 'Pageview from user.', [
-				$user->id,
-				$user->username,
-				$path,
-			]);
+			$user   = $this->container->auth->user();
+			$viewer = $user->username . ' (' . $user->id . ')';
 		} else {
-			$this->container->log->log('pageview', \Monolog\Logger::DEBUG, 'Pageview from anonymous.', [
-				$_SERVER['HTTP_X_FORWARDED_FOR'] ?? '',
-				$_SERVER['REMOTE_ADDR'],
-				$path,
-			]);
+			$viewer = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'];
 		}
+
+		$this->container->log->debug('pageview', 'Pageview from ' . $viewer . ' (' . $path . ').');
 
 		$response = $next($request, $response);
 		return $response;

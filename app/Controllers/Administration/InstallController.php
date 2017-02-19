@@ -67,7 +67,7 @@ class InstallController extends Controller
 		$this->container->flash->addMessage('success', '<b>Success!</b> Your new instance of ' . $request->getParam('title') . ' has been configured! To edit the config, see <code>/config/config.json</code> and the ACP.');
 		$this->container->flash->addMessage('info', 'The first registered account will have administrator permissions. Register an account now.');
 
-		$this->container->log->log('install', \Monolog\Logger::DEBUG, 'Sleeti instance installed successfully.');
+		$this->container->log->debug('install', 'Sleeti instance installed successfully.');
 
 		return $response->withRedirect($this->container->router->pathFor('home'));
 	}

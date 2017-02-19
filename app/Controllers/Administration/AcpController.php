@@ -64,10 +64,7 @@ class AcpController extends Controller
 
 		$user = $this->container->auth->user();
 
-		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'Database settings updated.', [
-			$user->id,
-			$user->username,
-		]);
+		$this->container->log->notice('acp', $user->username . ' (' . $user->id . ') updated the database settings.');
 
 		$this->container->flash->addMessage('success', 'Databse settings updated successfully!');
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.database'));
@@ -94,10 +91,7 @@ class AcpController extends Controller
 
 		$user = $this->container->auth->user();
 
-		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'Site settings updated.', [
-			$user->id,
-			$user->username,
-		]);
+		$this->container->log->notice('acp', $user->username . ' (' . $user->id . ') updated the site settings.');
 
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.site'));
 	}
@@ -116,10 +110,7 @@ class AcpController extends Controller
 
 		$user = $this->container->auth->user();
 
-		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'Password settings updated.', [
-			$user->id,
-			$user->username,
-		]);
+		$this->container->log->notice('acp', $user->username . ' (' . $user->id . ') updated the password settings.');
 
 		$this->container->flash->addMessage('success', 'Password settings updated successfully!');
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.password'));
@@ -139,10 +130,7 @@ class AcpController extends Controller
 
 		$user = $this->container->auth->user();
 
-		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'Error settings updated.', [
-			$user->id,
-			$user->username,
-		]);
+		$this->container->log->notice('acp', $user->username . ' (' . $user->id . ') updated the error settings.');
 
 		$this->container->flash->addMessage('success', 'Error settings updated successfully!');
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.errors'));
@@ -162,10 +150,7 @@ class AcpController extends Controller
 
 		$user = $this->container->auth->user();
 
-		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'reCAPTCHA settings updated.', [
-			$user->id,
-			$user->username,
-		]);
+		$this->container->log->notice('acp', $user->username . ' (' . $user->id . ') updated the reCAPTCHA settings.');
 
 		$this->container->flash->addMessage('success', 'reCAPTCHA settings updated successfully!');
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.recaptcha'));
@@ -197,10 +182,7 @@ class AcpController extends Controller
 
 		$user = $this->container->auth->user();
 
-		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'Log settings updated.', [
-			$user->id,
-			$user->username,
-		]);
+		$this->container->log->notice('acp', $user->username . ' (' . $user->id . ') updated the log settings.');
 
 		$this->container->flash->addMessage('success', 'Log settings updated successfully!');
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.log'));
@@ -222,10 +204,7 @@ class AcpController extends Controller
 
 		$user = $this->container->auth->user();
 
-		$this->container->log->log('acp', \Monolog\Logger::NOTICE, 'Cache settings updated.', [
-			$user->id,
-			$user->username,
-		]);
+		$this->container->log->notice('acp', $user->username . ' (' . $user->id . ') updated the cache settings.');
 
 		$this->container->flash->addMessage('success', 'Cache settings updated successfully!');
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.cache'));
