@@ -18,10 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Register our global middleware
-$app->add(new \Sleeti\Middleware\LogPageViewMiddleware($container));
-$app->add(new \Sleeti\Middleware\ValidationErrorsMiddleware($container));
-$app->add(new \Sleeti\Middleware\OldInputMiddleware($container));
-$app->add(new \Sleeti\Middleware\RememberMeMiddleware($container));
-$app->add(new \Sleeti\Middleware\SessionCanaryMiddleware($container));
-$app->add(new \Sleeti\Middleware\ActiveRouteMiddleware($container));
+namespace Sleeti\Middleware;
+
+class ActiveRouteMiddleware extends Middleware {
+	public function __invoke($request, $response, $next) {
+		$this->container->view->addExtension(new \Sleeti\Twig\Extensions\BootstrapActiveExtension($request));
+		
+		$response = $next($request, $response);
+		return $response;
+	}
+}

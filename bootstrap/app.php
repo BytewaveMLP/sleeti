@@ -41,6 +41,8 @@ if (!file_exists(__DIR__ . '/../config/config.json')) {
 // Load the config
 $settings['settings'] = json_decode(file_get_contents(__DIR__ . '/../config/config.json'), true);
 
+$settings['settings']['determineRouteBeforeAppMiddleware'] = true;
+
 // Load up Slim...
 $app = new \Slim\App($settings);
 
