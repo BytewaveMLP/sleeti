@@ -18,13 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <div class="col-md-2">
 	<ul class="nav nav-pills nav-stacked">
-		<li role="presentation"><a href="{{ path_for('admin.acp.home') }}"><span aria-hidden="true" class="fa fa-home fa-fw"></span> ACP Home</a></li>
-		<li role="presentation"><a href="{{ path_for('admin.acp.database') }}"><span aria-hidden="true" class="fa fa-database fa-fw"></span> Database Settings</a></li>
-		<li role="presentation"><a href="{{ path_for('admin.acp.site') }}"><span aria-hidden="true" class="fa fa-pencil-square-o fa-fw"></span> Site Settings</a></li>
-		<li role="presentation"><a href="{{ path_for('admin.acp.password') }}"><span aria-hidden="true" class="fa fa-asterisk fa-fw"></span> Password Settings</a></li>
-		<li role="presentation"><a href="{{ path_for('admin.acp.errors') }}"><span aria-hidden="true" class="fa fa-exclamation-triangle fa-fw"></span> Error Settings</a></li>
-		<li role="presentation"><a href="{{ path_for('admin.acp.recaptcha') }}"><span aria-hidden="true" class="fa fa-check-square fa-fw"></span> reCAPTCHA Settings</a></li>
-		<li role="presentation"><a href="{{ path_for('admin.acp.log') }}"><span aria-hidden="true" class="fa fa-file-text-o fa-fw"></span> Log Settings</a></li>
-		<li role="presentation"><a href="{{ path_for('admin.acp.cache') }}"><span aria-hidden="true" class="fa fa-files-o fa-fw"></span> Cache Settings</a></li>
+		<li role="presentation" class="{{ active_route('admin.acp.home') }}"><a href="{{ path_for('admin.acp.home') }}"><span aria-hidden="true" class="fa fa-home fa-fw"></span> ACP Home</a></li>
+		<li role="presentation" class="{{ active_route('admin.acp.database') }}"><a href="{{ path_for('admin.acp.database') }}"><span aria-hidden="true" class="fa fa-database fa-fw"></span> Database Settings</a></li>
+		<li role="presentation" class="{{ active_route('admin.acp.site') }}"><a href="{{ path_for('admin.acp.site') }}"><span aria-hidden="true" class="fa fa-pencil-square-o fa-fw"></span> Site Settings</a></li>
+		<li role="presentation" class="{{ active_route('admin.acp.password') }}"><a href="{{ path_for('admin.acp.password') }}"><span aria-hidden="true" class="fa fa-asterisk fa-fw"></span> Password Settings</a></li>
+		<li role="presentation" class="{{ active_route('admin.acp.errors') }}"><a href="{{ path_for('admin.acp.errors') }}"><span aria-hidden="true" class="fa fa-exclamation-triangle fa-fw"></span> Error Settings</a></li>
+		<li role="presentation" class="{{ active_route('admin.acp.recaptcha') }}"><a href="{{ path_for('admin.acp.recaptcha') }}"><span aria-hidden="true" class="fa fa-check-square fa-fw"></span> reCAPTCHA Settings</a></li>
+		<li role="presentation" class="{{ active_route('admin.acp.log') }}"><a href="{{ path_for('admin.acp.log') }}"><span aria-hidden="true" class="fa fa-file-text-o fa-fw"></span> Log Settings</a></li>
+		<li role="presentation" class="{{ active_route('admin.acp.cache') }}"><a href="{{ path_for('admin.acp.cache') }}"><span aria-hidden="true" class="fa fa-files-o fa-fw"></span> Cache Settings</a></li>
 	</ul>
 </div>
