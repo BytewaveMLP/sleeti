@@ -23,6 +23,7 @@ namespace Sleeti\Controllers\Auth;
 use Sleeti\Controllers\Controller;
 use Sleeti\Models\User;
 use Sleeti\Models\UserPermissions;
+use Sleeti\Models\UserSettings;
 use Respect\Validation\Validator as v;
 
 class AuthController extends Controller
@@ -146,6 +147,9 @@ class AuthController extends Controller
 			'username' => $request->getParam('username'),
 			'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT, $this->container['settings']['password'] ?? ['cost' => 10]),
 		]);
+
+		UserPermissions::create()->user()->associate($user)->save();
+		UserSettings::create()->user()->associate($user)->save();
 
 		$this->container->flash->addMessage('success', '<b>Success!</b> Welcome to ' . $this->container->settings['site']['title'] ?? 'sleeti' . '!');
 
