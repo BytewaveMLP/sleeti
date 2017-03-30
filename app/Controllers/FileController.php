@@ -122,7 +122,7 @@ class FileController extends Controller
 		} catch (FailedUploadException $e) {
 			$this->container->flash->addMessage('danger', '<b>Oh no!</b> We couldn\'t upload your file. Either the file name contains invalid characters, your file is too large, or we had trouble in handling. Sorry!');
 
-			$this->container->log->error('upload', $owner->username . '(' . $owner->id . ")'s file upload failed.\nException: " . $e->getMessage());
+			$this->container->log->error('upload', $owner->username . ' (' . $owner->id . ")'s file upload failed.\nException: " . $e->getMessage());
 
 			return $response->withRedirect($this->container->router->pathFor('file.upload'));
 		}
@@ -135,7 +135,7 @@ class FileController extends Controller
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your file was uploaded successfully. <a href="' . $path . '">Click here</a> to view it.<br><br><button type="button" role="button" class="btn btn-default btn-sm copy-to-clipboard" data-clipboard-text="' . $request->getUri()->getBaseUrl() . $path . '"><span class="fa fa-clipboard fa-fw"></span> Copy link to clipboard</button>');
 
-		$this->container->log->info('upload', $owner->username . '(' . $owner->id . ') uploaded ' . $filename . '.');
+		$this->container->log->info('upload', $owner->username . ' (' . $owner->id . ') uploaded ' . $filename . '.');
 
 		return $response->withRedirect($this->container->router->pathFor('file.upload'));
 	}
@@ -158,14 +158,14 @@ class FileController extends Controller
 
 			$filename = $this->handleFileUpload($request, $owner);
 
-			$this->container->log->info('upload-sharex', $owner->username . '(' . $owner->id . ') uploaded ' . $filename . '.');
+			$this->container->log->info('upload-sharex', $owner->username . ' (' . $owner->id . ') uploaded ' . $filename . '.');
 
 			return $response->write($request->getUri()->getBaseUrl() . $this->container->router->pathFor('file.view', [
 				'owner'    => $owner->id,
 				'filename' => rawurlencode($filename),
 			]));
 		} catch (FailedUploadException $e) {
-			$this->container->log->error('upload-sharex', $owner->username . '(' . $owner->id . ")'s file upload failed.\nException: " . $e->getMessage());
+			$this->container->log->error('upload-sharex', $owner->username . ' (' . $owner->id . ")'s file upload failed.\nException: " . $e->getMessage());
 
 			return $response->withStatus(500)->write('Upload failed - ' . $e->getMessage());
 		}
@@ -201,7 +201,7 @@ class FileController extends Controller
 				$viewer = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'];
 			}
 
-			$this->container->log->warning('file', $viewer . ' attempted to view ' . $owner->username . '(' . $owner->id . ')\'s file ' . $filename . '.');
+			$this->container->log->warning('file', $viewer . ' attempted to view ' . $owner->username . ' (' . $owner->id . ')\'s file ' . $filename . '.');
 
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
@@ -251,7 +251,7 @@ class FileController extends Controller
 			$file->delete();
 		}
 
-		$this->container->log->info('file', $authedUser->username . '(' . $authedUser->id . ') deleted ' . $owner->username . '(' . $owner->id . ')\'s file' . $filename . '.');
+		$this->container->log->info('file', $authedUser->username . ' (' . $authedUser->id . ') deleted ' . $owner->username . ' (' . $owner->id . ')\'s file' . $filename . '.');
 
 		return $response;
 	}
@@ -263,7 +263,7 @@ class FileController extends Controller
 		$user     = $this->container->auth->user();
 
 		if (($owner !== $user->id) && !$user->isModerator()) {
-			$this->container->log->warning('file', $user->username . '(' . $user->id . ') attempted to change the privacy of ' . $owner->username . '(' . $owner->id . ')\'s file' . $filename . '.');
+			$this->container->log->warning('file', $user->username . ' (' . $user->id . ') attempted to change the privacy of ' . $owner->username . ' (' . $owner->id . ')\'s file' . $filename . '.');
 
 			return $response->withStatus(403)->write('Permission denied.');
 		}
@@ -348,7 +348,7 @@ class FileController extends Controller
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your paste was created successfully. <a href="' . $path . '">Click here</a> to view it.<br><br><button type="button" role="button" class="btn btn-default btn-sm copy-to-clipboard" data-clipboard-text="' . $request->getUri()->getBaseUrl() . $path . '"><span class="fa fa-clipboard fa-fw"></span> Copy link to clipboard</button>');
 
-		$this->container->log->info('upload-paste', $owner->username . '(' . $owner->id . ') created paste ' . $title . '.');
+		$this->container->log->info('upload-paste', $owner->username . ' (' . $owner->id . ') created paste ' . $title . '.');
 
 		return $response->withRedirect($this->container->router->pathFor('file.upload.paste'));
 	}

@@ -223,7 +223,7 @@ class AuthController extends Controller
 
 		$authedUser = $this->container->auth->user();
 
-		$this->container->log->info('auth', $user->username . ' (' . $user->id . ')\'s account was deleted by ' . $authedUser->username . '(' . $authedUser->id . ').');
+		$this->container->log->info('auth', $user->username . ' (' . $user->id . ')\'s account was deleted by ' . $authedUser->username . ' (' . $authedUser->id . ').');
 
 		if ($this->container->auth->user()->id == $args['id']) {
 			$this->container->auth->signout();

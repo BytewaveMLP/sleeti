@@ -68,7 +68,7 @@ class AdminController extends Controller
 
 		$authedUser = $this->container->auth->user();
 
-		$this->container->log->notice('acp', $authedUser->username . '(' . $authedUser->id . ') changed ' . $user->username . '(' . $user->id . ')\'s usergroup from ' . $oldGroup . ' to ' . $user->permissions->flags . ' .');
+		$this->container->log->notice('acp', $authedUser->username . ' (' . $authedUser->id . ') changed ' . $user->username . ' (' . $user->id . ')\'s usergroup from ' . $oldGroup . ' to ' . $user->permissions->flags . ' .');
 
 		$this->container->flash->addMessage('success', '<b>Woohoo!</b> ' . $user->username . '\'s usergroup was changed successfully.');
 		return $response->withRedirect($this->container->router->pathFor('user.profile', [
