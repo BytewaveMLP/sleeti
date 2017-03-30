@@ -29,20 +29,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		</div>
 		<div id="navbar" class="collapse navbar-collapse">
 			<ul class="nav navbar-nav">
-				<li><a href="{{ path_for('home') }}">Home</a></li>
-				<li><a href="{{ path_for('community') }}">Community</a></li>
-				<li class="dropdown">
+				<li class="{{ active_route('home') }}"><a href="{{ path_for('home') }}">Home</a></li>
+				<li class="{{ active_route('community') }}"><a href="{{ path_for('community') }}">Community</a></li>
+				<li class="dropdown {{ active_group('file.upload') }}">
 					<a href="#" class="dropdown-toggle" id="uploaddropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Upload <span class="caret"></span></a>
 					<ul class="dropdown-menu" aria-labelledby="uploaddropdown">
-						<li><a href="{{ path_for('file.upload') }}">File</a></li>
-						<li><a href="{{ path_for('file.upload.paste') }}">Paste</a></li>
-						<li><a href="{{ path_for('file.upload.sharex') }}">ShareX</a></li>
-						<li><a href="{{ path_for('file.upload.bash') }}">Bash + cURL</a></li>
+						<li class="{{ active_route('file.upload') }}"><a href="{{ path_for('file.upload') }}">File</a></li>
+						<li class="{{ active_route('file.upload.paste') }}"><a href="{{ path_for('file.upload.paste') }}">Paste</a></li>
+						<li class="{{ active_route('file.upload.sharex') }}"><a href="{{ path_for('file.upload.sharex') }}">ShareX</a></li>
+						<li class="{{ active_route('file.upload.bash') }}"><a href="{{ path_for('file.upload.bash') }}">Bash + cURL</a></li>
 					</ul>
 				</li>
 				{% if auth.check %}
 					{% if auth.user.isModerator() %}
-							<li class="dropdown">
+							<li class="dropdown {{ active_group_one_of(['mod.mcp', 'admin.acp']) }}">
 								<a href="#" class="dropdown-toggle" id="controldropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Control Panels <span class="caret"></span></a>
 								<ul class="dropdown-menu" aria-labelledby="controldropdown">
 									<li><a href="{{ path_for('mod.mcp.home') }}">Moderator Control Panel</a></li>
@@ -56,7 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				{% if auth.check %}
-					<li class="dropdown">
+					<li class="dropdown {{ active_group_one_of(['user.profile', 'auth']) }}">
 						<a href="#" class="dropdown-toggle" id="userdropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ auth.user.username }} {% if auth.user.name %}({{ auth.user.name }}){% endif %}<span class="caret"></span></a>
 						<ul class="dropdown-menu" aria-labelledby="userdropdown">
 							<li><a href="{{ path_for('user.profile', {'id': auth.user.id}) }}">View profile</a></li>
@@ -68,8 +68,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 						</ul>
 					</li>
 				{% else %}
-					<li><a href="{{ path_for('auth.signup') }}">Sign up</a></li>
-					<li><a href="{{ path_for('auth.signin') }}">Sign in</a></li>
+					<li class="{{ active_route('auth.signup') }}"><a href="{{ path_for('auth.signup') }}">Sign up</a></li>
+					<li class="{{ active_route('auth.signin') }}"><a href="{{ path_for('auth.signin') }}">Sign in</a></li>
 				{% endif %}
 			</ul>
 		</div>
