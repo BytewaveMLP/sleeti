@@ -54,7 +54,8 @@ class FileController extends Controller
 		}
 
 		// Maintain cross-platform compatability by ensuring all file names are valid in NTFS
-		if (strpbrk($clientFilename, "\\/?%*:|\"<>")) {
+		$validator = v::notEmpty()->noTrailingWhitespace()->length(null, 100)->validFilename();
+		if (!$validator->validate($clientFilename)) {
 			throw new FailedUploadException("Invalid filename (" . $clientFilename . ").", 99);
 		}
 

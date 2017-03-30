@@ -161,7 +161,7 @@ class AuthController extends Controller
 
 			$this->container->log->notice('auth', 'Administrative account created.');
 		}
-
+ 
 		$this->container->auth->attempt(
 			$request->getParam('email'),
 			$request->getParam('password')

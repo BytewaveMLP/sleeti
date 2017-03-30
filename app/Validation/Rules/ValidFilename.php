@@ -22,13 +22,13 @@ namespace Sleeti\Validation\Rules;
 
 use Sleeti\Models\User;
 use Respect\Validation\Rules\AbstractRule;
+use Sleeti\Controllers\FileController;
 
 class ValidFilename extends AbstractRule
 {
 	public function validate($input) {
-		$filename = pathinfo($input, PATHINFO_FILENAME);
-		$ext      = pathinfo($input, PATHINFO_EXTENSION);
+		$illegalCharacters = "\\/?%*:|\"<>" . implode(array_map('chr', range(0, 31)));
 
-		return !(strpbrk($filename, "\\/?%*:|\"<>") || strpbrk($ext, "\\/?%*:|\"<>"));
+		return !strpbrk($input, $illegalCharacters);
 	}
 }
