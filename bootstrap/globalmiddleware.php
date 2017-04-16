@@ -22,6 +22,6 @@
 $app->add(new \Sleeti\Middleware\LogPageViewMiddleware($container));
 $app->add(new \Sleeti\Middleware\ValidationErrorsMiddleware($container));
 $app->add(new \Sleeti\Middleware\OldInputMiddleware($container));
-$app->add(new \Sleeti\Middleware\RememberMeMiddleware($container));
 $app->add(new \Sleeti\Middleware\SessionCanaryMiddleware($container));
 $app->add(new \Sleeti\Middleware\ActiveRouteMiddleware($container));
+$app->add(new \Sleeti\Middleware\RememberMeMiddleware($container));
