@@ -213,7 +213,7 @@ class FileController extends Controller
 		if ($contentType == 'text/html') {
 			$response = $response->withHeader('Content-Disposition', 'attachment; filename*=UTF-8\'\'' . rawurlencode($filename) . '; ');
 		}
-
+		
 		return $response->withBody(new \GuzzleHttp\Psr7\LazyOpenStream($filepath, 'r'));
 	}
 

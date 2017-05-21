@@ -38,6 +38,12 @@ class Auth
 	 */
 	const REMEMBER_ME_TOKEN_DELIMITER = '__|__';
 
+	/**
+	 * Name of the remember_me cookie.
+	 * @var string
+	 */
+	const REMEMBER_ME_COOKIE_NAME = 'remember_me';
+
 	protected $container;
 
 	public function __construct($container) {
@@ -125,10 +131,10 @@ class Auth
 	 * @return array the identifier and token, in that order, of the cookie
 	 */
 	public function getRememberCredentialsFromCookie() {
-		// If the cookie doesn't exist, don't try
-		if (!isset($_COOKIE['remember_me']) || empty($_COOKIE['remember_me'])) return null;
+		$cookie = $this->container->cookie->get($this::REMEMBER_ME_COOKIE_NAME);
 
-		$cookie = $_COOKIE['remember_me'];
+		// If the cookie doesn't exist, don't try
+		if (!$cookie) return null;
 
 		$parts = explode($this::REMEMBER_ME_TOKEN_DELIMITER, $cookie);
 
@@ -177,15 +183,10 @@ class Auth
 			$token->token = hash('sha384', $newToken);
 			$token->save();
 
-			setcookie(
-				"remember_me",
-				$token->identifier . $this::REMEMBER_ME_TOKEN_DELIMITER . $newToken,
-				strtotime($token->expires),
-				'/',
-				'',
-				isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
-				true
-			);
+			$this->container->cookie->set("remember_me", [
+				'value' => $token->identifier . $this::REMEMBER_ME_TOKEN_DELIMITER . $newToken,
+				'expires' => strtotime($token->expires),
+			]);
 
 			return;
 		}
@@ -219,15 +220,10 @@ class Auth
 			'expires'    => date('Y-m-d H:i:s', strtotime('+30 days')),
 		]);
 
-		setcookie(
-			"remember_me",
-			$rememberIdentifier . $this::REMEMBER_ME_TOKEN_DELIMITER . $rememberToken,
-			strtotime('+30 days'),
-			'/',
-			'',
-			isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
-			true
-		);
+		$this->container->cookie->set("remember_me", [
+			'value'    => $rememberIdentifier . $this::REMEMBER_ME_TOKEN_DELIMITER . $rememberToken,
+			'expires'  => strtotime('+30 days'),
+		]);
 	}
 
 	/**
@@ -268,15 +264,10 @@ class Auth
 	 * Tells the client to invlaidate the remember_me cookie
 	 */
 	public function removeRememberCookie() {
-		setcookie(
-			"remember_me",
-			false,
-			1,
-			'/',
-			'',
-			isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
-			true
-		);
+		$this->container->cookie->set("remember_me", [
+			'value' => false,
+			'expires' => 1,
+		]);
 	}
 
 	/**
