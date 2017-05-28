@@ -110,14 +110,3 @@ $container['randomlib'] = function ($container) {
 $container['log'] = function ($container) {
 	return new \Sleeti\Logging\Logger($container);
 };
-
-$container['cookie'] = function($c){
-	$request = $c->get('request');
-	$cookies = new \Slim\Http\Cookies($request->getCookieParams());
-	$cookies->setDefaults([
-		'path'     => '/',
-		'secure'   => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
-		'httponly' => true,
-	]);
-	return $cookies;
-};
