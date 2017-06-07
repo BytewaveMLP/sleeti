@@ -68,6 +68,8 @@ class FileHelperExtension extends \Twig_Extension
 	 * @return int          The size of the directory's contents (recursive)
 	 */
 	public static function dirsize($path) {
+		if (!is_dir($path)) return 0;
+		
 		$size = 0;
 
 		foreach (new \DirectoryIterator($path) as $file){
