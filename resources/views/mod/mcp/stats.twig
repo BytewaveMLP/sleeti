@@ -1,0 +1,94 @@
+{#
+This file is part of sleeti.
+Copyright (C) 2016  Eliot Partridge
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{% extends 'templates/mod/mcp/main.twig' %}
+
+{% block title %}Site Statistics{% endblock %}
+
+{% block mcpcontent %}
+	<div class="col-md-10">
+		<h2>Totals</h2>
+		<ul class="list-unstyled">
+			<li>
+				<b>Total uploaded files:</b> {{ files.count | number_format }}
+			</li>
+			<li>
+				<b>Total uploaded files size:</b> {{ dirsize(settings.site.upload.path) | format_bytes }}
+			</li>
+		</ul>
+		<h2>Leaderboards</h2>
+		<div class="row">
+			<div class="col-md-6">
+				<h3>File Count</h3>
+				<table class="table table-hover table-bordered">
+					<thead>
+						<th>User</th>
+						<th>Files</th>
+					</thead>
+					<tbody>
+						{% for user in usersFiles %}
+							<tr>
+								<td class="vert-align">
+									<a href="{{ path_for('user.profile', {'id': user.id}) }}">{{ user.name ? user.name : user.username }}</a>
+									{% if user.name %}({{ user.username }}){% endif %}
+
+									{% if user.isAdmin() %}
+										<span class="label label-danger">Administrator</span>
+									{% elseif user.isModerator() %}
+										<span class="label label-warning">Moderator</span>
+									{% endif %}
+								</td>
+								<td class="vert-align">
+									{{ user.files.count | number_format }}
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-6">
+				<h3>Size Uploaded</h3>
+				<table class="table table-hover table-bordered">
+					<thead>
+						<th>User</th>
+						<th>Total Uploaded</th>
+					</thead>
+					<tbody>
+						{% for user in usersSizes %}
+							<tr>
+								<td class="vert-align">
+									<a href="{{ path_for('user.profile', {'id': user.id}) }}">{{ user.name ? user.name : user.username }}</a>
+									{% if user.name %}({{ user.username }}){% endif %}
+
+									{% if user.isAdmin() %}
+										<span class="label label-danger">Administrator</span>
+									{% elseif user.isModerator() %}
+										<span class="label label-warning">Moderator</span>
+									{% endif %}
+								</td>
+								<td class="vert-align">
+									{{ dirsize(settings.site.upload.path ~ user.id) | format_bytes }}
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+{% endblock %}

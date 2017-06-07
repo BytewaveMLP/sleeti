@@ -21,7 +21,9 @@
 namespace Sleeti\Controllers\Moderation;
 
 use Sleeti\Controllers\Controller;
-use \Sleeti\Models\File;
+use Sleeti\Models\File;
+use Sleeti\Models\User;
+use Sleeti\Twig\Extensions\FileHelperExtension;
 
 class McpController extends Controller
 {
@@ -46,6 +48,21 @@ class McpController extends Controller
 				'current' => $page,
 				'last'    => $totalPages,
 			],
+		]);
+	}
+
+	public function getSiteStats($request, $response) {
+		$files = File::all();
+		$users = User::with('files')->get();
+		$container = $this->container;
+		return $container->view->render($response, 'mod/mcp/stats.twig', [
+			'files' => $files,
+			'usersFiles' => $users->sortBy(function ($user) {
+				return $user->files->count();
+			}, SORT_NUMERIC, true),
+			'usersSizes' => $users->sortBy(function ($user) use ($container) {
+				return FileHelperExtension::dirsize($container['settings']['site']['upload']['path'] . $user->id);
+			}, SORT_NUMERIC, true),
 		]);
 	}
 }

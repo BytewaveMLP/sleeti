@@ -126,6 +126,7 @@ $app->group('', function() use ($container) { // it's groups all the way down
 					$this->group('/mcp', function() {
 						$this->get('', 'McpController:getMcpHome')->setName('mod.mcp.home');
 						$this->get('/files', 'McpController:getFiles')->setName('mod.mcp.files');
+						$this->get('/stats', 'McpController:getSiteStats')->setName('mod.mcp.stats');
 					});
 				})->add(new ModeratorMiddleware($container));
 			})->add(new AuthMiddleware($container));

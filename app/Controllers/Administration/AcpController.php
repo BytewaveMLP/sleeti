@@ -75,7 +75,7 @@ class AcpController extends Controller
 	}
 
 	public function postSiteSettings($request, $response) {
-		$config           = $this->getConfigElements($request, ['title']);
+		$config		   = $this->getConfigElements($request, ['title']);
 		$config['upload'] = $this->getConfigElements($request, ['path']);
 
 		if (substr($config['upload']['path'], -1) != '/') {
