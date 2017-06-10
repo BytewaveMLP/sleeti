@@ -106,7 +106,7 @@ class ProfileController extends Controller
 		$user->settings->save();
 
 		$user->website = $website;
-		$user->bio     = strip_tags($bio); // no XSS 4 u
+		$user->bio     = $bio;
 		$user->name    = $name;
 
 		$user->save();

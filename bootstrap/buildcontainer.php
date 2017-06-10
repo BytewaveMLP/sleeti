@@ -60,7 +60,7 @@ $container['view'] = function ($container) {
 	));
 
 	// Create our Markdown parser...
-	$markdownEngine = new MarkdownEngine\ParsedownEngine;
+	$markdownEngine = new \Sleeti\Twig\Markdown\SafeParsedownEngine;
 	// ... and add it to Twig
 	$view->addExtension(new MarkdownExtension($markdownEngine));
 
