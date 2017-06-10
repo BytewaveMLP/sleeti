@@ -51,15 +51,15 @@ user="{{ auth.user.username }}" # your username
 pass="PUT YOUR PASSWORD HERE" # your password
 
 exit_with_error() {
-	>&amp;2 echo "`basename "$0"`: $1"
-	exit $2
+	>&amp;2 echo "$(basename "$0"): $1"
+	exit "$2"
 }
 
 usage() {
 	echo "sleeti upload script"
 	echo ""
 	echo "Usage:"
-	echo "    `basename "$0"` &lt;file&gt;"
+	echo "    $(basename "$0") &lt;file&gt;"
 	echo "Arguments:"
 	echo "    file    The file to upload (when -, read stdin)"
 	echo "Exit codes:"
