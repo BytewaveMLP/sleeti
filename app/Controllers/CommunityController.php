@@ -20,7 +20,7 @@
 
 namespace Sleeti\Controllers;
 
-use Sleeti\Models\User;
+use \Sleeti\Models\User;
 
 class CommunityController extends Controller
 {

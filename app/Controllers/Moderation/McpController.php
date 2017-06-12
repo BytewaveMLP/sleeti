@@ -20,10 +20,10 @@
 
 namespace Sleeti\Controllers\Moderation;
 
-use Sleeti\Controllers\Controller;
-use Sleeti\Models\File;
-use Sleeti\Models\User;
-use Sleeti\Twig\Extensions\FileHelperExtension;
+use \Sleeti\Controllers\Controller;
+use \Sleeti\Models\File;
+use \Sleeti\Models\User;
+use \Sleeti\Twig\Extensions\FileHelperExtension;
 
 class McpController extends Controller
 {

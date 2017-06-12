@@ -20,9 +20,9 @@
 
 namespace Sleeti\Controllers\Auth;
 
-use Sleeti\Controllers\Controller;
-use Sleeti\Models\UserTfaRecoveryToken;
-use Respect\Validation\Validator as v;
+use \Sleeti\Controllers\Controller;
+use \Sleeti\Models\UserTfaRecoveryToken;
+use \Respect\Validation\Validator as v;
 
 class TwoFactorAuthController extends Controller
 {

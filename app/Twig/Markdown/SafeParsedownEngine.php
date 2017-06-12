@@ -20,7 +20,7 @@
 
 namespace Sleeti\Twig\Markdown;
 
-use Aptoma\Twig\Extension\MarkdownEngineInterface;
+use \Aptoma\Twig\Extension\MarkdownEngineInterface;
 
 class SafeParsedownEngine implements MarkdownEngineInterface {
 	/**

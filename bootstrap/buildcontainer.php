@@ -18,9 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Aptoma\Twig\Extension\MarkdownExtension;
-use Aptoma\Twig\Extension\MarkdownEngine;
-
 // Save decoded config.json for modification through ACP (nasty hack, I know :()
 $container['config'] = function($container) use ($settings) {
 	return $settings['settings'];
@@ -62,7 +59,7 @@ $container['view'] = function ($container) {
 	// Create our Markdown parser...
 	$markdownEngine = new \Sleeti\Twig\Markdown\SafeParsedownEngine;
 	// ... and add it to Twig
-	$view->addExtension(new MarkdownExtension($markdownEngine));
+	$view->addExtension(new \Aptoma\Twig\Extension\MarkdownExtension($markdownEngine));
 
 	// Add our ReCaptcha extension
 	$view->addExtension(new \Sleeti\Twig\Extensions\ReCaptchaExtension($container['settings']['recaptcha']['sitekey']));

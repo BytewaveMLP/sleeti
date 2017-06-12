@@ -20,11 +20,11 @@
 
 namespace Sleeti\Controllers;
 
-use Respect\Validation\Validator as v;
-use Sleeti\Models\File;
-use Sleeti\Models\User;
-use Sleeti\Auth\Auth;
-use Sleeti\Exceptions\FailedUploadException;
+use \Respect\Validation\Validator as v;
+use \Sleeti\Models\File;
+use \Sleeti\Models\User;
+use \Sleeti\Auth\Auth;
+use \Sleeti\Exceptions\FailedUploadException;
 
 class FileController extends Controller
 {

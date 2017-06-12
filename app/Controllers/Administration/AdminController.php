@@ -20,8 +20,8 @@
 
 namespace Sleeti\Controllers\Administration;
 
-use Sleeti\Controllers\Controller;
-use Sleeti\Models\User;
+use \Sleeti\Controllers\Controller;
+use \Sleeti\Models\User;
 
 class AdminController extends Controller
 {

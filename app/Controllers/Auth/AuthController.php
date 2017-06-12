@@ -20,11 +20,11 @@
 
 namespace Sleeti\Controllers\Auth;
 
-use Sleeti\Controllers\Controller;
-use Sleeti\Models\User;
-use Sleeti\Models\UserPermissions;
-use Sleeti\Models\UserSettings;
-use Respect\Validation\Validator as v;
+use \Sleeti\Controllers\Controller;
+use \Sleeti\Models\User;
+use \Sleeti\Models\UserPermissions;
+use \Sleeti\Models\UserSettings;
+use \Respect\Validation\Validator as v;
 
 class AuthController extends Controller
 {

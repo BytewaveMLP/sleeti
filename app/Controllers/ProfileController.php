@@ -20,8 +20,8 @@
 
 namespace Sleeti\Controllers;
 
-use Sleeti\Models\User;
-use Respect\Validation\Validator as v;
+use \Sleeti\Models\User;
+use \espect\Validation\Validator as v;
 
 class ProfileController extends Controller
 {

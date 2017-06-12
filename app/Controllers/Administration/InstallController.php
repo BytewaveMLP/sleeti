@@ -20,7 +20,7 @@
 
 namespace Sleeti\Controllers\Administration;
 
-use Sleeti\Controllers\Controller;
+use \Sleeti\Controllers\Controller;
 
 class InstallController extends Controller
 {
