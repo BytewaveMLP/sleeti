@@ -19,7 +19,7 @@ class BootstrapActiveExtension extends \Twig_Extension {
 		return [
 			new \Twig_SimpleFunction('active_route', [$this, 'isActiveRoute']),
 			new \Twig_SimpleFunction('active_route_one_of', [$this, 'isActiveRouteOneOf']),
-			new \Twig_SimpleFunction('active_group', [$this, 'isActiveRouteInGruop']),
+			new \Twig_SimpleFunction('active_group', [$this, 'isActiveRouteInGroup']),
 			new \Twig_SimpleFunction('active_group_one_of', [$this, 'isActiveRouteInGroups']),
 		];
 	}
@@ -42,7 +42,7 @@ class BootstrapActiveExtension extends \Twig_Extension {
 		}
 	}
 
-	public function isActiveRouteInGruop(string $group) {
+	public function isActiveRouteInGroup(string $group) {
 		$route = $this->request->getAttribute('route');
 
 		if (!$route) return;
@@ -61,7 +61,7 @@ class BootstrapActiveExtension extends \Twig_Extension {
 
 	public function isActiveRouteInGroups(array $groups) {
 		foreach ($groups as $group) {
-			if ($this->isActiveRouteInGruop($group)) {
+			if ($this->isActiveRouteInGroup($group)) {
 				return 'active';
 			}
 		}
