@@ -36,6 +36,14 @@ $app->group('', function() use ($container) { // it's groups all the way down
 
 				$this->get('/auth/signin', 'AuthController:getSignIn')->setName('auth.signin');
 				$this->post('/auth/signin', 'AuthController:postSignIn');
+
+				if ($container->settings['mail']['enabled']) {
+					$this->get('/auth/password/forgot', 'PasswordController:getForgotPassword')->setName('auth.password.forgot');
+					$this->post('/auth/password/forgot', 'PasswordController:postForgotPassword');
+
+					$this->get('/auth/password/reset', 'PasswordController:getResetPassword')->setName('auth.password.reset');
+					$this->post('/auth/password/reset', 'PasswordController:postResetPassword');
+				}
 			})->add(new GuestMiddleware($container));
 
 			$this->group('', function() use ($container) {
@@ -102,6 +110,9 @@ $app->group('', function() use ($container) { // it's groups all the way down
 
 						$this->get('/cache', 'AcpController:getCacheSettings')->setName('admin.acp.cache');
 						$this->post('/cache', 'AcpController:postCacheSettings');
+
+						$this->get('/mail', 'AcpController:getMailSettings')->setName('admin.acp.mail');
+						$this->post('/mail', 'AcpController:postMailSettings');
 					});
 
 					$this->group('/user', function() {

@@ -63,7 +63,7 @@ class AcpController extends Controller
 	}
 
 	public function postSiteSettings($request, $response) {
-		$config		   = $this->getConfigElements($request, ['title']);
+		$config = $this->getConfigElements($request, ['title']);
 		$config['upload'] = $this->getConfigElements($request, ['path']);
 
 		if (substr($config['upload']['path'], -1) != '/') {
@@ -196,5 +196,25 @@ class AcpController extends Controller
 
 		$this->container->flash->addMessage('success', 'Cache settings updated successfully!');
 		return $response->withRedirect($this->container->router->pathFor('admin.acp.cache'));
+	}
+
+	public function getMailSettings($request, $response) {
+		return $this->container->view->render($response, 'admin/acp/mail.twig');
+	}
+
+	public function postMailSettings($request, $response) {
+		$config = $this->getConfigElements($request, ['enabled', 'apikey', 'domain', 'address']);
+
+		if ($this->writeConfig(['mail' => $config]) === false) {
+			$this->container->flash->addMessage('danger', '<b>Uh oh!</b> Looks like <code>/config/config.json</code> failed to write. :(');
+			return $response->withRedirect($this->container->router->pathFor('admin.acp.mail'));
+		}
+
+		$user = $this->container->auth->user();
+
+		$this->container->log->notice('acp', $user->username . ' (' . $user->id . ') updated the mail settings.');
+
+		$this->container->flash->addMessage('success', 'Mail settings updated successfully!');
+		return $response->withRedirect($this->container->router->pathFor('admin.acp.mail'));
 	}
 }

@@ -1,0 +1,49 @@
+{#
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#}
+
+{% extends 'templates/admin/acp/main.twig' %}
+
+{% block title %}Mail Settings{% endblock %}
+
+{% block acpcontent %}
+	<div class="col-md-6 col-md-offset-2">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Mail Settings
+				</h3>
+			</div>
+			<div class="panel-body">
+				<form action="{{ path_for('admin.acp.mail') }}" method="post" autocomplete="off">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="enabled" value="1"{{ settings.mail.enabled ? ' checked' : '' }}> Enable mail
+						</label>
+					</div>
+
+					<div class="form-group">
+						<label for="apikey">Mailgun API Key</label>
+						<input type="text" class="form-control" name="apikey" id="apikey" value="{{ settings.mail.apikey }}" placeholder="key-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+					</div>
+
+					<div class="form-group">
+						<label for="domain">Mailgun domain</label>
+						<input type="text" class="form-control" name="domain" id="domain" value="{{ settings.mail.domain }}" placeholder="mg.domain.ext">
+					</div>
+
+					<div class="form-group">
+						<label for="address">From address</label>
+						<input type="email" class="form-control" name="address" id="address" value="{{ settings.mail.address }}" placeholder="info@domain.ext">
+					</div>
+
+					<button type="submit" class="btn btn-default">Submit</button>
+
+					{{ csrf.field | raw }}
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

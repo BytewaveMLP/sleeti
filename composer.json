@@ -13,7 +13,10 @@
         "ircmaxell/random-lib": "^1.2",
         "monolog/monolog": "^1.21",
         "zeuxisoo/slim-whoops": "0.6.*",
-        "twig/twig": "~2.0"
+        "twig/twig": "~2.0",
+        "mailgun/mailgun-php": "^2.3",
+        "php-http/guzzle6-adapter": "^1.1",
+        "crossjoin/pre-mailer": "^1.0"
     },
 	"autoload": {
 		"psr-4": {

@@ -56,9 +56,11 @@ $container['view'] = function ($container) {
 
 	// Cache the values of auth->check() and auth->user() so we don't query the DB a bunch in views
 	$view->getEnvironment()->addGlobal('auth', [
-		'check' => $container->auth->check(),
-		'user'  => $container->auth->user(),
+		'check'    => $container->auth->check(),
+		'user'     => $container->auth->user(),
 	]);
+
+	$view->getEnvironment()->addGlobal('base_url', $container->request->getUri()->getBaseUrl());
 
 	// Add access to the flash messages
 	$view->getEnvironment()->addGlobal('flash', $container->flash);
@@ -94,4 +96,9 @@ $container['randomlib'] = function ($container) {
 // Add our logging handler
 $container['log'] = function ($container) {
 	return new \Sleeti\Logging\Logger($container);
+};
+
+$container['mail'] = function ($container) {
+	$mailgun = new \Mailgun\Mailgun($container['settings']['mail']['apikey'], new \Http\Adapter\Guzzle6\Client());
+	return new \Sleeti\Mail\Mailer($container, $mailgun);
 };

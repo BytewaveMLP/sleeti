@@ -17,6 +17,12 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 				</div>
 
 				<div class="panel-body">
+					{% if settings.mail.enabled %}
+						<p>
+							Forgot your password? <a href="{{ path_for('auth.password.forgot') }}">Click here</a> to reset it!
+						</p>
+					{% endif %}
+
 					<p>
 						Don't have an account? <a href="{{ path_for('auth.signup') }}">Click here</a> to register!
 					</p>

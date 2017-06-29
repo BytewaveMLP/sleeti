@@ -45,6 +45,10 @@ class User extends Model
 		return $this->hasMany('Sleeti\\Models\\UserRememberToken', 'user_id', 'id');
 	}
 
+	public function passwordRecoveryTokens() {
+		return $this->hasMany('Sleeti\\Models\\UserPasswordRecoveryToken', 'user_id', 'id');
+	}
+
 	public function tfaRecoveryTokens() {
 		return $this->hasMany('Sleeti\\Models\\UserTfaRecoveryToken', 'user_id', 'id');
 	}
