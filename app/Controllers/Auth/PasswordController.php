@@ -98,30 +98,23 @@ class PasswordController extends Controller
 	}
 
 	private function getRecoveryToken($identifier, $token) {
-		if (!$identifier || !$token) {
-			return null;
-		}
+		if (!$identifier || !$token) return null;
 
 		$tokenHash = hash('sha384', $token);
 
-		$dbTokens = UserPasswordRecoveryToken::where('identifier', $identifier);
+		$dbToken = UserPasswordRecoveryToken::where('identifier', $identifier)->first();
 
-		if ($dbTokens->count() > 0) {
-			$dbTokens = $dbTokens->get();
+		// If there is no matching token...
+		if (!$dbToken) return null;
 
-			foreach ($dbTokens as $dbToken) {
-				if (hash_equals($tokenHash, $dbToken->token)) {
-					if (strtotime($dbToken->expires) > time()) {
-						return $dbToken;
-					} else {
-						$dbToken->delete();
-						return null;
-					}
-				}
-			}
+		// If the identifier matches, but the token is wrong or has expired...
+		if (!hash_equals($tokenHash, $dbToken->token) || strtotime($dbToken->expires) < time()) {
+			$dbToken->delete();
+			return null;
 		}
 
-		return null;
+		// We've found a match
+		return $dbToken;
 	}
 
 	public function getResetPassword($request, $response) {

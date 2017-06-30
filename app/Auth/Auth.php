@@ -148,41 +148,42 @@ class Auth
 
 		$tokenHash = hash('sha384', $parts[1]);
 
-		// If the token half matches and the token isn't expired...
-		if (hash_equals($token->token, $tokenHash) && strtotime($token->expires) > time()) {
-			// Regenerate the session ID, just in case
-			session_regenerate_id(true);
+		// If the token is *invalid* or has expired...
+		if (!hash_equals($token->token, $tokenHash) || strtotime($token->expires) < time()) {
+			// Invalidate user's (forged?) remember_me cookie and the affected token
+			$this->removeRememberCookie();
+			$token->delete();
 
-			$_SESSION['user'] = $token->user_id; // Log the user in
-
-			$user = $this->user();
-
-			$this->container->log->info('auth', $user->username . ' (' . $user->id . ') logged in with remember credentials.');
-
-			// Regenerate remember_me token on successful remember
-			$newToken = $this->container->randomlib->generateString(255);
-
-			$token->token = hash('sha384', $newToken);
-			$token->save();
-
-			setcookie(
-				"remember_me",
-				$token->identifier . $this::REMEMBER_ME_TOKEN_DELIMITER . $newToken,
-				strtotime($token->expires),
-				'/',
-				'',
-				isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
-				true
-			);
+			$this->container->log->warning('auth', ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR']) . ' attempted to log in with invalid remember credentials.');
 
 			return;
 		}
 
-		// Invalidate user's (forged?) remember_me cookie and the affected token
-		$this->removeRememberCookie();
-		$token->delete();
+		// If the token half matches and the token isn't expired...
+		// Regenerate the session ID, just in case
+		session_regenerate_id(true);
 
-		$this->container->log->warning('auth', ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR']) . ' attempted to log in with invalid remember credentials.');
+		$_SESSION['user'] = $token->user_id; // Log the user in
+
+		$user = $this->user();
+
+		$this->container->log->info('auth', $user->username . ' (' . $user->id . ') logged in with remember credentials.');
+
+		// Regenerate remember_me token on successful remember
+		$newToken = $this->container->randomlib->generateString(255);
+
+		$token->token = hash('sha384', $newToken);
+		$token->save();
+
+		setcookie(
+			"remember_me",
+			$token->identifier . $this::REMEMBER_ME_TOKEN_DELIMITER . $newToken,
+			strtotime($token->expires),
+			'/',
+			'',
+			isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on',
+			true
+		);
 	}
 
 	/**
@@ -225,15 +226,10 @@ class Auth
 		$parts = $this->getRememberCredentialsFromCookie();
 		if (!$parts) return;
 
-		$tokens = UserRememberToken::where('identifier', $parts[0])->get();
-		if ($tokens->count() == 0) return;
+		$token = UserRememberToken::where('identifier', $parts[0])->first();
+		if (!$token) return;
 
-		foreach ($tokens as $token) {
-			if (hash_equals($token->token, hash('sha384', $parts[1]))) {
-				$token->delete();
-				break;
-			}
-		}
+		$token->delete();
 
 		$this->removeRememberCookie();
 	}
