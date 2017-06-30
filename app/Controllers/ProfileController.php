@@ -56,7 +56,7 @@ class ProfileController extends Controller
 		return $this->container->view->render($response, 'user/update.twig');
 	}
 
-	public function postEditoProfile($request, $response) {
+	public function postEditProfile($request, $response) {
 		$user = $this->container->auth->user();
 
 		$website = $request->getParam('website');

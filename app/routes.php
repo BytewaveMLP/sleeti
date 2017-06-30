@@ -54,7 +54,7 @@ $app->group('', function() use ($container) { // it's groups all the way down
 
 				$this->group('/profile', function() use ($container) {
 					$this->get('/edit', 'ProfileController:getEditProfile')->setName('user.profile.edit');
-					$this->post('/edit', 'ProfileController:postEditoProfile');
+					$this->post('/edit', 'ProfileController:postEditProfile');
 
 					$this->get('/delete[/{id}]', 'AuthController:getDeleteAccount')->setName('user.profile.delete');
 					$this->post('/delete/{id}', 'AuthController:postDeleteAccount');
