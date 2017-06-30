@@ -114,6 +114,7 @@ class PasswordController extends Controller
 					if (strtotime($dbToken->expires) > time()) {
 						return $dbToken;
 					} else {
+						$dbToken->delete();
 						return null;
 					}
 				}
@@ -128,7 +129,7 @@ class PasswordController extends Controller
 		$token      = $request->getParam('token');
 		
 		if (!$this->getRecoveryToken($identifier, $token)) {
-			$this->container->flash->addMessage('danger', 'Invalid or missing password recovery token!');
+			$this->container->flash->addMessage('danger', '<b>Whoops!</b> Looks like your link may have expired or been deleted. Please try resetting your password again, or contact the administrators if the problem persists.');
 			return $response->withRedirect($this->container->router->pathFor('home'))->withStatus(403);
 		}
 
@@ -145,7 +146,7 @@ class PasswordController extends Controller
 		$dbToken = $this->getRecoveryToken($identifier, $token);
 
 		if (!$dbToken) {
-			$this->container->flash->addMessage('danger', 'Invalid or missing password recovery token!');
+			$this->container->flash->addMessage('danger', '<b>Whoops!</b> Looks like your link may have expired or been deleted. Please try resetting your password again, or contact the administrators if the problem persists.');
 			return $response->withRedirect($this->container->router->pathFor('home'))->withStatus(403);
 		}
 
