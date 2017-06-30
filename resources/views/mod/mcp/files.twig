@@ -46,9 +46,9 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 								</td>
 								<td class="vert-align">
 									<select data-role="privacy-dropdown" class="form-control input-sm">
-										<option data-route="{{ path_for('file.privacy.change', {'owner': file.user.id, 'filename': file.filename, 'privacy': 0}) }}" {% if file.privacy_state == 0 %} selected{% endif %}>Public</option>
-										<option data-route="{{ path_for('file.privacy.change', {'owner': file.user.id, 'filename': file.filename, 'privacy': 1}) }}" {% if file.privacy_state == 1 %} selected{% endif %}>Unlisted</option>
-										<option data-route="{{ path_for('file.privacy.change', {'owner': file.user.id, 'filename': file.filename, 'privacy': 2}) }}" {% if file.privacy_state == 2 %} selected{% endif %}>Private</option>
+										<option data-route="{{ path_for('file.privacy.change', {'owner': file.user.id, 'filename': file.filename, 'privacy': 0}) }}" {% if file.privacy_state == constant('Sleeti\\Models\\File::PRIVACY_PUBLIC') %} selected{% endif %}>Public</option>
+										<option data-route="{{ path_for('file.privacy.change', {'owner': file.user.id, 'filename': file.filename, 'privacy': 1}) }}" {% if file.privacy_state == constant('Sleeti\\Models\\File::PRIVACY_UNLISTED') %} selected{% endif %}>Unlisted</option>
+										<option data-route="{{ path_for('file.privacy.change', {'owner': file.user.id, 'filename': file.filename, 'privacy': 2}) }}" {% if file.privacy_state == constant('Sleeti\\Models\\File::PRIVACY_PRIVATE') %} selected{% endif %}>Private</option>
 									</select>
 								</td>
 								<td class="vert-align text-center">

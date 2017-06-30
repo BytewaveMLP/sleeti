@@ -53,11 +53,11 @@ class FileController extends Controller
 		$privStr = $request->getParam('privacy');
 
 		if ($privStr == 'public') {
-			$privacy = 0;
+			$privacy = File::PRIVACY_PUBLIC;
 		} elseif ($privStr == 'unlisted') {
-			$privacy = 1;
+			$privacy = File::PRIVACY_UNLISTED;
 		} elseif ($privStr == 'private') {
-			$privacy = 2;
+			$privacy = File::PRIVACY_PRIVATE;
 		} else {
 			$privacy = $user->settings->default_privacy_state;
 		}
@@ -182,7 +182,7 @@ class FileController extends Controller
 		$owner = $file->user;
 
 		// Check privacy state of file, show error if the user doesn't have permission to view
-		if ($file->privacy_state == 2 && (!$this->container->auth->check() || ($user->id !== $owner->id && !$user->isModerator()))) {
+		if ($file->privacy_state == File::PRIVACY_PRIVATE && (!$this->container->auth->check() || ($user->id !== $owner->id && !$user->isModerator()))) {
 			if ($this->container->auth->check()) {
 				$viewer = $user->username . ' (' . $user->id . ')';
 			} else {
@@ -299,11 +299,11 @@ class FileController extends Controller
 		$privStr = $request->getParam('privacy');
 
 		if ($privStr == 'public') {
-			$privacy = 0;
+			$privacy = File::PRIVACY_PUBLIC;
 		} elseif ($privStr == 'unlisted') {
-			$privacy = 1;
+			$privacy = File::PRIVACY_UNLISTED;
 		} elseif ($privStr == 'private') {
-			$privacy = 2;
+			$privacy = File::PRIVACY_PRIVATE;
 		} else {
 			$privacy = $owner->settings->default_privacy_state;
 		}

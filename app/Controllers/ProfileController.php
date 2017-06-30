@@ -9,7 +9,8 @@
 namespace Sleeti\Controllers;
 
 use \Sleeti\Models\User;
-use \espect\Validation\Validator as v;
+use \Sleeti\Models\File;
+use \Respect\Validation\Validator as v;
 
 class ProfileController extends Controller
 {
@@ -30,7 +31,7 @@ class ProfileController extends Controller
 		$files = $user->files()->orderBy('id', 'DESC');
 
 		if (!$this->container->auth->check() || ($this->container->auth->user()->id != $user->id && !$this->container->auth->user()->isModerator())) {
-			$files = $files->where('privacy_state', 0);
+			$files = $files->where('privacy_state', File::PRIVACY_PUBLIC);
 		}
 
 		$itemsPerPage = $this->container->auth->check() ? $this->container->auth->user()->settings->items_per_page : 10;
@@ -82,11 +83,11 @@ class ProfileController extends Controller
 		}
 
 		if ($privacy == 'public') {
-			$user->settings->default_privacy_state = 0;
+			$user->settings->default_privacy_state = File::PRIVACY_PUBLIC;
 		} elseif ($privacy == 'unlisted') {
-			$user->settings->default_privacy_state = 1;
+			$user->settings->default_privacy_state = File::PRIVACY_UNLISTED;
 		} elseif ($privacy == 'private') {
-			$user->settings->default_privacy_state = 2;
+			$user->settings->default_privacy_state = File::PRIVACY_PRIVATE;
 		}
 
 		$user->settings->items_per_page = $itemsPerPage;

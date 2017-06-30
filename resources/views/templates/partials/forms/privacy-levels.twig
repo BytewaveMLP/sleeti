@@ -6,21 +6,21 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 <div class="radio">
 	<label>
-		<input type="radio" name="privacy" id="public" value="public"{% if auth.user.settings.default_privacy_state == 0 %} checked{% endif %}>
+		<input type="radio" name="privacy" id="public" value="public"{% if auth.user.settings.default_privacy_state == constant('Sleeti\\Models\\File::PRIVACY_PUBLIC') %} checked{% endif %}>
 		Public
 	</label>
 </div>
 
 <div class="radio">
 	<label>
-		<input type="radio" name="privacy" id="unlisted" value="unlisted"{% if auth.user.settings.default_privacy_state == 1 %} checked{% endif %}>
+		<input type="radio" name="privacy" id="unlisted" value="unlisted"{% if auth.user.settings.default_privacy_state == constant('Sleeti\\Models\\File::PRIVACY_UNLISTED') %} checked{% endif %}>
 		Unlisted
 	</label>
 </div>
 
 <div class="radio">
 	<label>
-		<input type="radio" name="privacy" id="private" value="private"{% if auth.user.settings.default_privacy_state == 2 %} checked{% endif %}>
+		<input type="radio" name="privacy" id="private" value="private"{% if auth.user.settings.default_privacy_state == constant('Sleeti\\Models\\File::PRIVACY_PRIVATE') %} checked{% endif %}>
 		Private
 	</label>
 </div>

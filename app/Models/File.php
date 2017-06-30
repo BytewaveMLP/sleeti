@@ -15,6 +15,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class File extends Model
 {
+	const PRIVACY_PUBLIC = 0;
+	const PRIVACY_UNLISTED = 1;
+	const PRIVACY_PRIVATE = 2;
+
 	protected $table = 'uploaded_files';
 
 	protected $fillable = [
