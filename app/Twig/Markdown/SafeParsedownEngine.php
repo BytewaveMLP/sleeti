@@ -16,6 +16,8 @@ class SafeParsedownEngine implements MarkdownEngineInterface {
 	 */
 	protected $engine;
 
+	protected $htmlPurifier;
+
 	/**
 	 * @param string|null $instanceName
 	 */
@@ -23,6 +25,8 @@ class SafeParsedownEngine implements MarkdownEngineInterface {
 	{
 		$this->engine = \Parsedown::instance($instanceName);
 		$this->engine->setMarkupEscaped(true);
+
+		$this->htmlPurifier = new \HTMLPurifier(\HTMLPurifier_Config::createDefault());
 	}
 
 	/**
@@ -30,7 +34,9 @@ class SafeParsedownEngine implements MarkdownEngineInterface {
 	 */
 	public function transform($content)
 	{
-		return $this->engine->parse($content);
+		$parsed = $this->engine->parse($content);
+
+		return $this->htmlPurifier->purify($parsed);
 	}
 
 	/**
@@ -38,6 +44,6 @@ class SafeParsedownEngine implements MarkdownEngineInterface {
 	 */
 	public function getName()
 	{
-		return 'erusev/parsedown (safe)';
+		return 'erusev/parsedown (safe/purified)';
 	}
 }
