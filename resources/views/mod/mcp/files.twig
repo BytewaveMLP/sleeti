@@ -9,6 +9,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 {% block title %}All Files{% endblock %}
 
 {% block extrajs %}
+	{% include 'templates/partials/confirm-delete.twig' %}
 	{% include 'templates/partials/js/file-list.twig' %}
 	{% include 'templates/partials/js/timeago.twig' %}
 {% endblock %}
@@ -74,6 +75,4 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 	</div>
 
 	{% include 'templates/partials/privacy-levels-desc.twig' %}
-
-	{% include 'templates/partials/confirm-delete.twig' %}
 {% endblock %}

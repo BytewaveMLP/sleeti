@@ -13,6 +13,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 {% endblock %}
 
 {% block extrajs %}
+	{% include 'templates/partials/confirm-delete.twig' %}
 	{% include 'templates/partials/js/file-list.twig' %}
 	{% include 'templates/partials/js/timeago.twig' %}
 {% endblock %}
@@ -124,7 +125,5 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 		{% if user.id == auth.user.id or auth.user.isModerator() %}
 			{% include 'templates/partials/privacy-levels-desc.twig' %}
 		{% endif %}
-
-		{% include 'templates/partials/confirm-delete.twig' %}
 	</div>
 {% endblock %}
