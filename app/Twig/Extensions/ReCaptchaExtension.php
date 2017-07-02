@@ -11,7 +11,7 @@ namespace Sleeti\Twig\Extensions;
 /**
  * Provides reCAPTCHA support to Twig views
  */
-class ReCaptchaExtension extends \Twig_Extension
+class ReCaptchaExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
 	/**
 	 * reCAPTCHA site key
@@ -35,29 +35,13 @@ class ReCaptchaExtension extends \Twig_Extension
 	}
 
 	/**
-	 * Generates and returns the HTML code necessary for reCAPTCHA on a form
-	 * @return string The HTML needed for a reCAPTCHA form element
-	 */
-	public function reCaptchaForm() {
-		return "<div class=\"g-recaptcha\" data-sitekey=" . $this->siteKey . "></div>";
-	}
-
-	/**
-	 * Returns the script necessary for
-	 * @return string The HTML script tag needed for reCAPTCHA to function
-	 */
-	public function reCaptchaScript() {
-		return '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
-	}
-
-	/**
 	 * {@inheritdoc}
 	 */
 	public function getGlobals() {
 		return [
 			'recaptcha' => [
-				'script' => $this->reCaptchaScript(),
-				'form'   => $this->reCaptchaForm(),
+				'script' => '<script src="https://www.google.com/recaptcha/api.js" async defer></script>',
+				'form'   => '<div class="g-recaptcha" data-sitekey="' . $this->siteKey . '"></div>',
 			],
 		];
 	}
