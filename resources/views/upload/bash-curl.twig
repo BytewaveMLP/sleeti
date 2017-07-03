@@ -86,7 +86,13 @@ else
 	echo "^D to upload"
 fi
 
-echo $(curl -s -F file=@"$1" -F identifier="$user" -F password="$pass" "$site")</code></pre>
+file="@$2"
+
+if [ ! -z "$3" ]; then
+	file="$file; filename=$3"
+fi
+
+echo $(curl -s -F file="$file" -F identifier="$user" -F password="$pass" "$site")</code></pre>
 		</div>
 	</div>
 {% endblock %}
