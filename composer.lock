@@ -4,8 +4,56 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "578643041d10e62055c3b4f18f6af922",
+    "content-hash": "0c9392489e3c0466581cb4bf1732828f",
     "packages": [
+        {
+            "name": "aidantwoods/secureparsedown",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aidantwoods/SecureParsedown.git",
+                "reference": "11130c1823d9900ce6334a93101eecf3f22564ed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aidantwoods/SecureParsedown/zipball/11130c1823d9900ce6334a93101eecf3f22564ed",
+                "reference": "11130c1823d9900ce6334a93101eecf3f22564ed",
+                "shasum": ""
+            },
+            "require": {
+                "erusev/parsedown": "^1.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aidantwoods\\SecureParsedown\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aidan Woods",
+                    "email": "aidantwoods@gmail.com",
+                    "homepage": "https://aidanwoods.com"
+                }
+            ],
+            "description": "A Parsedown extension for Security.",
+            "homepage": "https://github.com/aidantwoods/SecureParsedown/wiki",
+            "keywords": [
+                "markdown",
+                "parsedown",
+                "parser",
+                "secure",
+                "secureparsedown"
+            ],
+            "time": "2017-07-02T03:21:51+00:00"
+        },
         {
             "name": "aptoma/twig-markdown",
             "version": "3.0.0",
@@ -351,53 +399,6 @@
                 "parser"
             ],
             "time": "2017-03-29T16:04:15+00:00"
-        },
-        {
-            "name": "ezyang/htmlpurifier",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "17f80cd74b086a5db2a9c86368e815e43a9878b2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/17f80cd74b086a5db2a9c86368e815e43a9878b2",
-                "reference": "17f80cd74b086a5db2a9c86368e815e43a9878b2",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2"
-            },
-            "require-dev": {
-                "simpletest/simpletest": "^1.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "HTMLPurifier": "library/"
-                },
-                "files": [
-                    "library/HTMLPurifier.composer.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL"
-            ],
-            "authors": [
-                {
-                    "name": "Edward Z. Yang",
-                    "email": "admin@htmlpurifier.org",
-                    "homepage": "http://ezyang.com"
-                }
-            ],
-            "description": "Standards compliant HTML filter written in PHP",
-            "homepage": "http://htmlpurifier.org/",
-            "keywords": [
-                "html"
-            ],
-            "time": "2017-06-24 02:50:48"
         },
         {
             "name": "filp/whoops",
@@ -2604,9 +2605,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "ezyang/htmlpurifier": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

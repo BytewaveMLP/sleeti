@@ -17,11 +17,14 @@
         "mailgun/mailgun-php": "^2.3",
         "php-http/guzzle6-adapter": "^1.1",
         "crossjoin/pre-mailer": "^1.0",
-        "ezyang/htmlpurifier": "dev-master"
+        "aidantwoods/secureparsedown": "^1.0"
     },
 	"autoload": {
 		"psr-4": {
 			"Sleeti\\": "app"
 		}
+	},
+	"config":{
+		"optimize-autoloader": true
 	}
 }
