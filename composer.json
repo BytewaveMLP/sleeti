@@ -24,7 +24,7 @@
 			"Sleeti\\": "app"
 		}
 	},
-	"config":{
+	"config": {
 		"optimize-autoloader": true
 	}
 }
