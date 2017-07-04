@@ -52,7 +52,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 							<li><a href="{{ path_for('auth.password.change') }}">Change password</a></li>
 							<li><a href="{{ path_for('user.profile.2fa') }}">2FA settings</a></li>
 							<li><a href="{{ path_for('auth.signout') }}">Sign out</a></li>
-							<li><a href="{{ path_for('user.profile.delete') }}">Delete account</a></li>
+							<li><a href="{{ path_for('user.profile.delete') }}"><span class="text-danger">Delete account</span></a></li>
 						</ul>
 					</li>
 				{% else %}
