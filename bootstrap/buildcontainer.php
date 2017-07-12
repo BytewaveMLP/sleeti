@@ -56,8 +56,8 @@ $container['view'] = function ($container) {
 
 	// Cache the values of auth->check() and auth->user() so we don't query the DB a bunch in views
 	$view->getEnvironment()->addGlobal('auth', [
-		'check'    => $container->auth->check(),
-		'user'     => $container->auth->user(),
+		'check' => $container->auth->check(),
+		'user'  => $container->auth->user(),
 	]);
 
 	$view->getEnvironment()->addGlobal('base_url', $container->request->getUri()->getBaseUrl());
