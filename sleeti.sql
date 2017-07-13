@@ -10,7 +10,6 @@ SET time_zone = "+00:00";
 CREATE TABLE `uploaded_files` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `filename` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `ext` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `privacy_state` int(1) NOT NULL DEFAULT '0',
   `owner_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
