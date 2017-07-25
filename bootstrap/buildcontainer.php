@@ -33,7 +33,10 @@ $container['view'] = function ($container) {
 	$cachePath       = $container['settings']['cache']['path'];
 	$cacheAutoReload = $container['settings']['cache']['auto_reload'];
 
-	$view = new \Slim\Views\Twig(__DIR__ . '/../resources/views', [
+	$view = new \Slim\Views\Twig([
+		__DIR__ . '/../resources/custom/views',
+		__DIR__ . '/../resources/views',
+	], [
 		'cache' => $cacheEnabled ? $cachePath : false,
 		'auto_reload' => $cacheAutoReload,
 	]);
