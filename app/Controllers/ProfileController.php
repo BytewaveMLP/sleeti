@@ -69,11 +69,9 @@ class ProfileController extends Controller
 			$user = User::where('id', $id)->first();
 
 			return $this->container->view->render($response, 'user/update.twig', [
-				'auth' => [
-					'user' => $user,
-					'check' => true,
-				],
-				'id' => $user->id
+				'user' => $user,
+				'id' => $user->id,
+				'admin_editing' => true,
 			]);
 		}
 
