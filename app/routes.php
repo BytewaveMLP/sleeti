@@ -53,8 +53,8 @@ $app->group('', function() use ($container) { // it's groups all the way down
 				$this->post('/auth/password/change', 'PasswordController:postChangePassword');
 
 				$this->group('/profile', function() use ($container) {
-					$this->get('/edit', 'ProfileController:getEditProfile')->setName('user.profile.edit');
-					$this->post('/edit', 'ProfileController:postEditProfile');
+					$this->get('/edit[/{id}]', 'ProfileController:getEditProfile')->setName('user.profile.edit');
+					$this->post('/edit/{id}', 'ProfileController:postEditProfile');
 
 					$this->get('/delete[/{id}]', 'AuthController:getDeleteAccount')->setName('user.profile.delete');
 					$this->post('/delete/{id}', 'AuthController:postDeleteAccount');

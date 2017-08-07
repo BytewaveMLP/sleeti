@@ -46,7 +46,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 						Need to change your password? <a href="{{ path_for('auth.password.change') }}">Click here</a>!
 					</p>
 
-					<form action="{{ path_for('user.profile.edit') }}" method="post" autocomplete="off">
+					<form action="{{ path_for('user.profile.edit', {'id': id}) }}" method="post" autocomplete="off">
 						<h4>
 							Details
 						</h4>

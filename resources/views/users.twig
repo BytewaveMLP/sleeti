@@ -46,6 +46,9 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 										<td class="vert-align text-center">
 											<a href="{{ path_for('user.profile.delete', {'id': user.id}) }}" class="btn btn-danger btn-xs">Delete</a>
 										</td>
+										<td class="vert-align text-center">
+											<a href="{{ path_for('user.profile.edit', {'id': user.id}) }}" class="btn btn-warning btn-xs">Edit</a>
+										</td>
 									{% endif %}
 								</tr>
 							{% endfor %}
