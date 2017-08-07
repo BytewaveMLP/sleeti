@@ -53,12 +53,46 @@ class ProfileController extends Controller
 		]);
 	}
 
-	public function getEditProfile($request, $response) {
-		return $this->container->view->render($response, 'user/update.twig');
+	public function getEditProfile($request, $response, $args) {
+		$id = $args['id'] ?? $this->container->auth->user()->id;
+
+		if (!$this->container->auth->user()->isAdmin() && $this->container->auth->user()->id != $id) {
+			$this->container->flash->addMessage('danger', '<b>Hey!</b> What do you think you\'re doing?! You can\'t edit someone else\'s account!');
+			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
+		}
+
+		if ($this->container->auth->user()->isAdmin() && $this->container->auth->user()->id != $id) {
+			if (User::where('id', $id)->count() === 0) {
+				throw new \Slim\Exception\NotFoundException($request, $response);
+			}
+
+			$user = User::where('id', $id)->first();
+
+			return $this->container->view->render($response, 'user/update.twig', [
+				'user' => $user,
+				'id' => $user->id,
+				'admin_editing' => true,
+			]);
+		}
+
+		return $this->container->view->render($response, 'user/update.twig', [
+			'id' => $id
+		]);
 	}
 
-	public function postEditProfile($request, $response) {
-		$user = $this->container->auth->user();
+	public function postEditProfile($request, $response, $args) {
+		if ($this->container->auth->user()->id != $args['id'] && !$this->container->auth->user()->isAdmin()) {
+			$this->container->flash->addMessage('danger', '<b>Hey!</b> What do you think you\'re doing?! You can\'t delete someone else\'s account!');
+			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
+		}
+
+		$users = User::where('id', $args['id']);
+
+		if ($users->count() === 0) {
+			throw new \Slim\Exception\NotFoundException($request, $response);
+		}
+
+		$user = $users->first();
 
 		$website = $request->getParam('website');
 		$bio     = $request->getParam('bio');

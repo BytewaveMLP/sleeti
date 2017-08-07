@@ -42,18 +42,20 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 				</div>
 
 				<div class="panel-body">
-					<p>
-						Need to change your password? <a href="{{ path_for('auth.password.change') }}">Click here</a>!
-					</p>
+					{% if not admin_editing %}
+						<p>
+							Need to change your password? <a href="{{ path_for('auth.password.change') }}">Click here</a>!
+						</p>
+					{% endif %}
 
-					<form action="{{ path_for('user.profile.edit') }}" method="post" autocomplete="off">
+					<form action="{{ path_for('user.profile.edit', {'id': id}) }}" method="post" autocomplete="off">
 						<h4>
 							Details
 						</h4>
 
 						<div class="form-group{{ errors.name ? ' has-error' : '' }}">
 							<label for="website">Display Name</label>
-							<input type="text" name="name" id="name" placeholder="" class="form-control" value="{{ old.name | default(auth.user.name) }}" maxlength="50">
+							<input type="text" name="name" id="name" placeholder="" class="form-control" value="{{ (old.name ? old.name : user.name) | default(auth.user.name) }}" maxlength="50">
 							{% if errors.name %}
 								<span class="help-block">{{ errors.name | first }}</span>
 							{% endif %}
@@ -61,7 +63,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 						<div class="form-group{{ errors.website ? ' has-error' : '' }}">
 							<label for="website">Website</label>
-							<input type="url" name="website" id="website" placeholder="http://domain.ext" class="form-control" value="{{ old.website | default(auth.user.website) }}" maxlength="255">
+							<input type="url" name="website" id="website" placeholder="http://domain.ext" class="form-control" value="{{ (old.website ? old.website : user.website) | default(auth.user.website) }}" maxlength="255">
 							{% if errors.website %}
 								<span class="help-block">{{ errors.website | first }}</span>
 							{% endif %}
@@ -69,7 +71,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 						<div class="form-group{{ errors.bio ? ' has-error' : '' }}">
 							<label for="bio">Bio (supports GitHub Flavored Markdown)</label>
-							<textarea name="bio" id="bio" cols="30" rows="10" class="form-control" placeholder="Your life story.">{{ old.bio | default(auth.user.bio) }}</textarea>
+							<textarea name="bio" id="bio" cols="30" rows="10" class="form-control" placeholder="Your life story.">{{ (old.bio ? old.bio : user.bio) | default(auth.user.bio) }}</textarea>
 							<span class="help-block" id="remaining"></span>
 							{% if errors.bio %}
 								<span class="help-block">{{ errors.bio | first }}</span>
@@ -88,7 +90,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 						<div class="form-group{{ errors.items_per_page ? ' has-error' : '' }}">
 							<label for="items_per_page">Items per page</label>
-							<input type="number" name="items_per_page" id="items_per_page" placeholder="10" class="form-control" value="{{ old.items_per_page | default(auth.user.settings.items_per_page) }}" min="5" max="50" step="1">
+							<input type="number" name="items_per_page" id="items_per_page" placeholder="10" class="form-control" value="{{ (old.items_per_page ? old.items_per_page : user.settings.items_per_page) | default(auth.user.settings.items_per_page) }}" min="5" max="50" step="1">
 
 							{% if errors.items_per_page %}
 								<span class="help-block">{{ errors.items_per_page | first }}</span>

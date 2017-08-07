@@ -4,23 +4,28 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #}
 
+{% set default_privacy_state = auth.user.settings.default_privacy_state %}
+{% if admin_editing %}
+	{% set default_privacy_state = user.settings.default_privacy_state %}
+{% endif %}
+
 <div class="radio">
 	<label>
-		<input type="radio" name="privacy" id="public" value="public"{% if auth.user.settings.default_privacy_state == constant('Sleeti\\Models\\File::PRIVACY_PUBLIC') %} checked{% endif %}>
+		<input type="radio" name="privacy" id="public" value="public"{% if default_privacy_state == constant('Sleeti\\Models\\File::PRIVACY_PUBLIC') %} checked{% endif %}>
 		Public
 	</label>
 </div>
 
 <div class="radio">
 	<label>
-		<input type="radio" name="privacy" id="unlisted" value="unlisted"{% if auth.user.settings.default_privacy_state == constant('Sleeti\\Models\\File::PRIVACY_UNLISTED') %} checked{% endif %}>
+		<input type="radio" name="privacy" id="unlisted" value="unlisted"{% if default_privacy_state == constant('Sleeti\\Models\\File::PRIVACY_UNLISTED') %} checked{% endif %}>
 		Unlisted
 	</label>
 </div>
 
 <div class="radio">
 	<label>
-		<input type="radio" name="privacy" id="private" value="private"{% if auth.user.settings.default_privacy_state == constant('Sleeti\\Models\\File::PRIVACY_PRIVATE') %} checked{% endif %}>
+		<input type="radio" name="privacy" id="private" value="private"{% if default_privacy_state == constant('Sleeti\\Models\\File::PRIVACY_PRIVATE') %} checked{% endif %}>
 		Private
 	</label>
 </div>
