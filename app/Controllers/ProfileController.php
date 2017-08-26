@@ -76,6 +76,7 @@ class ProfileController extends Controller
 		}
 
 		return $this->container->view->render($response, 'user/update.twig', [
+			'user' => $this->container->auth->user(),
 			'id' => $id
 		]);
 	}

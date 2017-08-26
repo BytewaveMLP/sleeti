@@ -56,12 +56,14 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 			{% endif %}
 			{% if user.id == auth.user.id %}
 				<p>
-					<a href="{{ path_for('user.profile.edit') }}">Edit your profile</a>
+					<a href="{{ path_for('user.profile.edit') }}" class="btn btn-warning btn-xs">Edit profile</a>
 				</p>
 			{% elseif auth.user.isAdmin() %}
-				<p>
-					<a href="{{ path_for('admin.user.giveperms', {'uid': user.id}) }}">Change usergroup</a>
-				</p>
+				<div class="btn-group btn-group-xs" role="group" aria-label="Account functions">
+					<a href="{{ path_for('admin.user.giveperms', {'uid': user.id}) }}" class="btn btn-info btn-xs">Promote</a>
+					<a href="{{ path_for('user.profile.edit', {id: user.id}) }}" class="btn btn-warning btn-xs">Edit</a>
+					<a href="{{ path_for('user.profile.delete', {'id': user.id}) }}" class="btn btn-danger btn-xs">Delete</a>
+				</div>
 			{% endif %}
 		</div>
 		<div class="col-md-{{ (user.id == auth.user.id or auth.user.isModerator()) ? '7' : '9' }}">
