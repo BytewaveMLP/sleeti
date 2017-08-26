@@ -82,7 +82,7 @@ class ProfileController extends Controller
 
 	public function postEditProfile($request, $response, $args) {
 		if ($this->container->auth->user()->id != $args['id'] && !$this->container->auth->user()->isAdmin()) {
-			$this->container->flash->addMessage('danger', '<b>Hey!</b> What do you think you\'re doing?! You can\'t delete someone else\'s account!');
+			$this->container->flash->addMessage('danger', '<b>Hey!</b> What do you think you\'re doing?! You can\'t edit someone else\'s profile!');
 			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
 		}
 
@@ -134,9 +134,11 @@ class ProfileController extends Controller
 
 		$user->save();
 
-		$this->container->log->info('profile', $user->username . ' (' . $user->id . ') updated their profile.');
+		$authed = $this->container->auth->user();
 
-		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Your profile was updated successfully.');
+		$this->container->log->info('profile', $authed->username . ' (' . $authed->id . ') updated ' . $user->username . '(' . $user->id . ')\'s profile.');
+
+		$this->container->flash->addMessage('success', '<b>Woohoo!</b> Profile updated successfully.');
 		return $response->withRedirect($this->container->router->pathFor('user.profile', ['id' => $user->id]));
 	}
 }

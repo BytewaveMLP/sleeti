@@ -5,6 +5,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #}
 
 {% set default_privacy_state = auth.user.settings.default_privacy_state %}
+
 {% if admin_editing %}
 	{% set default_privacy_state = user.settings.default_privacy_state %}
 {% endif %}
