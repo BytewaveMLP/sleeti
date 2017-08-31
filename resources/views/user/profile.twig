@@ -56,14 +56,16 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 			{% endif %}
 			{% if user.id == auth.user.id %}
 				<p>
-					<a href="{{ path_for('user.profile.edit') }}" class="btn btn-warning btn-xs">Edit profile</a>
+					<a href="{{ path_for('user.profile.edit') }}" class="btn btn-warning btn-xs"><span class="fa fa-pencil-square"></span> Edit</a>
 				</p>
 			{% elseif auth.user.isAdmin() %}
-				<div class="btn-group btn-group-xs" role="group" aria-label="Account functions">
-					<a href="{{ path_for('admin.user.giveperms', {'uid': user.id}) }}" class="btn btn-info btn-xs">Promote</a>
-					<a href="{{ path_for('user.profile.edit', {id: user.id}) }}" class="btn btn-warning btn-xs">Edit</a>
-					<a href="{{ path_for('user.profile.delete', {'id': user.id}) }}" class="btn btn-danger btn-xs">Delete</a>
-				</div>
+				<p>
+					<div class="btn-group btn-group-xs" role="group" aria-label="Account functions">
+						<a href="{{ path_for('admin.user.giveperms', {'uid': user.id}) }}" class="btn btn-info"><span class="fa fa-shield"></span> Promote</a>
+						<a href="{{ path_for('user.profile.edit', {id: user.id}) }}" class="btn btn-warning"><span class="fa fa-pencil-square"></span> Edit</a>
+						<a href="{{ path_for('user.profile.delete', {'id': user.id}) }}" class="btn btn-danger"><span class="fa fa-trash"></span> Delete</a>
+					</div>
+				</p>
 			{% endif %}
 		</div>
 		<div class="col-md-{{ (user.id == auth.user.id or auth.user.isModerator()) ? '7' : '9' }}">
@@ -77,7 +79,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 								<th>Date uploaded</th>
 								{% if user.id == auth.user.id or auth.user.isModerator() %}
 									<th>Privacy</th>
-									<th>Delete</th>
+									<th>Actions</th>
 								{% endif %}
 							</tr>
 						</thead>
@@ -103,7 +105,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 											</select>
 										</td>
 										<td class="vert-align text-center">
-											<button type="button" class="btn btn-danger btn-xs delete-file" data-toggle="modal" data-target="#deleteConfirm" data-filename="{{ filename }}" data-route="{{ path_for('file.delete', {owner: user.id, filename: filename}) }}">Delete</button>
+											<button type="button" class="btn btn-danger btn-xs delete-file" data-toggle="modal" data-target="#deleteConfirm" data-filename="{{ filename }}" data-route="{{ path_for('file.delete', {owner: user.id, filename: filename}) }}"><span class="fa fa-trash"></span><span class="sr-only">Delete</span></button>
 										</td>
 									{% endif %}
 								</tr>

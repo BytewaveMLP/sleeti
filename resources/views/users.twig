@@ -44,10 +44,13 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 									</td>
 									{% if auth.user.isAdmin() %}
 										<td class="vert-align text-center">
-											<a href="{{ path_for('user.profile.delete', {'id': user.id}) }}" class="btn btn-danger btn-xs">Delete</a>
-										</td>
-										<td class="vert-align text-center">
-											<a href="{{ path_for('user.profile.edit', {'id': user.id}) }}" class="btn btn-warning btn-xs">Edit</a>
+											<div class="btn-group btn-group-xs" role="group" aria-label="Account functions">
+												{% if user.id != auth.user.id %}
+													<a href="{{ path_for('admin.user.giveperms', {'uid': user.id}) }}" class="btn btn-info btn-xs"><span class="fa fa-shield"></span><span class="sr-only">Promote</span></a>
+												{% endif %}
+												<a href="{{ path_for('user.profile.edit', {'id': user.id}) }}" class="btn btn-warning"><span class="fa fa-pencil-square"></span><span class="sr-only">Edit</span></a>
+												<a href="{{ path_for('user.profile.delete', {'id': user.id}) }}" class="btn btn-danger"><span class="fa fa-trash"></span><span class="sr-only">Delete</span></a>
+											</div>
 										</td>
 									{% endif %}
 								</tr>
