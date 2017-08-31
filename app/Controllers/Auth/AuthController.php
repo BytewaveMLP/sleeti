@@ -161,9 +161,13 @@ class AuthController extends Controller
 	public function getDeleteAccount($request, $response, $args) {
 		$args['id'] = $args['id'] ?? $this->container->auth->user()->id;
 
-		if (User::where('id', $args['id'])->count() === 0) {
+		$users = User::where('id', $args['id']);
+
+		if ($users->count() === 0) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
+
+		$user = $users->first();
 
 		if ($this->container->auth->user()->id != $args['id'] && !$this->container->auth->user()->isAdmin()) {
 			$this->container->flash->addMessage('danger', '<b>Hey!</b> What do you think you\'re doing?! You can\'t delete someone else\'s account!');
@@ -172,6 +176,7 @@ class AuthController extends Controller
 
 		return $this->container->view->render($response, 'user/delete.twig', [
 			'id' => $args['id'] ?? $this->container->auth->user()->id,
+			'user' => $user,
 		]);
 	}
 
