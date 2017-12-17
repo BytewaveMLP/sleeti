@@ -19,7 +19,7 @@ Welcome to sleeti, a summer project turned full-time learning experience. sleeti
 
 ## Background
 
-Covered in-depth [here](https://bytewave.antigravities.net/blog/2017/06/02/looking-back-sleeti/), but you can find a summary below:
+Covered in-depth [here](https://code.horse/sleeti.html), but you can find a summary below:
 
 I started sleeti with the intent to clone [eeti.me](https://eeti.me), an invite-only file sharing project by a friend of mine. It originated almost out of a joke, as I wasn't a fan of procedural PHP (which eeti was written in) and eeti's author wasn't a fan of MVC. sleeti started in the summer of 2016 (around August according to my `git` history), and since then it's grown into a fun learning tool for security and app design.
 
