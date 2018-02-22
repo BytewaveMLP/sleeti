@@ -1,0 +1,42 @@
+{
+    "site": {
+        "title": "sleeti",
+        "upload": {
+            "path": "\/var\/www\/sleeti\/uploads\/"
+        }
+    },
+    "db": {
+        "driver": "mysql",
+        "host": "mysql",
+        "database": "sleeti",
+        "username": "sleeti",
+        "password": "S75tKbq61p1Mc53ba3AyP5AiYR",
+        "charset": "utf8mb4",
+        "collation": "utf8mb4_unicode_ci"
+    },
+    "password": {
+        "cost": "12"
+    },
+    "recaptcha": {
+        "enabled": "0",
+        "sitekey": "",
+        "secretkey": ""
+    },
+    "cache": {
+        "enabled": "1",
+        "path": "\/var\/www\/sleeti\/resources\/views\/cache\/",
+        "auto_reload": "1"
+    },
+    "logging": {
+        "enabled": "1",
+        "path": "\/var\/www\/sleeti\/logs\/",
+        "maxFiles": "30",
+        "level": 100
+    },
+    "mail": {
+        "enabled": "0",
+        "apikey": "",
+        "domain": "yoursite.example.com",
+        "address": "yoursite@example.com"
+    }
+}
