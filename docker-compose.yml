@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  web:
+    build:
+      context: .
+    environment:
+      VIRTUAL_HOST: 'localhost'
+    ports:
+      - "80:80"
+    links:
+      - "mysql:mysql"
+    restart: always
+    network_mode: bridge
+  mysql:
+    image: mariadb:latest
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: 'sleeti'
+      MYSQL_USER: 'sleeti'
+      MYSQL_PASSWORD: 'S75tKbq61p1Mc53ba3AyP5AiYR'
+    volumes:
+      - ./sleeti.sql:/docker-entrypoint-initdb.d/sleeti.sql
+    restart: always
+    network_mode: bridge
