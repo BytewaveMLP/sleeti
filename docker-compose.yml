@@ -7,7 +7,7 @@ services:
     environment:
       VIRTUAL_HOST: 'localhost'
     ports:
-      - "80:80"
+      - "8080:80"
     links:
       - "mysql:mysql"
     restart: always
