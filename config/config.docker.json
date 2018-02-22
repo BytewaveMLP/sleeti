@@ -18,7 +18,7 @@
         "cost": "12"
     },
     "recaptcha": {
-        "enabled": "1",
+        "enabled": "0",
         "sitekey": "",
         "secretkey": ""
     },
@@ -34,9 +34,8 @@
         "maxFiles": "30",
         "level": 100
     },
-    "displayErrorDetails": "1",
     "mail": {
-        "enabled": "1",
+        "enabled": "0",
         "apikey": "",
         "domain": "yoursite.example.com",
         "address": "yoursite@example.com"
