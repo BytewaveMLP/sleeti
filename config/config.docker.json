@@ -22,7 +22,6 @@
         "sitekey": "",
         "secretkey": ""
     },
-    "determineRouteBeforeAppMiddleware": true,
     "cache": {
         "enabled": "1",
         "path": "\/var\/www\/sleeti\/resources\/views\/cache\/",
