@@ -27,11 +27,11 @@ WORKDIR /var/www/sleeti
 # Override configuration with Docker-specific one
 COPY ./config/config.docker.json ./config/config.json
 
-RUN mkdir /var/www/sleeti/uploads \
+RUN mkdir -p /var/www/sleeti/uploads \
     && chmod -R 777 /var/www/sleeti/uploads \
-    && mkdir /var/www/sleeti/resources/views/cache/ \
+    && mkdir -p /var/www/sleeti/resources/views/cache/ \
     && chmod -R 777 /var/www/sleeti/resources/views/cache \
-    && mkdir /var/www/sleeti/logs \
+    && mkdir -p /var/www/sleeti/logs \
     && chmod -R 777 /var/www/sleeti/logs
 
 # Install composer deps
