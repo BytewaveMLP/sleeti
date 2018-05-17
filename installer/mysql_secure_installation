@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+# Copyright (c) 2002, 2016, Oracle and/or its affiliates. All rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+
+# This file was modified by system-md (systemd) for use with the Sleeti Installer
+
+do_query() {
+	local mysqlFlags
+
+	if [ "$2" != '' ]; then
+		mysqlFlags+=("-p$2")
+	fi
+
+    echo "$1" | mysql -u root "${mysqlFlags[@]}" > /dev/null 2>&1
+    return $?
+}
+
+set_root_password() {
+    local status
+
+    do_query "SET PASSWORD = PASSWORD('$1');"
+    status=$?
+
+    if [ $status -eq 0 ]; then
+        reload_privilege_tables "$1"
+    else
+        echo "Updating Root Password Failed"
+    fi
+
+    return $status
+}
+
+remove_anonymous_users() {
+    do_query "DELETE FROM mysql.user WHERE User='';" "$1"
+    return $?
+}
+
+remove_remote_root() {
+    do_query "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');" "$1"
+    return $?
+}
+
+remove_test_database() {
+    do_query "DROP DATABASE IF EXISTS test;" "$1"
+    if [ $? -eq 1 ]; then
+        return 2
+    fi
+
+    do_query "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'" "$1"
+    if [ $? -eq 0 ]; then
+        return 2
+    fi
+
+    return 0
+}
+
+reload_privilege_tables() {
+    do_query "FLUSH PRIVILEGES;" "$1"
+    return $?
+}
