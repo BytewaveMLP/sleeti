@@ -5,3 +5,5 @@
 /uploads/
 /logs/
 /resources/views/cache/
+composer.phar
+/.vscode/
