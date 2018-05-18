@@ -5,8 +5,8 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 # This install script was written with apt based systems in mind, but should work on other systems as well
-# This script has only been tested on Red Hat Enterprise Linux 7.5.
-# This script will soon be tested on Ubuntu 14.04 WSL, Ubuntu 16.04, Fedora Server 27, CentOS 7.4, and Arch Linux as of ~16/05/2018
+# This script has only been tested on Red Hat Enterprise Linux 7.5, Ubuntu 16.04.
+# This script will soon be tested on Fedora Server 27, CentOS 7.4, and Arch Linux as of ~16/05/2018
 # Not all code paths have been tested, due to restrictions on the testbed servers. Whilst I have resonable confidence in the untested code, it may error or damage things. Do not use in production (yet).
 
 # Do not set -e
