@@ -1,0 +1,22 @@
+{% extends 'email/templates/default.twig' %}
+
+{% block content %}
+	<meta itemprop="name" content="Account Created"/>
+	<table width="100%" cellpadding="0" cellspacing="0">
+		<tr>
+			<td class="content-block">
+				<b>Hi there,</b>
+			</td>
+		</tr>
+		<tr>
+			<td class="content-block">
+				We recently received a request to create an account with your email address {{ email | default('example@example.com') }}. If you created this account, great! Welcome to the site. If you did not, then someone used your email address as their own. {# What can they do about it? #}
+			</td>
+		</tr>
+		<tr>
+			<td class="content-block">
+				&mdash; {{ settings.site.title | default('sleeti') }}
+			</td>
+		</tr>
+	</table>
+{% endblock %}
