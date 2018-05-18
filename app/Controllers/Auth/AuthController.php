@@ -148,7 +148,16 @@ class AuthController extends Controller
 			$this->container->flash->addMessage('info', 'New administrative account created!');
 
 			$this->container->log->notice('auth', 'Administrative account created.');
-		}
+        }
+        
+        if ($this->container['settings']['mail']['enabled']) {
+            $this->container->mail->send('email/account-created.twig', [
+				'email' => $user->email,
+			], function($message) use ($user) {
+				$message->to($user->email);
+				$message->subject('Account Created on ' . ($this->container['settings']['site']['title'] ?? 'sleeti'));
+			});
+        }
  
 		$this->container->auth->attempt(
 			$request->getParam('email'),
