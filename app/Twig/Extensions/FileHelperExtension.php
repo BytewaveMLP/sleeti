@@ -67,7 +67,7 @@ class FileHelperExtension extends \Twig_Extension
 		$size = 0;
 
 		foreach (self::$fs->listContents($path, true) as $file) {
-			$size += self::$fs->getSize($file);
+			$size += self::$fs->getSize($file['path']);
 		}
 
 		return $size;
