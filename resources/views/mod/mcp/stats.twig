@@ -70,7 +70,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 									{% endif %}
 								</td>
 								<td class="vert-align">
-									{{ dirsize('/' ~ user.id) | format_bytes }}
+									{{ dirsize(user.id) | format_bytes }}
 								</td>
 							</tr>
 						{% endfor %}
