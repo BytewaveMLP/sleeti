@@ -42,12 +42,12 @@ class FileController extends Controller
 		}
 
 		// Maintain cross-platform compatability by ensuring all file names are valid in NTFS
-		$validator = v::notEmpty()->noTrailingWhitespace()->length(null, 100)->validFilename();
-		if (!$validator->validate($clientFilename)) {
-			throw new FailedUploadException("Invalid filename (" . $clientFilename . ").", 99);
-		}
+		// $validator = v::notEmpty()->noTrailingWhitespace()->length(null, 100)->validFilename(); # Flysystem takes care of invalid filenames.
+		// if (!$validator->validate($clientFilename)) {
+		// 	throw new FailedUploadException("Invalid filename (" . $clientFilename . ").", 99);
+		// }
 
-		$path      = $this->container['settings']['site']['upload']['path'] . $user->id . '/';
+		$path      = $user->id . '/';
 		$filename  = $this->handleDuplicateFilename($path, $clientFilename);
 
 		$privStr = $request->getParam('privacy');
@@ -69,12 +69,13 @@ class FileController extends Controller
 		]);
 
 		try {
-			// Move file to uploaded files path
-			if (!is_dir($path)) {
-				mkdir($path);
-			}
-			$file->moveTo($path . $filename);
-		} catch (InvalidArgumentException $e) {
+			$fileStream = $file->getStream();
+
+			$this->container->fs->writeStream(
+				$path . $filename,
+				$fileStream->detach()
+			);
+		} catch (RuntimeException $e) {
 			// Remove inconsistent file record
 			$fileRecord->delete();
 			throw new FailedUploadException("File moving failed", 100);
@@ -91,7 +92,7 @@ class FileController extends Controller
 		$counter     = 1;
 		$newFilename = $filename;
 
-		while (file_exists($path . $newFilename)) {
+		while ($this->container->fs->has($path . $newFilename)) {
 			$newFilename = $counter . '-' . $filename;
 			$counter++;
 		}
@@ -171,10 +172,9 @@ class FileController extends Controller
 
 		$file = $files->first();
 
-		$filepath  = $this->container['settings']['site']['upload']['path'];
-		$filepath .= $file->getPath();
+		$filepath = $file->getPath();
 
-		if (!file_exists($filepath)) {
+		if (!$this->container->fs->has($filepath)) {
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
@@ -194,7 +194,7 @@ class FileController extends Controller
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
 
-		$contentType = mime_content_type($filepath);
+		$contentType = $this->container->fs->getMimetype($filepath);
 
 		$response = $response->withHeader('Content-Type', $contentType);
 
@@ -202,7 +202,7 @@ class FileController extends Controller
 			$response = $response->withHeader('Content-Disposition', 'attachment; filename*=UTF-8\'\'' . rawurlencode($filename) . '; ');
 		}
 
-		return $response->withBody(new \GuzzleHttp\Psr7\LazyOpenStream($filepath, 'r'));
+		return $response->withBody(new \Slim\Http\Stream($this->container->fs->readStream($filepath)));
 	}
 
 	public function deleteFile($request, $response, $args) {
@@ -220,10 +220,9 @@ class FileController extends Controller
 		$file  = $files->first();
 		$owner = $file->user;
 
-		$filepath  = $this->container['settings']['site']['upload']['path'];
-		$filepath .= $file->getPath();
+		$filepath = $file->getPath();
 
-		if (!file_exists($filepath)) {
+		if (!$this->container->fs->has($filepath)) {
 			$file->delete(); // broken link
 			throw new \Slim\Exception\NotFoundException($request, $response);
 		}
@@ -235,7 +234,7 @@ class FileController extends Controller
 			return $response->withStatus(403)->withRedirect($this->container->router->pathFor('home'));
 		}
 
-		if (unlink($filepath)) {
+		if ($this->container->fs->delete($filepath)) {
 			$file->delete();
 		}
 
@@ -308,7 +307,7 @@ class FileController extends Controller
 			$privacy = $owner->settings->default_privacy_state;
 		}
 
-		$path     = $this->container['settings']['site']['upload']['path'] . $owner->id . '/';
+		$path     = $owner->id . '/';
 		$filename = $this->handleDuplicateFilename($path, $title);
 
 		if ($filename != $title) {
@@ -321,13 +320,9 @@ class FileController extends Controller
 			'privacy_state' => $privacy,
 		]);
 
-		if (!is_dir($path)) {
-			mkdir($path);
-		}
-
 		$safeFilename = rawurlencode($filename);
 
-		file_put_contents($this->container['settings']['site']['upload']['path'] . $file->getPath(), $paste);
+		$this->container->fs->write($file->getPath(), $paste);
 
 		$path = $this->container->router->pathFor('file.view', [
 			'owner'    => $owner->id,

@@ -89,7 +89,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 										<a id="file-entry-{{ filename | url_encode }}" href="{{ path_for('file.view', {'owner': file.user.id, 'filename': filename | url_encode }) }}">{{ filename }}</a>
 									</td>
 									<td class="vert-align">
-										{{ filesize(settings.site.upload.path ~ file.getPath()) | format_bytes }}
+										{{ filesize(file.getPath()) | format_bytes }}
 									</td>
 									<td class="vert-align">
 										<time class="timeago" datetime="{{ file.created_at | date('c') }}">{{ file.created_at | date('m/d/Y g:i:s A T') }}</time>
