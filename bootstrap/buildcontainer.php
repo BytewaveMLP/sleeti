@@ -55,7 +55,7 @@ $container['view'] = function ($container) {
 	// Add our ReCaptcha extension
 	$view->addExtension(new \Sleeti\Twig\Extensions\ReCaptchaExtension($container['settings']['recaptcha']['sitekey']));
 
-	$view->addExtension(new \Sleeti\Twig\Extensions\FileHelperExtension);
+	$view->addExtension(\Sleeti\Twig\Extensions\FileHelperExtension::setFs($container['fs']));
 
 	// Cache the values of auth->check() and auth->user() so we don't query the DB a bunch in views
 	$view->getEnvironment()->addGlobal('auth', [
@@ -104,4 +104,10 @@ $container['log'] = function ($container) {
 $container['mail'] = function ($container) {
 	$mailgun = new \Mailgun\Mailgun($container['settings']['mail']['apikey'], new \Http\Adapter\Guzzle6\Client());
 	return new \Sleeti\Mail\Mailer($container, $mailgun);
+};
+
+$container['fs'] = function ($container) {
+	$adapter = new \League\Flysystem\Adapter\Local($container['settings']['site']['upload']['path']);
+
+	return new \League\Flysystem\Filesystem($adapter, ['visibility' => 'public']);
 };

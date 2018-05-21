@@ -49,7 +49,7 @@ class McpController extends Controller
 				return $user->files->count();
 			}, SORT_NUMERIC, true),
 			'usersSizes' => $users->sortBy(function ($user) use ($container) {
-				return FileHelperExtension::dirsize($container['settings']['site']['upload']['path'] . $user->id);
+				return FileHelperExtension::dirsize($user->id);
 			}, SORT_NUMERIC, true),
 		]);
 	}

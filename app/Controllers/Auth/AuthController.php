@@ -204,15 +204,11 @@ class AuthController extends Controller
 		}
 
 		foreach ($user->files as $file) {
-			unlink($this->container['settings']['site']['upload']['path'] . $file->getPath());
+			$this->container->fs->delete($file->getPath());
 			$file->delete();
 		}
 
-		$path = $this->container['settings']['site']['upload']['path'] . $user->id;
-
-		if (is_dir($path)) {
-			rmdir($path);
-		}
+		$this->container->fs->deleteDir($user->id);
 
 		$authedUser = $this->container->auth->user();
 
